@@ -222,15 +222,17 @@
 
         /* Markers */
         .marker {
-            width: 32px; height: 32px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            pointer-events: auto !important;
         }
         .marker:hover { transform: scale(1.15); }
         .marker.selected { transform: scale(1.25); border-color: #fff; box-shadow: 0 0 20px rgba(245,158,11,0.6); }
@@ -238,6 +240,24 @@
         .marker.lpg { background: linear-gradient(135deg, #14b8a6, #0d9488); }
         .marker.chemical { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .marker.crude { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .marker.maintenance { 
+            background: linear-gradient(135deg, #f59e0b, #92400e) !important; 
+            border: 3px dashed #fbbf24 !important;
+        }
+        .marker.maintenance::after {
+            content: '🔧';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 14px;
+            background: #1e293b;
+            border-radius: 50%;
+            padding: 2px;
+        }
+        .marker.maintenance.selected {
+            border-color: #fff !important;
+            box-shadow: 0 0 20px rgba(245,158,11,0.8);
+        }
 
         /* Panel */
         .panel-overlay {
@@ -327,6 +347,19 @@
         .vessel-card.crude::before { background: var(--red); }
         .vessel-card:active { background: var(--bg-secondary); }
         .vessel-card.selected { border-color: var(--amber); background: var(--bg-secondary); }
+        .vessel-card.maintenance { border-left: 4px dashed var(--amber) !important; }
+        .vessel-card.maintenance::before { display: none; }
+        .maintenance-tag { 
+            display: inline-block;
+            background: rgba(245,158,11,0.2); 
+            color: var(--amber-light); 
+            font-size: 9px; 
+            font-weight: 600;
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
 
         .vessel-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .vessel-name { font-size: 15px; font-weight: 600; }
@@ -520,6 +553,7 @@
                     <button class="filter-btn" data-filter="lpg">LPG</button>
                     <button class="filter-btn" data-filter="chemical">Chemical</button>
                     <button class="filter-btn" data-filter="crude">Crude</button>
+                    <button class="filter-btn" data-filter="maintenance">🔧 Maintenance</button>
                 </div>
             </div>
             <div class="vessel-list" id="vesselList"></div>
@@ -631,15 +665,20 @@
                 }).addTo(map);
 
                 vessels.forEach(function(v) {
+                    var maintClass = v.active ? '' : ' maintenance';
+                    var zIndex = v.active ? 100 : 200; // Maintenance vessels on top
                     var icon = L.divIcon({
-                        html: '<div class="marker ' + v.type + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                        html: '<div class="marker ' + v.type + maintClass + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
                         className: '',
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 16]
+                        iconSize: [36, 36],
+                        iconAnchor: [18, 18]
                     });
 
-                    var marker = L.marker([v.lat, v.lng], { icon: icon }).addTo(map);
-                    marker.on('click', function() { selectVessel(v.id); });
+                    var marker = L.marker([v.lat, v.lng], { icon: icon, zIndexOffset: zIndex }).addTo(map);
+                    marker.on('click', function(e) { 
+                        L.DomEvent.stopPropagation(e);
+                        selectVessel(v.id); 
+                    });
                     markers[v.id] = marker;
                 });
 
@@ -655,9 +694,10 @@
             if (selectedId) {
                 var pv = vessels.find(function(v) { return v.id === selectedId; });
                 if (pv && markers[selectedId]) {
+                    var pvMaint = pv.active ? '' : ' maintenance';
                     markers[selectedId].setIcon(L.divIcon({
-                        html: '<div class="marker ' + pv.type + '">' + (pv.type === 'lpg' ? '⛽' : '🚢') + '</div>',
-                        className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+                        html: '<div class="marker ' + pv.type + pvMaint + '">' + (pv.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                        className: '', iconSize: [36, 36], iconAnchor: [18, 18]
                     }));
                 }
                 var pc = document.querySelector('.vessel-card.selected');
@@ -668,9 +708,10 @@
             var v = vessels.find(function(x) { return x.id === id; });
             if (!v) return;
 
+            var vMaint = v.active ? '' : ' maintenance';
             markers[id].setIcon(L.divIcon({
-                html: '<div class="marker ' + v.type + ' selected">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
-                className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+                html: '<div class="marker ' + v.type + vMaint + ' selected">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                className: '', iconSize: [36, 36], iconAnchor: [18, 18]
             }));
 
             var card = document.querySelector('.vessel-card[data-id="' + id + '"]');
@@ -686,9 +727,10 @@
             if (!selectedId) return;
             var v = vessels.find(function(x) { return x.id === selectedId; });
             if (v && markers[selectedId]) {
+                var vMaint = v.active ? '' : ' maintenance';
                 markers[selectedId].setIcon(L.divIcon({
-                    html: '<div class="marker ' + v.type + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
-                    className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+                    html: '<div class="marker ' + v.type + vMaint + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                    className: '', iconSize: [36, 36], iconAnchor: [18, 18]
                 }));
             }
             var pc = document.querySelector('.vessel-card.selected');
@@ -742,8 +784,10 @@
 
         function renderList(list) {
             var html = list.map(function(v) {
-                return '<div class="vessel-card ' + v.type + (v.id === selectedId ? ' selected' : '') + '" data-id="' + v.id + '" onclick="selectVessel(' + v.id + ')">' +
-                    '<div class="vessel-header"><div><div class="vessel-name">' + v.name + '</div><div class="vessel-imo">IMO: ' + v.imo + '</div></div>' +
+                var maintClass = v.active ? '' : ' maintenance';
+                var maintTag = v.active ? '' : '<span class="maintenance-tag">🔧 Maintenance</span>';
+                return '<div class="vessel-card ' + v.type + maintClass + (v.id === selectedId ? ' selected' : '') + '" data-id="' + v.id + '" onclick="selectVessel(' + v.id + ')">' +
+                    '<div class="vessel-header"><div><div class="vessel-name">' + v.name + maintTag + '</div><div class="vessel-imo">IMO: ' + v.imo + '</div></div>' +
                     '<span class="vessel-badge ' + v.type + '">' + v.typeLabel + '</span></div>' +
                     '<div class="vessel-location">📍 ' + v.location + '</div></div>';
             }).join('');
@@ -766,7 +810,14 @@
                     filterBtns.forEach(function(b) { b.classList.remove('active'); });
                     this.classList.add('active');
                     var f = this.getAttribute('data-filter');
-                    var filtered = f === 'all' ? vessels : vessels.filter(function(v) { return v.type === f; });
+                    var filtered;
+                    if (f === 'all') {
+                        filtered = vessels;
+                    } else if (f === 'maintenance') {
+                        filtered = vessels.filter(function(v) { return !v.active; });
+                    } else {
+                        filtered = vessels.filter(function(v) { return v.type === f; });
+                    }
                     renderList(filtered);
                 });
             });
