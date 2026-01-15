@@ -5,157 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="BIHAR Fleet">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0a1628">
-    <meta name="format-detection" content="telephone=no">
-    <title>BIHAR Fleet Tracker | Real-Time Vessel Monitoring</title>
+    <meta name="theme-color" content="#0f172a">
+    <title>BIHAR Fleet Tracker</title>
     
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         :root {
-            --navy-900: #0a1628;
-            --navy-800: #111d35;
-            --navy-700: #1a2942;
-            --navy-600: #243654;
-            --navy-500: #2d4366;
-            --amber-400: #fbbf24;
-            --amber-500: #f59e0b;
-            --amber-600: #d97706;
-            --teal-400: #2dd4bf;
-            --teal-500: #14b8a6;
-            --red-400: #f87171;
-            --red-500: #ef4444;
-            --green-400: #4ade80;
-            --green-500: #22c55e;
-            --blue-400: #60a5fa;
-            --blue-500: #3b82f6;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --safe-area-top: env(safe-area-inset-top, 0px);
-            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --border: #475569;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --amber: #f59e0b;
+            --amber-light: #fbbf24;
+            --teal: #14b8a6;
+            --blue: #3b82f6;
+            --red: #ef4444;
+            --green: #22c55e;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --header-height: 64px;
         }
 
         html, body {
             height: 100%;
             overflow: hidden;
-        }
-
-        body {
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--navy-900);
-            color: var(--gray-100);
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            touch-action: manipulation;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
         }
 
         /* Header */
         .header {
-            background: linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 100%);
-            border-bottom: 1px solid var(--navy-600);
-            padding: 0.75rem 1rem;
-            padding-top: calc(0.75rem + var(--safe-area-top));
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
+            height: calc(var(--header-height) + var(--safe-top));
+            padding-top: var(--safe-top);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 16px;
+            padding-right: 16px;
             z-index: 1000;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 12px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--amber-500), var(--amber-600));
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, var(--amber), #d97706);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            font-size: 22px;
         }
 
-        .logo-text h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--gray-100);
-        }
+        .logo-text h1 { font-size: 18px; font-weight: 700; }
+        .logo-text p { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        .logo-text span {
-            font-size: 0.65rem;
-            color: var(--gray-400);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
+        .header-right { display: flex; align-items: center; gap: 16px; }
 
-        .header-stats { display: none; }
+        .stats { display: none; gap: 24px; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 20px; font-weight: 700; color: var(--amber-light); }
+        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
 
-        .live-indicator {
+        .live-badge {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            background: var(--navy-700);
-            padding: 0.4rem 0.75rem;
-            border-radius: 16px;
-            border: 1px solid var(--navy-600);
+            gap: 6px;
+            background: var(--bg-tertiary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--green);
+            text-transform: uppercase;
         }
 
         .live-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--green-500);
+            width: 8px; height: 8px;
+            background: var(--green);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.3); }
-        }
-
-        .live-text {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: var(--green-400);
-            text-transform: uppercase;
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         /* Main Layout */
-        .main-container {
+        .app {
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            height: -webkit-fill-available;
-            padding-top: calc(60px + var(--safe-area-top));
+            height: 100%;
+            padding-top: calc(var(--header-height) + var(--safe-top));
         }
 
         /* Map */
-        .map-container {
+        .map-wrapper {
             flex: 1;
             position: relative;
             min-height: 0;
@@ -164,610 +127,343 @@
         #map {
             width: 100%;
             height: 100%;
-            background: var(--navy-900);
+            background: var(--bg-primary);
         }
 
-        .leaflet-container {
-            background: var(--navy-900);
-            font-family: 'DM Sans', sans-serif;
+        /* Leaflet Overrides */
+        .leaflet-container { background: #0f172a !important; font-family: 'Inter', sans-serif !important; }
+        .leaflet-control-zoom { border: none !important; box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important; }
+        .leaflet-control-zoom a { 
+            background: #1e293b !important; 
+            color: #f8fafc !important; 
+            border: 1px solid #475569 !important; 
+            width: 36px !important; 
+            height: 36px !important; 
+            line-height: 36px !important; 
+        }
+        .leaflet-control-zoom a:hover { background: #334155 !important; }
+        .leaflet-popup-content-wrapper { background: #1e293b !important; color: #f8fafc !important; border-radius: 12px !important; }
+        .leaflet-popup-tip { background: #1e293b !important; }
+
+        /* Loading */
+        .map-loading {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            gap: 16px;
+        }
+        .map-loading.hidden { display: none; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--bg-tertiary);
+            border-top-color: var(--amber);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .map-loading p { color: var(--text-secondary); font-size: 14px; }
+        .map-loading .error { color: var(--red); }
+        .map-loading button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: var(--amber);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        .leaflet-control-zoom {
-            border: none !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 12px; right: 12px;
+            z-index: 400;
         }
 
-        .leaflet-control-zoom a {
-            background: var(--navy-700) !important;
-            color: var(--gray-100) !important;
-            border: 1px solid var(--navy-600) !important;
-            width: 36px !important;
-            height: 36px !important;
-            line-height: 34px !important;
+        .map-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
         }
+        .map-btn:active { background: var(--bg-tertiary); }
 
-        .vessel-marker-icon {
-            width: 32px;
-            height: 32px;
+        /* Legend */
+        .legend {
+            position: absolute;
+            bottom: 12px; left: 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            z-index: 400;
+            display: flex;
+            gap: 12px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .legend-dot.tanker { background: var(--amber); }
+        .legend-dot.lpg { background: var(--teal); }
+        .legend-dot.chemical { background: var(--blue); }
+        .legend-dot.crude { background: var(--red); }
+
+        /* Markers */
+        .marker {
+            width: 32px; height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
-        }
-
-        .vessel-marker-icon.oil-tanker { background: linear-gradient(135deg, var(--amber-500), var(--amber-600)); }
-        .vessel-marker-icon.lpg-carrier { background: linear-gradient(135deg, var(--teal-400), var(--teal-500)); }
-        .vessel-marker-icon.chemical { background: linear-gradient(135deg, var(--blue-400), var(--blue-500)); }
-        .vessel-marker-icon.crude { background: linear-gradient(135deg, var(--red-400), var(--red-500)); }
-
-        .vessel-marker-icon.active {
-            transform: scale(1.3);
-            border-color: var(--amber-400);
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
-        }
-
-        /* Map Legend */
-        .map-legend {
-            position: absolute;
-            bottom: calc(20px + var(--safe-area-bottom));
-            left: 12px;
-            background: var(--navy-800);
-            border: 1px solid var(--navy-600);
-            border-radius: 10px;
-            padding: 0.6rem 0.75rem;
-            z-index: 500;
-            display: flex;
-            gap: 0.75rem;
-            font-size: 0.65rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            color: var(--gray-300);
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .legend-dot.oil-tanker { background: var(--amber-500); }
-        .legend-dot.lpg-carrier { background: var(--teal-500); }
-        .legend-dot.chemical { background: var(--blue-500); }
-        .legend-dot.crude { background: var(--red-500); }
-
-        /* Center Button */
-        .center-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: var(--navy-700);
-            border: 1px solid var(--navy-600);
-            border-radius: 10px;
-            padding: 0.6rem 0.9rem;
-            color: var(--gray-100);
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
+            font-size: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
-            z-index: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
+        .marker:hover { transform: scale(1.15); }
+        .marker.selected { transform: scale(1.25); border-color: #fff; box-shadow: 0 0 20px rgba(245,158,11,0.6); }
+        .marker.tanker { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .marker.lpg { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+        .marker.chemical { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .marker.crude { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
-        .center-btn:active { transform: scale(0.95); }
-
-        /* Bottom Sheet */
-        .bottom-sheet-overlay {
+        /* Panel */
+        .panel-overlay {
+            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 600;
+        }
+        .panel-overlay.visible { display: block; }
+
+        .panel {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--bg-secondary);
+            border-radius: 20px 20px 0 0;
+            z-index: 700;
+            max-height: calc(80% - var(--safe-top));
+            display: flex;
+            flex-direction: column;
+            transform: translateY(calc(100% - 70px));
+            transition: transform 0.3s ease-out;
+            padding-bottom: var(--safe-bottom);
+        }
+        .panel.open { transform: translateY(0); }
+
+        .panel-handle { padding: 12px; display: flex; justify-content: center; cursor: pointer; }
+        .panel-handle span { width: 40px; height: 5px; background: var(--bg-tertiary); border-radius: 3px; }
+
+        .panel-header { padding: 0 16px 12px; border-bottom: 1px solid var(--border); }
+        .panel-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .panel-title h2 { font-size: 16px; font-weight: 600; }
+        .vessel-count { background: var(--bg-tertiary); padding: 4px 10px; border-radius: 12px; font-size: 12px; color: var(--text-secondary); }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: inherit;
+            outline: none;
+        }
+        .search-input:focus { border-color: var(--amber); }
+        .search-input::placeholder { color: var(--text-muted); }
+
+        .filters { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
+        .filters::-webkit-scrollbar { display: none; }
+        .filter-btn {
+            flex-shrink: 0;
+            padding: 8px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .filter-btn.active { background: var(--amber); border-color: var(--amber); color: #000; }
+
+        /* Vessel List */
+        .vessel-list { flex: 1; overflow-y: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
+
+        .vessel-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            position: relative;
+            padding-left: 18px;
+        }
+        .vessel-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            border-radius: 12px 0 0 12px;
+        }
+        .vessel-card.tanker::before { background: var(--amber); }
+        .vessel-card.lpg::before { background: var(--teal); }
+        .vessel-card.chemical::before { background: var(--blue); }
+        .vessel-card.crude::before { background: var(--red); }
+        .vessel-card:active { background: var(--bg-secondary); }
+        .vessel-card.selected { border-color: var(--amber); background: var(--bg-secondary); }
+
+        .vessel-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .vessel-name { font-size: 15px; font-weight: 600; }
+        .vessel-imo { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .vessel-badge { font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
+        .vessel-badge.tanker { background: rgba(245,158,11,0.15); color: var(--amber-light); }
+        .vessel-badge.lpg { background: rgba(20,184,166,0.15); color: var(--teal); }
+        .vessel-badge.chemical { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .vessel-badge.crude { background: rgba(239,68,68,0.15); color: var(--red); }
+        .vessel-location { font-size: 13px; color: var(--text-secondary); }
+
+        /* Detail Modal */
+        .detail-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
             z-index: 800;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s;
         }
-
-        .bottom-sheet-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .bottom-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--navy-800);
-            border-radius: 20px 20px 0 0;
-            z-index: 900;
-            transform: translateY(calc(100% - 80px));
-            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-            max-height: calc(85vh - var(--safe-area-top));
-            display: flex;
-            flex-direction: column;
-            padding-bottom: var(--safe-area-bottom);
-            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .bottom-sheet.expanded { transform: translateY(0); }
-
-        .bottom-sheet-handle {
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: grab;
-        }
-
-        .bottom-sheet-handle::before {
-            content: '';
-            width: 36px;
-            height: 4px;
-            background: var(--navy-500);
-            border-radius: 2px;
-        }
-
-        .bottom-sheet-header {
-            padding: 0 1rem 0.75rem;
-            border-bottom: 1px solid var(--navy-600);
-        }
-
-        .bottom-sheet-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
-
-        .bottom-sheet-title h2 {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .vessel-count {
-            font-size: 0.7rem;
-            color: var(--gray-400);
-            background: var(--navy-700);
-            padding: 0.25rem 0.6rem;
-            border-radius: 12px;
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            background: var(--navy-700);
-            border: 1px solid var(--navy-600);
-            border-radius: 10px;
-            color: var(--gray-100);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 16px; /* Prevents iOS zoom */
-            -webkit-appearance: none;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--amber-500);
-        }
-
-        .search-box input::placeholder { color: var(--gray-500); }
-
-        .search-icon {
-            position: absolute;
-            left: 0.9rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray-500);
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 0.4rem;
-            margin-top: 0.75rem;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .filter-tabs::-webkit-scrollbar { display: none; }
-
-        .filter-tab {
-            flex-shrink: 0;
-            padding: 0.5rem 0.75rem;
-            background: var(--navy-700);
-            border: 1px solid var(--navy-600);
-            border-radius: 8px;
-            color: var(--gray-400);
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .filter-tab:active { transform: scale(0.95); }
-        .filter-tab.active {
-            background: var(--amber-500);
-            border-color: var(--amber-500);
-            color: var(--navy-900);
-        }
-
-        /* Vessel List */
-        .vessel-list {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 0.75rem;
-            overscroll-behavior: contain;
-        }
-
-        .vessel-card {
-            background: var(--navy-700);
-            border: 1px solid var(--navy-600);
-            border-radius: 12px;
-            padding: 0.9rem;
-            margin-bottom: 0.6rem;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vessel-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-        }
-
-        .vessel-card[data-type="oil-tanker"]::before { background: var(--amber-500); }
-        .vessel-card[data-type="lpg-carrier"]::before { background: var(--teal-500); }
-        .vessel-card[data-type="chemical"]::before { background: var(--blue-500); }
-        .vessel-card[data-type="crude"]::before { background: var(--red-500); }
-
-        .vessel-card:active {
-            background: var(--navy-600);
-            transform: scale(0.98);
-        }
-
-        .vessel-card.active {
-            border-color: var(--amber-500);
-            box-shadow: 0 0 16px rgba(245, 158, 11, 0.2);
-        }
-
-        .vessel-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-        }
-
-        .vessel-name {
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin-bottom: 0.15rem;
-        }
-
-        .vessel-imo {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--gray-400);
-        }
-
-        .vessel-type-badge {
-            font-size: 0.6rem;
-            font-weight: 600;
-            padding: 0.2rem 0.45rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .vessel-type-badge.oil-tanker { background: rgba(245, 158, 11, 0.15); color: var(--amber-400); }
-        .vessel-type-badge.lpg-carrier { background: rgba(45, 212, 191, 0.15); color: var(--teal-400); }
-        .vessel-type-badge.chemical { background: rgba(96, 165, 250, 0.15); color: var(--blue-400); }
-        .vessel-type-badge.crude { background: rgba(248, 113, 113, 0.15); color: var(--red-400); }
-
-        .vessel-location {
-            font-size: 0.75rem;
-            color: var(--gray-300);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .vessel-location svg { color: var(--gray-500); }
-
-        /* Detail Modal */
-        .detail-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1100;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
-
-        .detail-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .detail-overlay.visible { opacity: 1; visibility: visible; }
 
         .detail-modal {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--navy-800);
+            bottom: 0; left: 0; right: 0;
+            background: var(--bg-secondary);
             border-radius: 20px 20px 0 0;
-            z-index: 1200;
-            transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-            max-height: calc(90vh - var(--safe-area-top));
+            z-index: 900;
+            max-height: 85vh;
             display: flex;
             flex-direction: column;
-            padding-bottom: var(--safe-area-bottom);
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            padding-bottom: var(--safe-bottom);
         }
+        .detail-modal.visible { transform: translateY(0); }
 
-        .detail-modal.active { transform: translateY(0); }
-
-        .detail-handle {
-            padding: 12px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .detail-handle::before {
-            content: '';
-            width: 36px;
-            height: 4px;
-            background: var(--navy-500);
-            border-radius: 2px;
-        }
+        .detail-handle { padding: 12px; display: flex; justify-content: center; }
+        .detail-handle span { width: 40px; height: 5px; background: var(--bg-tertiary); border-radius: 3px; }
 
         .detail-header {
-            padding: 0 1.25rem 1rem;
-            border-bottom: 1px solid var(--navy-600);
+            padding: 0 20px 16px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
         }
-
-        .detail-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .detail-subtitle {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--amber-400);
-        }
-
+        .detail-title { font-size: 22px; font-weight: 700; }
+        .detail-imo { font-size: 14px; color: var(--amber); margin-top: 4px; }
         .detail-close {
-            background: var(--navy-700);
-            border: 1px solid var(--navy-600);
+            width: 36px; height: 36px;
+            background: var(--bg-tertiary);
+            border: none;
             border-radius: 10px;
-            color: var(--gray-400);
-            width: 36px;
-            height: 36px;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
         }
 
-        .detail-close:active { transform: scale(0.95); }
-
-        .detail-body {
-            padding: 1.25rem;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            flex: 1;
-        }
-
-        .detail-section { margin-bottom: 1.25rem; }
+        .detail-body { padding: 20px; overflow-y: auto; flex: 1; }
+        .detail-section { margin-bottom: 20px; }
         .detail-section:last-child { margin-bottom: 0; }
-
         .detail-section-title {
-            font-size: 0.7rem;
+            font-size: 11px;
             font-weight: 600;
-            color: var(--gray-500);
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 0.6rem;
-            padding-bottom: 0.4rem;
-            border-bottom: 1px solid var(--navy-600);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
         }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .detail-item { background: var(--bg-primary); border-radius: 10px; padding: 12px; }
+        .detail-item.full { grid-column: span 2; }
+        .detail-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .detail-value { font-size: 14px; font-weight: 500; }
+        .detail-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .detail-status.active { background: rgba(34,197,94,0.15); color: var(--green); }
+        .detail-status.maintenance { background: rgba(245,158,11,0.15); color: var(--amber); }
+        .detail-status-dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
+        .charter-box { background: var(--bg-primary); border-radius: 10px; padding: 14px; }
+        .charter-company { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+        .charter-dates { display: flex; gap: 20px; }
+        .charter-date-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .charter-date-value { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+        .status-box { background: var(--bg-primary); border-radius: 10px; padding: 14px; font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
 
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.6rem;
-        }
-
-        .detail-item {
-            background: var(--navy-700);
-            border-radius: 8px;
-            padding: 0.7rem;
-        }
-
-        .detail-item-label {
-            font-size: 0.6rem;
-            color: var(--gray-500);
-            text-transform: uppercase;
-            margin-bottom: 0.2rem;
-        }
-
-        .detail-item-value {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .detail-item-value.mono { font-family: 'Space Mono', monospace; }
-        .detail-full { grid-column: span 2; }
-
-        .charter-info {
-            background: var(--navy-700);
-            border-radius: 10px;
-            padding: 0.9rem;
-        }
-
-        .charter-company {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.6rem;
-        }
-
-        .charter-dates {
-            display: flex;
-            justify-content: space-between;
-            gap: 0.75rem;
-        }
-
-        .charter-date-label {
-            font-size: 0.6rem;
-            color: var(--gray-500);
-            text-transform: uppercase;
-            margin-bottom: 0.2rem;
-        }
-
-        .charter-date-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--gray-300);
-        }
-
-        .status-text {
-            background: var(--navy-700);
-            border-radius: 10px;
-            padding: 0.9rem;
-            font-size: 0.85rem;
-            color: var(--gray-300);
-            line-height: 1.5;
-        }
-
-        .popup-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.3rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .popup-status.active { background: rgba(34, 197, 94, 0.15); color: var(--green-400); }
-        .popup-status.maintenance { background: rgba(245, 158, 11, 0.15); color: var(--amber-400); }
-
-        /* Desktop Styles */
-        @media (min-width: 769px) {
-            .header {
-                padding: 1rem 2rem;
-                padding-top: calc(1rem + var(--safe-area-top));
-            }
-
-            .logo-icon { width: 48px; height: 48px; font-size: 1.5rem; }
-            .logo-text h1 { font-size: 1.5rem; }
-            .logo-text span { font-size: 0.75rem; }
-
-            .header-stats {
-                display: flex;
-                gap: 2rem;
-            }
-
-            .header-stat { text-align: center; }
-
-            .header-stat-value {
-                font-family: 'Space Mono', monospace;
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: var(--amber-400);
-            }
-
-            .header-stat-label {
-                font-size: 0.7rem;
-                color: var(--gray-400);
-                text-transform: uppercase;
-            }
-
-            .main-container {
-                display: grid;
-                grid-template-columns: 380px 1fr;
-                padding-top: calc(80px + var(--safe-area-top));
-                height: 100vh;
-            }
-
-            .bottom-sheet-overlay { display: none; }
-
-            .bottom-sheet {
-                position: static;
+        /* Desktop */
+        @media (min-width: 768px) {
+            .header { padding-left: 24px; padding-right: 24px; }
+            .stats { display: flex; }
+            .app { flex-direction: row; }
+            .map-wrapper { flex: 1; order: 2; }
+            .panel-overlay { display: none !important; }
+            .panel {
+                position: relative;
+                order: 1;
+                width: 380px;
+                flex-shrink: 0;
                 transform: none;
-                max-height: none;
                 border-radius: 0;
-                box-shadow: none;
-                border-right: 1px solid var(--navy-600);
+                max-height: none;
+                border-right: 1px solid var(--border);
             }
-
-            .bottom-sheet-handle { display: none; }
-            .bottom-sheet-header { padding: 1.25rem; }
-            .vessel-list { padding: 0.75rem 1rem; }
-
-            .vessel-card:hover {
-                background: var(--navy-600);
-                transform: translateX(4px);
-            }
-
-            .map-legend {
-                flex-direction: column;
-                gap: 0.5rem;
-                padding: 1rem;
-            }
-
-            .center-btn { display: none; }
-
-            .detail-overlay { display: none; }
-
+            .panel-handle { display: none; }
+            .panel-header { padding: 20px; }
+            .vessel-list { padding: 16px; }
+            .vessel-card:hover { background: var(--bg-secondary); border-color: var(--text-muted); }
+            .map-btn { display: none; }
+            .legend { flex-direction: column; gap: 8px; }
+            .detail-overlay { display: none !important; }
             .detail-modal {
                 position: absolute;
-                top: 1rem;
-                right: 1rem;
-                bottom: auto;
-                left: auto;
+                top: 16px; right: 16px;
+                bottom: auto; left: auto;
                 width: 360px;
-                max-height: calc(100% - 2rem);
+                max-height: calc(100% - 32px);
                 border-radius: 16px;
                 transform: translateX(400px);
+                opacity: 0;
             }
-
-            .detail-modal.active { transform: translateX(0); }
+            .detail-modal.visible { transform: translateX(0); opacity: 1; }
             .detail-handle { display: none; }
         }
 
-        @media (min-width: 1200px) {
-            .main-container { grid-template-columns: 420px 1fr; }
+        @media (min-width: 1024px) {
+            .panel { width: 420px; }
         }
     </style>
+    
+    <!-- Leaflet CSS from CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
 <body>
     <header class="header">
@@ -775,69 +471,55 @@
             <div class="logo-icon">⚓</div>
             <div class="logo-text">
                 <h1>BIHAR Fleet</h1>
-                <span>Real-Time Tracking</span>
+                <p>Real-Time Tracking</p>
             </div>
         </div>
-        <div class="header-stats">
-            <div class="header-stat">
-                <div class="header-stat-value">23</div>
-                <div class="header-stat-label">Total Vessels</div>
+        <div class="header-right">
+            <div class="stats">
+                <div class="stat"><div class="stat-value">23</div><div class="stat-label">Vessels</div></div>
+                <div class="stat"><div class="stat-value">21</div><div class="stat-label">Active</div></div>
+                <div class="stat"><div class="stat-value">2</div><div class="stat-label">Maintenance</div></div>
             </div>
-            <div class="header-stat">
-                <div class="header-stat-value">21</div>
-                <div class="header-stat-label">Active</div>
-            </div>
-            <div class="header-stat">
-                <div class="header-stat-value">2</div>
-                <div class="header-stat-label">Maintenance</div>
-            </div>
-        </div>
-        <div class="live-indicator">
-            <div class="live-dot"></div>
-            <span class="live-text">Live</span>
+            <div class="live-badge"><div class="live-dot"></div><span>Live</span></div>
         </div>
     </header>
 
-    <div class="main-container">
-        <div class="map-container">
+    <div class="app">
+        <div class="map-wrapper">
             <div id="map"></div>
-            <button class="center-btn" onclick="centerOnFleet()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                Center
-            </button>
-            <div class="map-legend">
-                <div class="legend-item"><div class="legend-dot oil-tanker"></div><span>Tanker</span></div>
-                <div class="legend-item"><div class="legend-dot lpg-carrier"></div><span>LPG</span></div>
-                <div class="legend-item"><div class="legend-dot chemical"></div><span>Chemical</span></div>
-                <div class="legend-item"><div class="legend-dot crude"></div><span>Crude</span></div>
+            <div class="map-loading" id="mapLoading">
+                <div class="spinner"></div>
+                <p>Loading map...</p>
+            </div>
+            <div class="map-controls">
+                <button class="map-btn" onclick="centerFleet()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                    Center
+                </button>
+            </div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot tanker"></div>Tanker</div>
+                <div class="legend-item"><div class="legend-dot lpg"></div>LPG</div>
+                <div class="legend-item"><div class="legend-dot chemical"></div>Chemical</div>
+                <div class="legend-item"><div class="legend-dot crude"></div>Crude</div>
             </div>
         </div>
 
-        <div class="bottom-sheet-overlay" onclick="toggleBottomSheet()"></div>
-
-        <div class="bottom-sheet" id="bottomSheet">
-            <div class="bottom-sheet-handle" onclick="toggleBottomSheet()"></div>
-            <div class="bottom-sheet-header">
-                <div class="bottom-sheet-title">
+        <div class="panel-overlay" id="panelOverlay" onclick="togglePanel()"></div>
+        <div class="panel" id="panel">
+            <div class="panel-handle" onclick="togglePanel()"><span></span></div>
+            <div class="panel-header">
+                <div class="panel-title">
                     <h2>Fleet Overview</h2>
-                    <span class="vessel-count">23 Vessels</span>
+                    <span class="vessel-count" id="vesselCount">23 Vessels</span>
                 </div>
-                <div class="search-box">
-                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="searchInput" placeholder="Search vessels, IMO, location...">
-                </div>
-                <div class="filter-tabs">
-                    <button class="filter-tab active" data-filter="all">All (23)</button>
-                    <button class="filter-tab" data-filter="oil-tanker">Tankers</button>
-                    <button class="filter-tab" data-filter="lpg-carrier">LPG</button>
-                    <button class="filter-tab" data-filter="chemical">Chemical</button>
-                    <button class="filter-tab" data-filter="crude">Crude</button>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search vessel, IMO, location...">
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="tanker">Tankers</button>
+                    <button class="filter-btn" data-filter="lpg">LPG</button>
+                    <button class="filter-btn" data-filter="chemical">Chemical</button>
+                    <button class="filter-btn" data-filter="crude">Crude</button>
                 </div>
             </div>
             <div class="vessel-list" id="vesselList"></div>
@@ -845,189 +527,265 @@
 
         <div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
         <div class="detail-modal" id="detailModal">
-            <div class="detail-handle"></div>
+            <div class="detail-handle"><span></span></div>
             <div class="detail-header">
                 <div>
                     <div class="detail-title" id="detailTitle">Vessel Name</div>
-                    <div class="detail-subtitle" id="detailSubtitle">IMO: 0000000</div>
+                    <div class="detail-imo" id="detailImo">IMO: 0000000</div>
                 </div>
-                <button class="detail-close" onclick="closeDetail()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
+                <button class="detail-close" onclick="closeDetail()">×</button>
             </div>
             <div class="detail-body" id="detailBody"></div>
         </div>
     </div>
 
     <script>
-        const fleetData = [
-            { id: 1, name: "Israa", imo: "9325960", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,319 MT", built: 2011, charterer: "PETCO, Malaysia", delivered: "25/12/2022", redelivery: "24/06/2026", status: "Completed discharge Jet A1 at Prai, Malaysia, next will sail to Singapore, ETA Singapore 16/01 PM.", location: "Prai, Malaysia", lat: 5.3841, lng: 100.3938, active: true },
-            { id: 2, name: "Al Zarandi", imo: "9325958", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,303 MT", built: 2010, charterer: "Bihar Bunkers", delivered: "29/02/2020", redelivery: "Yearly Renewal", status: "At Jeddah for bunkering operations.", location: "Jeddah, Saudi Arabia", lat: 21.5433, lng: 39.1728, active: true },
-            { id: 3, name: "Galbot", imo: "9555084", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,281 MT", built: 2010, charterer: "Sacor Bunkers, Portugal", delivered: "24/10/2023", redelivery: "23/10/2026", status: "At Sines, Portugal for bunkering operations.", location: "Sines, Portugal", lat: 37.9500, lng: -8.8667, active: true },
-            { id: 4, name: "Al Safa", imo: "9501643", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,324 MT", built: 2009, charterer: "Amsol, South Africa", delivered: "20/01/2020", redelivery: "18/01/2026", status: "At Durban, South Africa for bunkering operations.", location: "Durban, South Africa", lat: -29.8587, lng: 31.0218, active: true },
-            { id: 5, name: "Andes", imo: "9411719", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,364 MT", built: 2007, charterer: "International Supply", delivered: "31/12/2019", redelivery: "Yearly Renewal", status: "At Fujairah for bunkering operations.", location: "Fujairah, UAE", lat: 25.1288, lng: 56.3264, active: true },
-            { id: 6, name: "Miraj", imo: "9394741", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,450 MT", built: 2007, charterer: "Waad Energy Co. Ltd.", delivered: "25/02/2024", redelivery: "Yearly Renewal", status: "At Jeddah for bunkering operations.", location: "Jeddah, Saudi Arabia", lat: 21.5169, lng: 39.1489, active: true },
-            { id: 7, name: "Daisy", imo: "9516545", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,280 MT", built: 2009, charterer: "International Supply", delivered: "14/11/2023", redelivery: "Yearly Renewal", status: "Off hired for pre dry dock repairs at Khor Fakkan, UAE.", location: "Khor Fakkan, UAE", lat: 25.3436, lng: 56.3475, active: false },
-            { id: 8, name: "Lilac", imo: "9411721", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "7,373 MT", built: 2009, charterer: "International Supply (Replacement for Daisy)", delivered: "-", redelivery: "-", status: "At Fujairah for bunkering operations.", location: "Fujairah, UAE", lat: 25.1488, lng: 56.3464, active: true },
-            { id: 9, name: "Al Barrah", imo: "9332030", type: "lpg-carrier", typeLabel: "LPG Carrier", deadweight: "27,710 MT", built: 2007, charterer: "ENOC, UAE", delivered: "01/04/2024", redelivery: "31/03/2027", status: "Waiting at Jebel Ali partly loaded to berth / discharge the balance cargo.", location: "Jebel Ali, UAE", lat: 25.0066, lng: 55.0580, active: true },
-            { id: 10, name: "Al Jabirah", imo: "9332042", type: "lpg-carrier", typeLabel: "LPG Carrier", deadweight: "27,710 MT", built: 2007, charterer: "Indian Oil Corporation", delivered: "15/11/2025", redelivery: "14/11/2026", status: "Sailing laden with propane and butane from Ruwais, UAE, to Kandla, India.", location: "Arabian Sea", lat: 21.8243, lng: 65.4567, active: true },
-            { id: 11, name: "Al Shaffiah", imo: "9358620", type: "chemical", typeLabel: "Chemical/Product", deadweight: "19,907 MT", built: 2006, charterer: "Aramco Trading Co", delivered: "30/04/2024", redelivery: "29/04/2026", status: "Sailing in ballast from Singapore to Jubail to load next cargo.", location: "Indian Ocean", lat: 15.5432, lng: 68.2341, active: true },
-            { id: 12, name: "Al Mahboobah", imo: "9340415", type: "chemical", typeLabel: "Chemical/Product", deadweight: "19,982 MT", built: 2006, charterer: "Aramco Trading Co", delivered: "02/05/2024", redelivery: "01/05/2026", status: "Arrived Jubail, waiting to berth / load the cargo.", location: "Jubail, Saudi Arabia", lat: 27.0046, lng: 49.6588, active: true },
-            { id: 13, name: "Dianella", imo: "9901087", type: "chemical", typeLabel: "Product Oil/Chemical", deadweight: "49,803 MT", built: 2021, charterer: "PETCO", delivered: "21/01/2024", redelivery: "15/01/2026", status: "Discharging Jet A1 cargo at Shenao, Taiwan.", location: "Shenao, Taiwan", lat: 25.1276, lng: 121.8167, active: true },
-            { id: 14, name: "Liatris", imo: "9901099", type: "chemical", typeLabel: "Product Oil/Chemical", deadweight: "49,803 MT", built: 2021, charterer: "ISTC (Sabic)", delivered: "06/05/2023", redelivery: "05/05/2026", status: "Sailing in ballast from Shanghai, China to Singapore for bunkers.", location: "South China Sea", lat: 18.4523, lng: 114.3421, active: true },
-            { id: 15, name: "Angelonia", imo: "9901051", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "110,521 MT", built: 2021, charterer: "Aramco Trading Co.", delivered: "13/01/2024", redelivery: "12/01/2027", status: "Arrived at Suez STS Area to discharge diesel oil through STS.", location: "Suez, Egypt", lat: 29.9668, lng: 32.5498, active: true },
-            { id: 16, name: "Lunaria", imo: "9901063", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "110,521 MT", built: 2021, charterer: "Aramco Trading Co.", delivered: "25/01/2024", redelivery: "24/01/2027", status: "Sailing laden with gas oil to Venice, Italy to discharge the cargo.", location: "Mediterranean Sea", lat: 38.4521, lng: 16.3456, active: true },
-            { id: 17, name: "Bouvardia", imo: "9935595", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "111,075 MT", built: 2022, charterer: "Aramco Trading Co.", delivered: "19/03/2025", redelivery: "18/03/2028", status: "At Antwerp berth, Belgium for loading VLSFO.", location: "Antwerp, Belgium", lat: 51.2194, lng: 4.4025, active: true },
-            { id: 18, name: "Ixora", imo: "9940459", type: "oil-tanker", typeLabel: "Oil Tanker", deadweight: "111,006 MT", built: 2022, charterer: "Aramco Trading Co.", delivered: "09/03/2025", redelivery: "08/03/2028", status: "Sailing laden with HFO to Tanjung Buras, Malaysia.", location: "South China Sea", lat: 7.4523, lng: 107.3421, active: true },
-            { id: 19, name: "Al Habibah", imo: "9290294", type: "crude", typeLabel: "Crude/Product", deadweight: "105,946 MT", built: 2004, charterer: "Utility Operations", delivered: "-", redelivery: "-", status: "At Khor Fakkan, off hired for pre dry dock work.", location: "Khor Fakkan, UAE", lat: 25.3636, lng: 56.3675, active: false },
-            { id: 20, name: "Al Mahfoza", imo: "9271365", type: "crude", typeLabel: "Crude/Product", deadweight: "105,433 MT", built: 2003, charterer: "Utility Operations", delivered: "-", redelivery: "-", status: "Sailing in ballast to Fujairah enroute to Ras Tanurah.", location: "Gulf of Oman", lat: 24.5432, lng: 57.8765, active: true },
-            { id: 21, name: "Daffodil", imo: "9239927", type: "crude", typeLabel: "Crude/Product", deadweight: "105,357 MT", built: 2002, charterer: "Utility Operations", delivered: "-", redelivery: "-", status: "Discharging cargo of ALCO at Shoaiba PP.", location: "Shoaiba, Saudi Arabia", lat: 20.6894, lng: 39.5087, active: true },
-            { id: 22, name: "Desert Rose", imo: "9239939", type: "crude", typeLabel: "Crude/Product", deadweight: "105,328 MT", built: 2002, charterer: "Utility Operations", delivered: "-", redelivery: "-", status: "Drifting off Yanbu waiting to berth / load ALCO cargo.", location: "Yanbu, Saudi Arabia", lat: 24.0894, lng: 38.0634, active: true },
-            { id: 23, name: "Encelia", imo: "9240172", type: "crude", typeLabel: "Crude/Product", deadweight: "109,250 MT", built: 2003, charterer: "Utility Operations", delivered: "-", redelivery: "-", status: "Drifting / waiting to load next cargo for Utility.", location: "Saudi Arabia", lat: 26.2345, lng: 50.1234, active: true }
+        // Fleet Data
+        var vessels = [
+            { id: 1, name: "Israa", imo: "9325960", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,319 MT", built: 2011, charterer: "PETCO, Malaysia", delivered: "25/12/2022", redelivery: "24/06/2026", status: "Completed discharge at Prai, Malaysia. Sailing to Singapore.", location: "Prai, Malaysia", lat: 5.3841, lng: 100.3938, active: true },
+            { id: 2, name: "Al Zarandi", imo: "9325958", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,303 MT", built: 2010, charterer: "Bihar Bunkers", delivered: "29/02/2020", redelivery: "Yearly", status: "At Jeddah for bunkering.", location: "Jeddah, Saudi Arabia", lat: 21.5433, lng: 39.1728, active: true },
+            { id: 3, name: "Galbot", imo: "9555084", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,281 MT", built: 2010, charterer: "Sacor Bunkers", delivered: "24/10/2023", redelivery: "23/10/2026", status: "At Sines, Portugal for bunkering.", location: "Sines, Portugal", lat: 37.9500, lng: -8.8667, active: true },
+            { id: 4, name: "Al Safa", imo: "9501643", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,324 MT", built: 2009, charterer: "Amsol", delivered: "20/01/2020", redelivery: "18/01/2026", status: "At Durban for bunkering.", location: "Durban, South Africa", lat: -29.8587, lng: 31.0218, active: true },
+            { id: 5, name: "Andes", imo: "9411719", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,364 MT", built: 2007, charterer: "International Supply", delivered: "31/12/2019", redelivery: "Yearly", status: "At Fujairah for bunkering.", location: "Fujairah, UAE", lat: 25.1288, lng: 56.3264, active: true },
+            { id: 6, name: "Miraj", imo: "9394741", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,450 MT", built: 2007, charterer: "Waad Energy", delivered: "25/02/2024", redelivery: "Yearly", status: "At Jeddah for bunkering.", location: "Jeddah, Saudi Arabia", lat: 21.5169, lng: 39.1489, active: true },
+            { id: 7, name: "Daisy", imo: "9516545", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,280 MT", built: 2009, charterer: "International Supply", delivered: "14/11/2023", redelivery: "Yearly", status: "Pre dry dock repairs at Khor Fakkan.", location: "Khor Fakkan, UAE", lat: 25.3436, lng: 56.3475, active: false },
+            { id: 8, name: "Lilac", imo: "9411721", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,373 MT", built: 2009, charterer: "International Supply", delivered: "-", redelivery: "-", status: "At Fujairah (replacement for Daisy).", location: "Fujairah, UAE", lat: 25.1488, lng: 56.3464, active: true },
+            { id: 9, name: "Al Barrah", imo: "9332030", type: "lpg", typeLabel: "LPG Carrier", dwt: "27,710 MT", built: 2007, charterer: "ENOC, UAE", delivered: "01/04/2024", redelivery: "31/03/2027", status: "At Jebel Ali, waiting to discharge.", location: "Jebel Ali, UAE", lat: 25.0066, lng: 55.0580, active: true },
+            { id: 10, name: "Al Jabirah", imo: "9332042", type: "lpg", typeLabel: "LPG Carrier", dwt: "27,710 MT", built: 2007, charterer: "Indian Oil Corp", delivered: "15/11/2025", redelivery: "14/11/2026", status: "Sailing to Kandla with propane/butane.", location: "Arabian Sea", lat: 21.8243, lng: 65.4567, active: true },
+            { id: 11, name: "Al Shaffiah", imo: "9358620", type: "chemical", typeLabel: "Chemical", dwt: "19,907 MT", built: 2006, charterer: "Aramco Trading", delivered: "30/04/2024", redelivery: "29/04/2026", status: "Sailing to Jubail.", location: "Indian Ocean", lat: 15.5432, lng: 68.2341, active: true },
+            { id: 12, name: "Al Mahboobah", imo: "9340415", type: "chemical", typeLabel: "Chemical", dwt: "19,982 MT", built: 2006, charterer: "Aramco Trading", delivered: "02/05/2024", redelivery: "01/05/2026", status: "At Jubail, waiting to load.", location: "Jubail, Saudi Arabia", lat: 27.0046, lng: 49.6588, active: true },
+            { id: 13, name: "Dianella", imo: "9901087", type: "chemical", typeLabel: "Product/Chemical", dwt: "49,803 MT", built: 2021, charterer: "PETCO", delivered: "21/01/2024", redelivery: "15/01/2026", status: "Discharging at Shenao, Taiwan.", location: "Shenao, Taiwan", lat: 25.1276, lng: 121.8167, active: true },
+            { id: 14, name: "Liatris", imo: "9901099", type: "chemical", typeLabel: "Product/Chemical", dwt: "49,803 MT", built: 2021, charterer: "ISTC (Sabic)", delivered: "06/05/2023", redelivery: "05/05/2026", status: "Sailing to Singapore for bunkers.", location: "South China Sea", lat: 18.4523, lng: 114.3421, active: true },
+            { id: 15, name: "Angelonia", imo: "9901051", type: "tanker", typeLabel: "Oil Tanker", dwt: "110,521 MT", built: 2021, charterer: "Aramco Trading", delivered: "13/01/2024", redelivery: "12/01/2027", status: "At Suez STS Area, discharging.", location: "Suez, Egypt", lat: 29.9668, lng: 32.5498, active: true },
+            { id: 16, name: "Lunaria", imo: "9901063", type: "tanker", typeLabel: "Oil Tanker", dwt: "110,521 MT", built: 2021, charterer: "Aramco Trading", delivered: "25/01/2024", redelivery: "24/01/2027", status: "Sailing to Venice with gas oil.", location: "Mediterranean", lat: 38.4521, lng: 16.3456, active: true },
+            { id: 17, name: "Bouvardia", imo: "9935595", type: "tanker", typeLabel: "Oil Tanker", dwt: "111,075 MT", built: 2022, charterer: "Aramco Trading", delivered: "19/03/2025", redelivery: "18/03/2028", status: "At Antwerp, loading VLSFO.", location: "Antwerp, Belgium", lat: 51.2194, lng: 4.4025, active: true },
+            { id: 18, name: "Ixora", imo: "9940459", type: "tanker", typeLabel: "Oil Tanker", dwt: "111,006 MT", built: 2022, charterer: "Aramco Trading", delivered: "09/03/2025", redelivery: "08/03/2028", status: "Sailing to Tanjung Buras with HFO.", location: "South China Sea", lat: 7.4523, lng: 107.3421, active: true },
+            { id: 19, name: "Al Habibah", imo: "9290294", type: "crude", typeLabel: "Crude/Product", dwt: "105,946 MT", built: 2004, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Pre dry dock at Khor Fakkan.", location: "Khor Fakkan, UAE", lat: 25.3636, lng: 56.3675, active: false },
+            { id: 20, name: "Al Mahfoza", imo: "9271365", type: "crude", typeLabel: "Crude/Product", dwt: "105,433 MT", built: 2003, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Sailing to Fujairah.", location: "Gulf of Oman", lat: 24.5432, lng: 57.8765, active: true },
+            { id: 21, name: "Daffodil", imo: "9239927", type: "crude", typeLabel: "Crude/Product", dwt: "105,357 MT", built: 2002, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Discharging at Shoaiba.", location: "Shoaiba, Saudi Arabia", lat: 20.6894, lng: 39.5087, active: true },
+            { id: 22, name: "Desert Rose", imo: "9239939", type: "crude", typeLabel: "Crude/Product", dwt: "105,328 MT", built: 2002, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Off Yanbu, waiting to load.", location: "Yanbu, Saudi Arabia", lat: 24.0894, lng: 38.0634, active: true },
+            { id: 23, name: "Encelia", imo: "9240172", type: "crude", typeLabel: "Crude/Product", dwt: "109,250 MT", built: 2003, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Waiting to load utility cargo.", location: "Saudi Arabia", lat: 26.2345, lng: 50.1234, active: true }
         ];
 
-        let map, markers = {}, selectedVessel = null, sheetExpanded = false;
+        var map = null;
+        var markers = {};
+        var selectedId = null;
+        var panelOpen = false;
+
+        // Load Leaflet dynamically with fallbacks
+        function loadLeaflet() {
+            var cdns = [
+                'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
+                'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+                'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js'
+            ];
+            
+            tryLoadScript(cdns, 0);
+        }
+
+        function tryLoadScript(cdns, index) {
+            if (index >= cdns.length) {
+                showError();
+                return;
+            }
+
+            var script = document.createElement('script');
+            script.src = cdns[index];
+            script.onload = function() {
+                if (typeof L !== 'undefined') {
+                    initApp();
+                } else {
+                    tryLoadScript(cdns, index + 1);
+                }
+            };
+            script.onerror = function() {
+                tryLoadScript(cdns, index + 1);
+            };
+            document.body.appendChild(script);
+        }
+
+        function showError() {
+            document.getElementById('mapLoading').innerHTML = 
+                '<p class="error">Could not load map library.</p>' +
+                '<button onclick="location.reload()">Retry</button>';
+        }
+
+        function initApp() {
+            initMap();
+            renderList(vessels);
+            setupEvents();
+        }
 
         function initMap() {
-            map = L.map('map', { center: [20, 55], zoom: 3, zoomControl: true, attributionControl: false });
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
-            fleetData.forEach(v => addMarker(v));
-            map.on('click', () => { if (selectedVessel) deselect(); });
-        }
+            try {
+                map = L.map('map', {
+                    center: [22, 50],
+                    zoom: 3,
+                    zoomControl: true,
+                    attributionControl: false
+                });
 
-        function createIcon(v, active = false) {
-            return L.divIcon({
-                html: `<div class="vessel-marker-icon ${v.type} ${active ? 'active' : ''}">${v.type === 'lpg-carrier' ? '⛽' : '🚢'}</div>`,
-                className: '',
-                iconSize: [32, 32],
-                iconAnchor: [16, 16]
-            });
-        }
+                // Try multiple tile sources
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(map);
 
-        function addMarker(v) {
-            const m = L.marker([v.lat, v.lng], { icon: createIcon(v) }).addTo(map);
-            m.on('click', e => { L.DomEvent.stopPropagation(e); selectVessel(v); });
-            markers[v.id] = m;
-        }
+                vessels.forEach(function(v) {
+                    var icon = L.divIcon({
+                        html: '<div class="marker ' + v.type + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                        className: '',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    });
 
-        function selectVessel(v) {
-            if (selectedVessel) {
-                markers[selectedVessel.id].setIcon(createIcon(selectedVessel, false));
-                document.querySelector(`.vessel-card[data-id="${selectedVessel.id}"]`)?.classList.remove('active');
+                    var marker = L.marker([v.lat, v.lng], { icon: icon }).addTo(map);
+                    marker.on('click', function() { selectVessel(v.id); });
+                    markers[v.id] = marker;
+                });
+
+                document.getElementById('mapLoading').classList.add('hidden');
+                map.on('click', function() { if (selectedId) deselectVessel(); });
+
+            } catch (e) {
+                showError();
             }
-            selectedVessel = v;
-            markers[v.id].setIcon(createIcon(v, true));
-            document.querySelector(`.vessel-card[data-id="${v.id}"]`)?.classList.add('active');
-            map.setView([v.lat, v.lng], 6, { animate: true });
-            openDetail(v);
-            if (window.innerWidth < 769 && sheetExpanded) toggleBottomSheet();
         }
 
-        function deselect() {
-            if (selectedVessel) {
-                markers[selectedVessel.id].setIcon(createIcon(selectedVessel, false));
-                document.querySelector(`.vessel-card[data-id="${selectedVessel.id}"]`)?.classList.remove('active');
-                selectedVessel = null;
+        function selectVessel(id) {
+            if (selectedId) {
+                var pv = vessels.find(function(v) { return v.id === selectedId; });
+                if (pv && markers[selectedId]) {
+                    markers[selectedId].setIcon(L.divIcon({
+                        html: '<div class="marker ' + pv.type + '">' + (pv.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                        className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+                    }));
+                }
+                var pc = document.querySelector('.vessel-card.selected');
+                if (pc) pc.classList.remove('selected');
             }
+
+            selectedId = id;
+            var v = vessels.find(function(x) { return x.id === id; });
+            if (!v) return;
+
+            markers[id].setIcon(L.divIcon({
+                html: '<div class="marker ' + v.type + ' selected">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+            }));
+
+            var card = document.querySelector('.vessel-card[data-id="' + id + '"]');
+            if (card) { card.classList.add('selected'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+            map.setView([v.lat, v.lng], 5, { animate: true });
+            showDetail(v);
+
+            if (window.innerWidth < 768 && panelOpen) togglePanel();
+        }
+
+        function deselectVessel() {
+            if (!selectedId) return;
+            var v = vessels.find(function(x) { return x.id === selectedId; });
+            if (v && markers[selectedId]) {
+                markers[selectedId].setIcon(L.divIcon({
+                    html: '<div class="marker ' + v.type + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
+                    className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+                }));
+            }
+            var pc = document.querySelector('.vessel-card.selected');
+            if (pc) pc.classList.remove('selected');
+            selectedId = null;
             closeDetail();
         }
 
-        function toggleBottomSheet() {
-            sheetExpanded = !sheetExpanded;
-            document.getElementById('bottomSheet').classList.toggle('expanded', sheetExpanded);
-            document.querySelector('.bottom-sheet-overlay').classList.toggle('active', sheetExpanded);
-        }
-
-        function openDetail(v) {
+        function showDetail(v) {
             document.getElementById('detailTitle').textContent = v.name;
-            document.getElementById('detailSubtitle').textContent = `IMO: ${v.imo}`;
-            const sc = v.active ? 'active' : 'maintenance';
-            const st = v.active ? 'Active' : 'Maintenance';
-            document.getElementById('detailBody').innerHTML = `
-                <div class="detail-section">
-                    <div class="detail-section-title">Vessel Information</div>
-                    <div class="detail-grid">
-                        <div class="detail-item"><div class="detail-item-label">Type</div><div class="detail-item-value">${v.typeLabel}</div></div>
-                        <div class="detail-item"><div class="detail-item-label">Status</div><div class="detail-item-value"><span class="popup-status ${sc}"><span style="width:6px;height:6px;background:currentColor;border-radius:50%;display:inline-block"></span> ${st}</span></div></div>
-                        <div class="detail-item"><div class="detail-item-label">Deadweight</div><div class="detail-item-value mono">${v.deadweight}</div></div>
-                        <div class="detail-item"><div class="detail-item-label">Built</div><div class="detail-item-value mono">${v.built}</div></div>
-                        <div class="detail-item detail-full"><div class="detail-item-label">Location</div><div class="detail-item-value">${v.location}</div></div>
-                        <div class="detail-item"><div class="detail-item-label">Lat</div><div class="detail-item-value mono">${v.lat.toFixed(4)}°</div></div>
-                        <div class="detail-item"><div class="detail-item-label">Lng</div><div class="detail-item-value mono">${v.lng.toFixed(4)}°</div></div>
-                    </div>
-                </div>
-                <div class="detail-section">
-                    <div class="detail-section-title">Charter Info</div>
-                    <div class="charter-info">
-                        <div class="charter-company">${v.charterer}</div>
-                        <div class="charter-dates">
-                            <div><div class="charter-date-label">Delivered</div><div class="charter-date-value">${v.delivered}</div></div>
-                            <div><div class="charter-date-label">Redelivery</div><div class="charter-date-value">${v.redelivery}</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="detail-section">
-                    <div class="detail-section-title">Current Status</div>
-                    <div class="status-text">${v.status}</div>
-                </div>`;
-            document.getElementById('detailModal').classList.add('active');
-            document.getElementById('detailOverlay').classList.add('active');
+            document.getElementById('detailImo').textContent = 'IMO: ' + v.imo;
+            var sc = v.active ? 'active' : 'maintenance';
+            var st = v.active ? 'Active' : 'Maintenance';
+
+            document.getElementById('detailBody').innerHTML = 
+                '<div class="detail-section"><div class="detail-section-title">Vessel Information</div><div class="detail-grid">' +
+                '<div class="detail-item"><div class="detail-label">Type</div><div class="detail-value">' + v.typeLabel + '</div></div>' +
+                '<div class="detail-item"><div class="detail-label">Status</div><div class="detail-value"><span class="detail-status ' + sc + '"><span class="detail-status-dot"></span>' + st + '</span></div></div>' +
+                '<div class="detail-item"><div class="detail-label">Deadweight</div><div class="detail-value">' + v.dwt + '</div></div>' +
+                '<div class="detail-item"><div class="detail-label">Built</div><div class="detail-value">' + v.built + '</div></div>' +
+                '<div class="detail-item full"><div class="detail-label">Location</div><div class="detail-value">' + v.location + '</div></div>' +
+                '<div class="detail-item"><div class="detail-label">Lat</div><div class="detail-value">' + v.lat.toFixed(4) + '°</div></div>' +
+                '<div class="detail-item"><div class="detail-label">Lng</div><div class="detail-value">' + v.lng.toFixed(4) + '°</div></div>' +
+                '</div></div>' +
+                '<div class="detail-section"><div class="detail-section-title">Charter</div><div class="charter-box">' +
+                '<div class="charter-company">' + v.charterer + '</div>' +
+                '<div class="charter-dates"><div><div class="charter-date-label">Delivered</div><div class="charter-date-value">' + v.delivered + '</div></div>' +
+                '<div><div class="charter-date-label">Redelivery</div><div class="charter-date-value">' + v.redelivery + '</div></div></div></div></div>' +
+                '<div class="detail-section"><div class="detail-section-title">Status</div><div class="status-box">' + v.status + '</div></div>';
+
+            document.getElementById('detailModal').classList.add('visible');
+            document.getElementById('detailOverlay').classList.add('visible');
         }
 
         function closeDetail() {
-            document.getElementById('detailModal').classList.remove('active');
-            document.getElementById('detailOverlay').classList.remove('active');
+            document.getElementById('detailModal').classList.remove('visible');
+            document.getElementById('detailOverlay').classList.remove('visible');
         }
 
-        function centerOnFleet() {
-            map.fitBounds(L.latLngBounds(fleetData.map(v => [v.lat, v.lng])), { padding: [30, 30] });
+        function togglePanel() {
+            panelOpen = !panelOpen;
+            document.getElementById('panel').classList.toggle('open', panelOpen);
+            document.getElementById('panelOverlay').classList.toggle('visible', panelOpen);
         }
 
-        function renderList(vessels) {
-            document.getElementById('vesselList').innerHTML = vessels.map(v => `
-                <div class="vessel-card" data-id="${v.id}" data-type="${v.type}" onclick="selectVessel(fleetData.find(x=>x.id===${v.id}))">
-                    <div class="vessel-card-header">
-                        <div><div class="vessel-name">${v.name}</div><div class="vessel-imo">IMO: ${v.imo}</div></div>
-                        <span class="vessel-type-badge ${v.type}">${v.typeLabel}</span>
-                    </div>
-                    <div class="vessel-location">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        ${v.location}
-                    </div>
-                </div>`).join('');
-            document.querySelector('.vessel-count').textContent = `${vessels.length} Vessels`;
-        }
-
-        document.getElementById('searchInput').addEventListener('input', e => {
-            const q = e.target.value.toLowerCase();
-            renderList(fleetData.filter(v => v.name.toLowerCase().includes(q) || v.imo.includes(q) || v.location.toLowerCase().includes(q) || v.charterer.toLowerCase().includes(q)));
-        });
-
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                const f = this.dataset.filter;
-                renderList(f === 'all' ? fleetData : fleetData.filter(v => v.type === f));
-            });
-        });
-
-        function initApp() { initMap(); renderList(fleetData); }
-
-        setInterval(() => {
+        function centerFleet() {
             if (!map) return;
-            fleetData.forEach(v => {
-                if (v.active && v.status.includes('Sailing')) {
-                    v.lat += (Math.random() - 0.5) * 0.01;
-                    v.lng += (Math.random() - 0.5) * 0.01;
-                    markers[v.id]?.setLatLng([v.lat, v.lng]);
+            var bounds = L.latLngBounds(vessels.map(function(v) { return [v.lat, v.lng]; }));
+            map.fitBounds(bounds, { padding: [30, 30] });
+        }
+
+        function renderList(list) {
+            var html = list.map(function(v) {
+                return '<div class="vessel-card ' + v.type + (v.id === selectedId ? ' selected' : '') + '" data-id="' + v.id + '" onclick="selectVessel(' + v.id + ')">' +
+                    '<div class="vessel-header"><div><div class="vessel-name">' + v.name + '</div><div class="vessel-imo">IMO: ' + v.imo + '</div></div>' +
+                    '<span class="vessel-badge ' + v.type + '">' + v.typeLabel + '</span></div>' +
+                    '<div class="vessel-location">📍 ' + v.location + '</div></div>';
+            }).join('');
+            document.getElementById('vesselList').innerHTML = html;
+            document.getElementById('vesselCount').textContent = list.length + ' Vessels';
+        }
+
+        function setupEvents() {
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                var q = e.target.value.toLowerCase();
+                var filtered = vessels.filter(function(v) {
+                    return v.name.toLowerCase().indexOf(q) > -1 || v.imo.indexOf(q) > -1 || v.location.toLowerCase().indexOf(q) > -1;
+                });
+                renderList(filtered);
+            });
+
+            var filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    var f = this.getAttribute('data-filter');
+                    var filtered = f === 'all' ? vessels : vessels.filter(function(v) { return v.type === f; });
+                    renderList(filtered);
+                });
+            });
+        }
+
+        // Start loading
+        loadLeaflet();
+
+        // Simulate movement
+        setInterval(function() {
+            if (!map) return;
+            vessels.forEach(function(v) {
+                if (v.active && v.status.toLowerCase().indexOf('sailing') > -1) {
+                    v.lat += (Math.random() - 0.5) * 0.008;
+                    v.lng += (Math.random() - 0.5) * 0.008;
+                    if (markers[v.id]) markers[v.id].setLatLng([v.lat, v.lng]);
                 }
             });
         }, 5000);
     </script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" onload="initApp()"></script>
 </body>
 </html>
