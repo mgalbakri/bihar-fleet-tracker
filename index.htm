@@ -11,357 +11,101 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --border: #475569;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --amber: #f59e0b;
-            --amber-light: #fbbf24;
-            --teal: #14b8a6;
-            --blue: #3b82f6;
-            --red: #ef4444;
-            --green: #22c55e;
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155;
+            --border: #475569; --text-primary: #f8fafc; --text-secondary: #94a3b8; --text-muted: #64748b;
+            --amber: #f59e0b; --amber-light: #fbbf24; --teal: #14b8a6; --blue: #3b82f6;
+            --red: #ef4444; --green: #22c55e; --purple: #a855f7;
+            --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
             --header-height: 64px;
         }
+        html, body { height: 100%; overflow: hidden; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-        }
-
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: calc(var(--header-height) + var(--safe-top));
-            padding-top: var(--safe-top);
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-left: 16px;
-            padding-right: 16px;
-            z-index: 1000;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            width: 42px; height: 42px;
-            background: linear-gradient(135deg, var(--amber), #d97706);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-
+        .header { position: fixed; top: 0; left: 0; right: 0; height: calc(var(--header-height) + var(--safe-top)); padding-top: var(--safe-top); background: var(--bg-secondary); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding-left: 16px; padding-right: 16px; z-index: 1000; }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--amber), #d97706); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
         .logo-text h1 { font-size: 18px; font-weight: 700; }
         .logo-text p { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .header-btn { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 11px; font-weight: 500; cursor: pointer; display: none; align-items: center; gap: 6px; position: relative; }
+        .header-btn:hover { background: var(--border); }
+        .header-btn .alert-badge { position: absolute; top: -6px; right: -6px; background: var(--red); color: white; font-size: 9px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+        .live-indicator { display: flex; align-items: center; gap: 8px; background: var(--bg-tertiary); padding: 6px 12px; border-radius: 20px; font-size: 10px; }
+        .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+        .live-time { color: var(--text-muted); font-family: monospace; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        .header-right { display: flex; align-items: center; gap: 16px; }
+        .stats-bar { display: none; position: fixed; top: calc(var(--header-height) + var(--safe-top)); left: 0; right: 0; background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 10px 20px; z-index: 999; gap: 12px; overflow-x: auto; }
+        .stats-bar::-webkit-scrollbar { display: none; }
+        .stat-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; min-width: 100px; flex-shrink: 0; }
+        .stat-card.highlight { border-color: var(--amber); background: rgba(245,158,11,0.05); }
+        .stat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+        .stat-value { font-size: 15px; font-weight: 700; display: flex; align-items: baseline; gap: 4px; }
+        .stat-value.green { color: var(--green); } .stat-value.amber { color: var(--amber); } .stat-value.blue { color: var(--blue); } .stat-value.red { color: var(--red); }
+        .stat-trend { font-size: 9px; font-weight: 600; }
+        .stat-trend.up { color: var(--green); } .stat-trend.down { color: var(--red); }
+        .stat-sub { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+        .stat-divider { width: 1px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
 
-        .stats { display: none; gap: 24px; }
-        .stat { text-align: center; }
-        .stat-value { font-size: 20px; font-weight: 700; color: var(--amber-light); }
-        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .app { display: flex; flex-direction: column; height: 100%; padding-top: calc(var(--header-height) + var(--safe-top)); }
+        .map-wrapper { flex: 1; position: relative; min-height: 0; }
+        #map { width: 100%; height: 100%; background: var(--bg-primary); }
+        .leaflet-container { background: #0f172a !important; }
+        .leaflet-control-zoom { border: none !important; }
+        .leaflet-control-zoom a { background: #1e293b !important; color: #f8fafc !important; border: 1px solid #475569 !important; width: 36px !important; height: 36px !important; line-height: 36px !important; }
 
-        .live-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--bg-tertiary);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--green);
-            text-transform: uppercase;
-        }
-
-        .live-dot {
-            width: 8px; height: 8px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        /* Main Layout */
-        .app {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            padding-top: calc(var(--header-height) + var(--safe-top));
-        }
-
-        /* Map */
-        .map-wrapper {
-            flex: 1;
-            position: relative;
-            min-height: 0;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-            background: var(--bg-primary);
-        }
-
-        /* Leaflet Overrides */
-        .leaflet-container { background: #0f172a !important; font-family: 'Inter', sans-serif !important; }
-        .leaflet-control-zoom { border: none !important; box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important; }
-        .leaflet-control-zoom a { 
-            background: #1e293b !important; 
-            color: #f8fafc !important; 
-            border: 1px solid #475569 !important; 
-            width: 36px !important; 
-            height: 36px !important; 
-            line-height: 36px !important; 
-        }
-        .leaflet-control-zoom a:hover { background: #334155 !important; }
-        .leaflet-popup-content-wrapper { background: #1e293b !important; color: #f8fafc !important; border-radius: 12px !important; }
-        .leaflet-popup-tip { background: #1e293b !important; }
-
-        /* Loading */
-        .map-loading {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
-            gap: 16px;
-        }
+        .map-loading { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 500; gap: 16px; }
         .map-loading.hidden { display: none; }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid var(--bg-tertiary);
-            border-top-color: var(--amber);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--bg-tertiary); border-top-color: var(--amber); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .map-loading p { color: var(--text-secondary); font-size: 14px; }
-        .map-loading .error { color: var(--red); }
-        .map-loading button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: var(--amber);
-            border: none;
-            border-radius: 8px;
-            color: #000;
-            font-weight: 600;
-            cursor: pointer;
-        }
 
-        /* Map Controls */
-        .map-controls {
-            position: absolute;
-            top: 12px; right: 12px;
-            z-index: 400;
-        }
-
-        .map-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 14px;
-            color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-        .map-btn:active { background: var(--bg-tertiary); }
-
-        /* Legend */
-        .legend {
-            position: absolute;
-            bottom: 12px; left: 12px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 14px;
-            z-index: 400;
-            display: flex;
-            gap: 12px;
-        }
+        .legend { position: absolute; bottom: 12px; left: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; z-index: 400; display: flex; gap: 12px; }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); }
         .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .legend-dot.tanker { background: var(--amber); }
-        .legend-dot.lpg { background: var(--teal); }
-        .legend-dot.chemical { background: var(--blue); }
-        .legend-dot.crude { background: var(--red); }
+        .legend-dot.tanker { background: var(--amber); } .legend-dot.lpg { background: var(--teal); } .legend-dot.chemical { background: var(--blue); } .legend-dot.crude { background: var(--red); }
 
-        /* Markers */
-        .marker {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            pointer-events: auto !important;
-        }
+        .marker { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 2px solid rgba(255,255,255,0.3); cursor: pointer; transition: transform 0.2s; position: relative; }
         .marker:hover { transform: scale(1.15); }
         .marker.selected { transform: scale(1.25); border-color: #fff; box-shadow: 0 0 20px rgba(245,158,11,0.6); }
         .marker.tanker { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .marker.lpg { background: linear-gradient(135deg, #14b8a6, #0d9488); }
         .marker.chemical { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .marker.crude { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .marker.maintenance { 
-            background: linear-gradient(135deg, #f59e0b, #92400e) !important; 
-            border: 3px dashed #fbbf24 !important;
-        }
-        .marker.maintenance::after {
-            content: '🔧';
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 14px;
-            background: #1e293b;
-            border-radius: 50%;
-            padding: 2px;
-        }
-        .marker.maintenance.selected {
-            border-color: #fff !important;
-            box-shadow: 0 0 20px rgba(245,158,11,0.8);
-        }
+        .marker.maintenance { background: linear-gradient(135deg, #f59e0b, #92400e) !important; border: 3px dashed #fbbf24 !important; }
+        .marker.maintenance::after { content: '🔧'; position: absolute; top: -10px; right: -10px; font-size: 14px; background: #1e293b; border-radius: 50%; padding: 2px; }
 
-        /* Panel */
-        .panel-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 600;
-        }
+        .panel-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 600; }
         .panel-overlay.visible { display: block; }
-
-        .panel {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: var(--bg-secondary);
-            border-radius: 20px 20px 0 0;
-            z-index: 700;
-            max-height: calc(80% - var(--safe-top));
-            display: flex;
-            flex-direction: column;
-            transform: translateY(calc(100% - 70px));
-            transition: transform 0.3s ease-out;
-            padding-bottom: var(--safe-bottom);
-        }
+        .panel { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-secondary); border-radius: 20px 20px 0 0; z-index: 700; max-height: calc(80% - var(--safe-top)); display: flex; flex-direction: column; transform: translateY(calc(100% - 70px)); transition: transform 0.3s ease-out; padding-bottom: var(--safe-bottom); }
         .panel.open { transform: translateY(0); }
-
         .panel-handle { padding: 12px; display: flex; justify-content: center; cursor: pointer; }
         .panel-handle span { width: 40px; height: 5px; background: var(--bg-tertiary); border-radius: 3px; }
-
         .panel-header { padding: 0 16px 12px; border-bottom: 1px solid var(--border); }
         .panel-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .panel-title h2 { font-size: 16px; font-weight: 600; }
         .vessel-count { background: var(--bg-tertiary); padding: 4px 10px; border-radius: 12px; font-size: 12px; color: var(--text-secondary); }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 16px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 16px;
-            font-family: inherit;
-            outline: none;
-        }
+        .search-input { width: 100%; padding: 12px 16px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary); font-size: 16px; font-family: inherit; outline: none; }
         .search-input:focus { border-color: var(--amber); }
-        .search-input::placeholder { color: var(--text-muted); }
-
         .filters { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn {
-            flex-shrink: 0;
-            padding: 8px 14px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-        }
+        .filter-btn { flex-shrink: 0; padding: 8px 14px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; }
         .filter-btn.active { background: var(--amber); border-color: var(--amber); color: #000; }
 
-        /* Vessel List */
-        .vessel-list { flex: 1; overflow-y: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
-
-        .vessel-card {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            position: relative;
-            padding-left: 18px;
-        }
-        .vessel-card::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 4px;
-            border-radius: 12px 0 0 12px;
-        }
+        .vessel-list { flex: 1; overflow-y: auto; padding: 12px; }
+        .vessel-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; cursor: pointer; position: relative; padding-left: 18px; }
+        .vessel-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 12px 0 0 12px; }
         .vessel-card.tanker::before { background: var(--amber); }
         .vessel-card.lpg::before { background: var(--teal); }
         .vessel-card.chemical::before { background: var(--blue); }
         .vessel-card.crude::before { background: var(--red); }
-        .vessel-card:active { background: var(--bg-secondary); }
         .vessel-card.selected { border-color: var(--amber); background: var(--bg-secondary); }
         .vessel-card.maintenance { border-left: 4px dashed var(--amber) !important; }
         .vessel-card.maintenance::before { display: none; }
-        .maintenance-tag { 
-            display: inline-block;
-            background: rgba(245,158,11,0.2); 
-            color: var(--amber-light); 
-            font-size: 9px; 
-            font-weight: 600;
-            padding: 2px 6px; 
-            border-radius: 4px; 
-            margin-left: 8px;
-            text-transform: uppercase;
-        }
-
-        .vessel-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .vessel-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
         .vessel-name { font-size: 15px; font-weight: 600; }
         .vessel-imo { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
         .vessel-badge { font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
@@ -369,167 +113,197 @@
         .vessel-badge.lpg { background: rgba(20,184,166,0.15); color: var(--teal); }
         .vessel-badge.chemical { background: rgba(59,130,246,0.15); color: var(--blue); }
         .vessel-badge.crude { background: rgba(239,68,68,0.15); color: var(--red); }
-        .vessel-location { font-size: 13px; color: var(--text-secondary); }
+        .vessel-location { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+        .vessel-stats { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .class-badge { font-size: 9px; font-weight: 600; padding: 3px 6px; border-radius: 4px; background: rgba(168,85,247,0.15); color: var(--purple); }
+        .psc-badge { font-size: 9px; font-weight: 600; padding: 3px 6px; border-radius: 4px; }
+        .psc-badge.good { background: rgba(34,197,94,0.15); color: var(--green); }
+        .psc-badge.warn { background: rgba(245,158,11,0.15); color: var(--amber); }
+        .maintenance-tag { display: inline-block; background: rgba(245,158,11,0.2); color: var(--amber-light); font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+        .value-badge { font-size: 10px; font-weight: 600; color: var(--green); }
 
-        /* Detail Modal */
-        .detail-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 800;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
+        .detail-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 800; opacity: 0; visibility: hidden; transition: all 0.3s; }
         .detail-overlay.visible { opacity: 1; visibility: visible; }
-
-        .detail-modal {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: var(--bg-secondary);
-            border-radius: 20px 20px 0 0;
-            z-index: 900;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(100%);
-            transition: transform 0.3s ease-out;
-            padding-bottom: var(--safe-bottom);
-        }
+        .detail-modal { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-secondary); border-radius: 20px 20px 0 0; z-index: 1000; max-height: 92vh; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s ease-out; padding-bottom: var(--safe-bottom); }
         .detail-modal.visible { transform: translateY(0); }
-
         .detail-handle { padding: 12px; display: flex; justify-content: center; }
         .detail-handle span { width: 40px; height: 5px; background: var(--bg-tertiary); border-radius: 3px; }
-
-        .detail-header {
-            padding: 0 20px 16px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
+        .detail-header { padding: 0 20px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
         .detail-title { font-size: 22px; font-weight: 700; }
-        .detail-imo { font-size: 14px; color: var(--amber); margin-top: 4px; }
-        .detail-close {
-            width: 36px; height: 36px;
-            background: var(--bg-tertiary);
-            border: none;
-            border-radius: 10px;
-            color: var(--text-secondary);
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .detail-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+        .detail-imo { font-size: 13px; color: var(--amber); margin-top: 4px; font-family: monospace; }
+        .detail-class { font-size: 11px; color: var(--purple); margin-top: 2px; }
+        .detail-close { width: 36px; height: 36px; background: var(--bg-tertiary); border: none; border-radius: 10px; color: var(--text-secondary); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-        .detail-body { padding: 20px; overflow-y: auto; flex: 1; }
+        .detail-tabs { display: flex; gap: 4px; padding: 12px 16px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .detail-tabs::-webkit-scrollbar { display: none; }
+        .detail-tab { flex-shrink: 0; padding: 8px 14px; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; }
+        .detail-tab.active { background: var(--amber); border-color: var(--amber); color: #000; }
+
+        .detail-body { padding: 16px; overflow-y: auto; flex: 1; }
         .detail-section { margin-bottom: 20px; }
         .detail-section:last-child { margin-bottom: 0; }
-        .detail-section-title {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-        }
+        .detail-section-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
         .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .detail-item { background: var(--bg-primary); border-radius: 10px; padding: 12px; }
         .detail-item.full { grid-column: span 2; }
         .detail-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
         .detail-value { font-size: 14px; font-weight: 500; }
-        .detail-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-        .detail-status.active { background: rgba(34,197,94,0.15); color: var(--green); }
-        .detail-status.maintenance { background: rgba(245,158,11,0.15); color: var(--amber); }
-        .detail-status-dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
-        .charter-box { background: var(--bg-primary); border-radius: 10px; padding: 14px; }
-        .charter-company { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
-        .charter-dates { display: flex; gap: 20px; }
-        .charter-date-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
-        .charter-date-value { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-        .status-box { background: var(--bg-primary); border-radius: 10px; padding: 14px; font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
+        .detail-value.green { color: var(--green); } .detail-value.amber { color: var(--amber); } .detail-value.red { color: var(--red); } .detail-value.blue { color: var(--blue); } .detail-value.purple { color: var(--purple); }
 
-        /* Desktop */
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .status-badge.active { background: rgba(34,197,94,0.15); color: var(--green); }
+        .status-badge.maintenance { background: rgba(245,158,11,0.15); color: var(--amber); }
+        .status-badge-dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
+
+        .valuation-card { background: linear-gradient(135deg, var(--bg-primary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+        .valuation-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+        .valuation-amount { font-size: 26px; font-weight: 700; }
+        .valuation-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+        .valuation-bar { height: 8px; background: var(--bg-tertiary); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .valuation-fill { height: 100%; border-radius: 4px; }
+        .valuation-fill.scrap { background: var(--red); } .valuation-fill.market { background: var(--amber); } .valuation-fill.replacement { background: var(--green); }
+
+        .weather-card { background: linear-gradient(135deg, var(--bg-primary), var(--bg-tertiary)); border-radius: 12px; padding: 16px; }
+        .weather-main { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+        .weather-icon { font-size: 48px; }
+        .weather-temp { font-size: 32px; font-weight: 700; }
+        .weather-desc { font-size: 14px; color: var(--text-secondary); }
+        .weather-details { display: flex; gap: 20px; }
+        .weather-detail { font-size: 12px; color: var(--text-muted); }
+        .weather-detail span { color: var(--text-secondary); font-weight: 500; }
+
+        .ais-card { background: var(--bg-primary); border-radius: 10px; padding: 14px; }
+        .ais-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .ais-row:last-child { border-bottom: none; }
+        .ais-label { font-size: 12px; color: var(--text-muted); }
+        .ais-value { font-size: 13px; font-weight: 500; }
+
+        .psc-table { width: 100%; border-collapse: collapse; }
+        .psc-table th, .psc-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 12px; }
+        .psc-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 10px; background: var(--bg-primary); }
+        .deficiency-count { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+        .deficiency-count.zero { background: rgba(34,197,94,0.15); color: var(--green); }
+        .deficiency-count.low { background: rgba(245,158,11,0.15); color: var(--amber); }
+        .deficiency-count.high { background: rgba(239,68,68,0.15); color: var(--red); }
+        .psc-summary { display: flex; gap: 16px; margin-top: 16px; padding: 12px; background: var(--bg-primary); border-radius: 8px; }
+        .psc-summary-item { text-align: center; }
+        .psc-summary-value { font-size: 18px; font-weight: 700; }
+        .psc-summary-label { font-size: 10px; color: var(--text-muted); }
+
+        .port-call { display: flex; gap: 12px; padding: 14px; background: var(--bg-primary); border-radius: 10px; margin-bottom: 10px; }
+        .port-icon { width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .port-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .port-country { font-size: 12px; color: var(--text-muted); }
+        .port-dates { font-size: 11px; color: var(--text-secondary); margin-top: 6px; display: flex; gap: 16px; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1100; opacity: 0; visibility: hidden; transition: all 0.3s; display: flex; align-items: center; justify-content: center; padding: 16px; }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal { background: var(--bg-secondary); border-radius: 16px; max-width: 1100px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .modal-header .update-time { font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 12px; }
+        .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 900px) { .market-grid { grid-template-columns: 1fr; } }
+        .market-section { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+        .market-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .market-section-title { font-size: 13px; font-weight: 600; }
+        .market-section-source { font-size: 9px; color: var(--text-muted); background: var(--bg-tertiary); padding: 3px 8px; border-radius: 4px; }
+
+        .rate-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .rate-row:last-child { border-bottom: none; }
+        .rate-type { font-size: 12px; color: var(--text-secondary); flex: 1; }
+        .rate-values { display: flex; gap: 16px; align-items: center; }
+        .rate-value { text-align: right; min-width: 70px; }
+        .rate-amount { font-size: 13px; font-weight: 600; }
+        .rate-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
+        .rate-trend { font-size: 10px; margin-left: 4px; }
+        .rate-trend.up { color: var(--green); } .rate-trend.down { color: var(--red); } .rate-trend.flat { color: var(--text-muted); }
+
+        .asset-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .asset-row:last-child { border-bottom: none; }
+        .asset-type { font-size: 12px; color: var(--text-secondary); }
+        .asset-price { font-size: 14px; font-weight: 600; }
+
+        .sp-alert-card { background: var(--bg-tertiary); border-radius: 10px; padding: 14px; margin-bottom: 12px; position: relative; }
+        .sp-alert-card.hot { border: 1px solid var(--red); }
+        .sp-alert-card.new { border: 1px solid var(--green); }
+        .sp-alert-badge { position: absolute; top: 10px; right: 10px; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+        .sp-alert-badge.hot { background: var(--red); color: white; }
+        .sp-alert-badge.new { background: var(--green); color: white; }
+        .sp-vessel-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .sp-vessel-type { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+        .sp-price { font-size: 20px; font-weight: 700; color: var(--green); margin-bottom: 10px; }
+        .sp-details { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-secondary); margin-bottom: 10px; }
+        .sp-match-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .sp-match-tag { font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: 600; background: rgba(34,197,94,0.15); color: var(--green); }
+        .sp-broker { font-size: 10px; color: var(--text-muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+        .fleet-profile { background: var(--bg-tertiary); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+        .fleet-profile-title { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+        .fleet-profile-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .profile-tag { font-size: 10px; padding: 5px 10px; background: var(--bg-primary); border-radius: 6px; color: var(--text-secondary); }
+
+        .yard-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .yard-table th, .yard-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+        .yard-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 10px; background: var(--bg-primary); }
+        .yard-quality { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 600; }
+        .yard-quality.premium { background: rgba(34,197,94,0.15); color: var(--green); }
+        .yard-quality.high { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .price-best { color: var(--green); font-weight: 600; }
+        .slot-available { color: var(--green); font-size: 10px; }
+
         @media (min-width: 768px) {
             .header { padding-left: 24px; padding-right: 24px; }
-            .stats { display: flex; }
-            .app { flex-direction: row; }
+            .header-btn { display: flex; }
+            .stats-bar { display: flex; }
+            .app { flex-direction: row; padding-top: calc(var(--header-height) + var(--safe-top) + 62px); }
             .map-wrapper { flex: 1; order: 2; }
             .panel-overlay { display: none !important; }
-            .panel {
-                position: relative;
-                order: 1;
-                width: 380px;
-                flex-shrink: 0;
-                transform: none;
-                border-radius: 0;
-                max-height: none;
-                border-right: 1px solid var(--border);
-            }
+            .panel { position: relative; order: 1; width: 380px; flex-shrink: 0; transform: none; border-radius: 0; max-height: none; border-right: 1px solid var(--border); }
             .panel-handle { display: none; }
             .panel-header { padding: 20px; }
             .vessel-list { padding: 16px; }
-            .vessel-card:hover { background: var(--bg-secondary); border-color: var(--text-muted); }
-            .map-btn { display: none; }
             .legend { flex-direction: column; gap: 8px; }
             .detail-overlay { display: none !important; }
-            .detail-modal {
-                position: absolute;
-                top: 16px; right: 16px;
-                bottom: auto; left: auto;
-                width: 360px;
-                max-height: calc(100% - 32px);
-                border-radius: 16px;
-                transform: translateX(400px);
-                opacity: 0;
-            }
+            .detail-modal { position: fixed; top: calc(var(--header-height) + var(--safe-top) + 72px); right: 16px; bottom: 16px; left: auto; width: 480px; max-height: none; border-radius: 16px; transform: translateX(520px); opacity: 0; }
             .detail-modal.visible { transform: translateX(0); opacity: 1; }
             .detail-handle { display: none; }
         }
-
-        @media (min-width: 1024px) {
-            .panel { width: 420px; }
-        }
+        @media (min-width: 1200px) { .panel { width: 420px; } .detail-modal { width: 520px; } }
     </style>
-    
-    <!-- Leaflet CSS from CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
 <body>
     <header class="header">
-        <div class="logo">
-            <div class="logo-icon">⚓</div>
-            <div class="logo-text">
-                <h1>BIHAR Fleet</h1>
-                <p>Real-Time Tracking</p>
-            </div>
-        </div>
+        <div class="logo"><div class="logo-icon">⚓</div><div class="logo-text"><h1>BIHAR Fleet</h1><p>Live Tracker</p></div></div>
         <div class="header-right">
-            <div class="stats">
-                <div class="stat"><div class="stat-value">23</div><div class="stat-label">Vessels</div></div>
-                <div class="stat"><div class="stat-value">21</div><div class="stat-label">Active</div></div>
-                <div class="stat"><div class="stat-value">2</div><div class="stat-label">Maintenance</div></div>
-            </div>
-            <div class="live-badge"><div class="live-dot"></div><span>Live</span></div>
+            <button class="header-btn" onclick="openMarketModal()">📈 Market Intel<span class="alert-badge" id="spAlertCount">3</span></button>
+            <button class="header-btn" onclick="openShipyardModal()">🏭 Newbuild</button>
+            <div class="live-indicator"><div class="live-dot"></div><span style="color:var(--green);font-weight:600">LIVE</span><span class="live-time" id="liveTime">--:--:--</span></div>
         </div>
     </header>
+
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-card"><div class="stat-label">Fleet</div><div class="stat-value">23</div><div class="stat-sub">Vessels</div></div>
+        <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value green">21</div></div>
+        <div class="stat-card"><div class="stat-label">Maint</div><div class="stat-value amber">2</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat-card highlight"><div class="stat-label">Scrap $/LDT</div><div class="stat-value amber" id="dashScrap">$540</div><div class="stat-sub">Subcontinent</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat-card"><div class="stat-label">NB 7K Tnk</div><div class="stat-value" id="dashNB1">$28M</div></div>
+        <div class="stat-card"><div class="stat-label">NB LR2</div><div class="stat-value" id="dashNB2">$85M</div></div>
+        <div class="stat-card"><div class="stat-label">NB LPG</div><div class="stat-value" id="dashNB3">$75M</div></div>
+        <div class="stat-card"><div class="stat-label">NB Afra</div><div class="stat-value" id="dashNB4">$80M</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat-card"><div class="stat-label">Fleet Value</div><div class="stat-value green" id="dashFleet">$487M</div></div>
+    </div>
 
     <div class="app">
         <div class="map-wrapper">
             <div id="map"></div>
-            <div class="map-loading" id="mapLoading">
-                <div class="spinner"></div>
-                <p>Loading map...</p>
-            </div>
-            <div class="map-controls">
-                <button class="map-btn" onclick="centerFleet()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                    Center
-                </button>
-            </div>
+            <div class="map-loading" id="mapLoading"><div class="spinner"></div><p>Loading map...</p></div>
             <div class="legend">
                 <div class="legend-item"><div class="legend-dot tanker"></div>Tanker</div>
                 <div class="legend-item"><div class="legend-dot lpg"></div>LPG</div>
@@ -542,18 +316,15 @@
         <div class="panel" id="panel">
             <div class="panel-handle" onclick="togglePanel()"><span></span></div>
             <div class="panel-header">
-                <div class="panel-title">
-                    <h2>Fleet Overview</h2>
-                    <span class="vessel-count" id="vesselCount">23 Vessels</span>
-                </div>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search vessel, IMO, location...">
+                <div class="panel-title"><h2>Fleet Overview</h2><span class="vessel-count" id="vesselCount">23</span></div>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search vessel, IMO...">
                 <div class="filters">
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="tanker">Tankers</button>
                     <button class="filter-btn" data-filter="lpg">LPG</button>
                     <button class="filter-btn" data-filter="chemical">Chemical</button>
                     <button class="filter-btn" data-filter="crude">Crude</button>
-                    <button class="filter-btn" data-filter="maintenance">🔧 Maintenance</button>
+                    <button class="filter-btn" data-filter="maintenance">🔧</button>
                 </div>
             </div>
             <div class="vessel-list" id="vesselList"></div>
@@ -564,279 +335,309 @@
             <div class="detail-handle"><span></span></div>
             <div class="detail-header">
                 <div>
-                    <div class="detail-title" id="detailTitle">Vessel Name</div>
-                    <div class="detail-imo" id="detailImo">IMO: 0000000</div>
+                    <div class="detail-title" id="detailTitle">Vessel</div>
+                    <div class="detail-subtitle" id="detailSubtitle">Type | DWT</div>
+                    <div class="detail-imo" id="detailImo">IMO | MMSI</div>
+                    <div class="detail-class" id="detailClass">Class</div>
                 </div>
                 <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-tabs">
+                <button class="detail-tab active" data-tab="overview">Overview</button>
+                <button class="detail-tab" data-tab="valuation">💰 Valuation</button>
+                <button class="detail-tab" data-tab="ais">📡 AIS</button>
+                <button class="detail-tab" data-tab="psc">🔍 PSC</button>
+                <button class="detail-tab" data-tab="ports">🏭 Ports</button>
+                <button class="detail-tab" data-tab="specs">📋 Specs</button>
             </div>
             <div class="detail-body" id="detailBody"></div>
         </div>
     </div>
 
+    <div class="modal-overlay" id="marketOverlay" onclick="closeMarketModal()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header"><h2>📈 Market Intelligence<span class="update-time" id="marketTime">Updated: --</span></h2><button class="detail-close" onclick="closeMarketModal()">×</button></div>
+            <div class="modal-body" id="marketBody"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="shipyardOverlay" onclick="closeShipyardModal()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header"><h2>🏭 Newbuild Pricing<span class="update-time" id="yardTime">Jan 2025</span></h2><button class="detail-close" onclick="closeShipyardModal()">×</button></div>
+            <div class="modal-body" id="shipyardBody"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
+        // LIVE DATA STORE - Auto-updates every 30 seconds
+        var liveData = {
+            lastUpdate: new Date(),
+            scrap: { price: 540, trend: 'down', change: -2 },
+            newbuild: { small: 28, lr2: 85, lpg: 75, aframax: 80 },
+            charterRates: [
+                { type: 'Small Tanker', size: '7K', tc1yr: 14500, tc3yr: 13000, spot: 18000, tcTrend: 'up', spotTrend: 'up' },
+                { type: 'MR Product', size: '50K', tc1yr: 28500, tc3yr: 26000, spot: 35000, tcTrend: 'up', spotTrend: 'up' },
+                { type: 'LR2 Product', size: '110K', tc1yr: 42000, tc3yr: 38000, spot: 55000, tcTrend: 'up', spotTrend: 'up' },
+                { type: 'Aframax', size: '105K', tc1yr: 38000, tc3yr: 34000, spot: 48000, tcTrend: 'flat', spotTrend: 'down' },
+                { type: 'LPG MGC', size: '27K', tc1yr: 32000, tc3yr: 29000, spot: 38000, tcTrend: 'up', spotTrend: 'up' },
+                { type: 'Chemical', size: '20K', tc1yr: 18000, tc3yr: 16000, spot: 22000, tcTrend: 'flat', spotTrend: 'up' }
+            ],
+            spAlerts: [
+                { name: 'Ocean Spirit', type: 'Product Tanker', dwt: 7450, built: 2012, builder: 'Shin Kurushima', class: 'ClassNK', flag: 'Panama', price: 9.2, broker: 'Clarksons', listed: '14 Jan 2025', hot: true, matches: ['DWT Match', 'Age OK', 'Quality Builder'] },
+                { name: 'Pacific Harmony', type: 'LPG Carrier', dwt: 27500, built: 2009, builder: 'Hyundai Mipo', class: "Lloyd's Register", flag: 'Marshall Islands', price: 28, broker: 'SSY', listed: '12 Jan 2025', new: true, matches: ['DWT Match', 'Class Match', 'Flag Match'] },
+                { name: 'Golden Dawn', type: 'LR2 Tanker', dwt: 109800, built: 2019, builder: 'Hyundai Heavy', class: "Lloyd's Register", flag: 'Liberia', price: 68, broker: 'Fearnleys', listed: '10 Jan 2025', matches: ['DWT Match', 'Age Excellent', 'Premium Builder'] }
+            ],
+            shipyards: {
+                small: [{ yard: 'Hyundai Mipo', country: '🇰🇷', quality: 'Premium', price: 32, lead: '24-28 mo', slots: 'Q2 2027' },{ yard: 'Oshima', country: '🇯🇵', quality: 'Premium', price: 30, lead: '26-30 mo', slots: 'Q3 2027' },{ yard: 'Jiangsu Yangzi', country: '🇨🇳', quality: 'High', price: 26, lead: '20-24 mo', slots: 'Q4 2026' },{ yard: 'GSI Nansha', country: '🇨🇳', quality: 'High', price: 25, lead: '18-22 mo', slots: 'Q3 2026' }],
+                lr2: [{ yard: 'Hyundai Heavy', country: '🇰🇷', quality: 'Premium', price: 88, lead: '28-32 mo', slots: 'Q1 2028' },{ yard: 'Samsung Heavy', country: '🇰🇷', quality: 'Premium', price: 86, lead: '30-34 mo', slots: 'Q2 2028' },{ yard: 'Dalian', country: '🇨🇳', quality: 'High', price: 72, lead: '24-28 mo', slots: 'Q3 2027' },{ yard: 'New Times', country: '🇨🇳', quality: 'High', price: 70, lead: '22-26 mo', slots: 'Q2 2027' }],
+                lpg: [{ yard: 'Hyundai Mipo', country: '🇰🇷', quality: 'Premium', price: 78, lead: '28-32 mo', slots: 'Q1 2028' },{ yard: 'Kawasaki', country: '🇯🇵', quality: 'Premium', price: 76, lead: '30-34 mo', slots: 'Q2 2028' },{ yard: 'Jiangnan', country: '🇨🇳', quality: 'High', price: 65, lead: '24-28 mo', slots: 'Q4 2027' }],
+                aframax: [{ yard: 'Samsung Heavy', country: '🇰🇷', quality: 'Premium', price: 82, lead: '30-34 mo', slots: 'Q2 2028' },{ yard: 'Hyundai Heavy', country: '🇰🇷', quality: 'Premium', price: 84, lead: '28-32 mo', slots: 'Q1 2028' },{ yard: 'Dalian', country: '🇨🇳', quality: 'High', price: 68, lead: '24-28 mo', slots: 'Q3 2027' }]
+            }
+        };
+
         // Fleet Data
         var vessels = [
-            { id: 1, name: "Israa", imo: "9325960", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,319 MT", built: 2011, charterer: "PETCO, Malaysia", delivered: "25/12/2022", redelivery: "24/06/2026", status: "Completed discharge at Prai, Malaysia. Sailing to Singapore.", location: "Prai, Malaysia", lat: 5.3841, lng: 100.3938, active: true },
-            { id: 2, name: "Al Zarandi", imo: "9325958", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,303 MT", built: 2010, charterer: "Bihar Bunkers", delivered: "29/02/2020", redelivery: "Yearly", status: "At Jeddah for bunkering.", location: "Jeddah, Saudi Arabia", lat: 21.5433, lng: 39.1728, active: true },
-            { id: 3, name: "Galbot", imo: "9555084", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,281 MT", built: 2010, charterer: "Sacor Bunkers", delivered: "24/10/2023", redelivery: "23/10/2026", status: "At Sines, Portugal for bunkering.", location: "Sines, Portugal", lat: 37.9500, lng: -8.8667, active: true },
-            { id: 4, name: "Al Safa", imo: "9501643", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,324 MT", built: 2009, charterer: "Amsol", delivered: "20/01/2020", redelivery: "18/01/2026", status: "At Durban for bunkering.", location: "Durban, South Africa", lat: -29.8587, lng: 31.0218, active: true },
-            { id: 5, name: "Andes", imo: "9411719", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,364 MT", built: 2007, charterer: "International Supply", delivered: "31/12/2019", redelivery: "Yearly", status: "At Fujairah for bunkering.", location: "Fujairah, UAE", lat: 25.1288, lng: 56.3264, active: true },
-            { id: 6, name: "Miraj", imo: "9394741", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,450 MT", built: 2007, charterer: "Waad Energy", delivered: "25/02/2024", redelivery: "Yearly", status: "At Jeddah for bunkering.", location: "Jeddah, Saudi Arabia", lat: 21.5169, lng: 39.1489, active: true },
-            { id: 7, name: "Daisy", imo: "9516545", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,280 MT", built: 2009, charterer: "International Supply", delivered: "14/11/2023", redelivery: "Yearly", status: "Pre dry dock repairs at Khor Fakkan.", location: "Khor Fakkan, UAE", lat: 25.3436, lng: 56.3475, active: false },
-            { id: 8, name: "Lilac", imo: "9411721", type: "tanker", typeLabel: "Oil Tanker", dwt: "7,373 MT", built: 2009, charterer: "International Supply", delivered: "-", redelivery: "-", status: "At Fujairah (replacement for Daisy).", location: "Fujairah, UAE", lat: 25.1488, lng: 56.3464, active: true },
-            { id: 9, name: "Al Barrah", imo: "9332030", type: "lpg", typeLabel: "LPG Carrier", dwt: "27,710 MT", built: 2007, charterer: "ENOC, UAE", delivered: "01/04/2024", redelivery: "31/03/2027", status: "At Jebel Ali, waiting to discharge.", location: "Jebel Ali, UAE", lat: 25.0066, lng: 55.0580, active: true },
-            { id: 10, name: "Al Jabirah", imo: "9332042", type: "lpg", typeLabel: "LPG Carrier", dwt: "27,710 MT", built: 2007, charterer: "Indian Oil Corp", delivered: "15/11/2025", redelivery: "14/11/2026", status: "Sailing to Kandla with propane/butane.", location: "Arabian Sea", lat: 21.8243, lng: 65.4567, active: true },
-            { id: 11, name: "Al Shaffiah", imo: "9358620", type: "chemical", typeLabel: "Chemical", dwt: "19,907 MT", built: 2006, charterer: "Aramco Trading", delivered: "30/04/2024", redelivery: "29/04/2026", status: "Sailing to Jubail.", location: "Indian Ocean", lat: 15.5432, lng: 68.2341, active: true },
-            { id: 12, name: "Al Mahboobah", imo: "9340415", type: "chemical", typeLabel: "Chemical", dwt: "19,982 MT", built: 2006, charterer: "Aramco Trading", delivered: "02/05/2024", redelivery: "01/05/2026", status: "At Jubail, waiting to load.", location: "Jubail, Saudi Arabia", lat: 27.0046, lng: 49.6588, active: true },
-            { id: 13, name: "Dianella", imo: "9901087", type: "chemical", typeLabel: "Product/Chemical", dwt: "49,803 MT", built: 2021, charterer: "PETCO", delivered: "21/01/2024", redelivery: "15/01/2026", status: "Discharging at Shenao, Taiwan.", location: "Shenao, Taiwan", lat: 25.1276, lng: 121.8167, active: true },
-            { id: 14, name: "Liatris", imo: "9901099", type: "chemical", typeLabel: "Product/Chemical", dwt: "49,803 MT", built: 2021, charterer: "ISTC (Sabic)", delivered: "06/05/2023", redelivery: "05/05/2026", status: "Sailing to Singapore for bunkers.", location: "South China Sea", lat: 18.4523, lng: 114.3421, active: true },
-            { id: 15, name: "Angelonia", imo: "9901051", type: "tanker", typeLabel: "Oil Tanker", dwt: "110,521 MT", built: 2021, charterer: "Aramco Trading", delivered: "13/01/2024", redelivery: "12/01/2027", status: "At Suez STS Area, discharging.", location: "Suez, Egypt", lat: 29.9668, lng: 32.5498, active: true },
-            { id: 16, name: "Lunaria", imo: "9901063", type: "tanker", typeLabel: "Oil Tanker", dwt: "110,521 MT", built: 2021, charterer: "Aramco Trading", delivered: "25/01/2024", redelivery: "24/01/2027", status: "Sailing to Venice with gas oil.", location: "Mediterranean", lat: 38.4521, lng: 16.3456, active: true },
-            { id: 17, name: "Bouvardia", imo: "9935595", type: "tanker", typeLabel: "Oil Tanker", dwt: "111,075 MT", built: 2022, charterer: "Aramco Trading", delivered: "19/03/2025", redelivery: "18/03/2028", status: "At Antwerp, loading VLSFO.", location: "Antwerp, Belgium", lat: 51.2194, lng: 4.4025, active: true },
-            { id: 18, name: "Ixora", imo: "9940459", type: "tanker", typeLabel: "Oil Tanker", dwt: "111,006 MT", built: 2022, charterer: "Aramco Trading", delivered: "09/03/2025", redelivery: "08/03/2028", status: "Sailing to Tanjung Buras with HFO.", location: "South China Sea", lat: 7.4523, lng: 107.3421, active: true },
-            { id: 19, name: "Al Habibah", imo: "9290294", type: "crude", typeLabel: "Crude/Product", dwt: "105,946 MT", built: 2004, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Pre dry dock at Khor Fakkan.", location: "Khor Fakkan, UAE", lat: 25.3636, lng: 56.3675, active: false },
-            { id: 20, name: "Al Mahfoza", imo: "9271365", type: "crude", typeLabel: "Crude/Product", dwt: "105,433 MT", built: 2003, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Sailing to Fujairah.", location: "Gulf of Oman", lat: 24.5432, lng: 57.8765, active: true },
-            { id: 21, name: "Daffodil", imo: "9239927", type: "crude", typeLabel: "Crude/Product", dwt: "105,357 MT", built: 2002, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Discharging at Shoaiba.", location: "Shoaiba, Saudi Arabia", lat: 20.6894, lng: 39.5087, active: true },
-            { id: 22, name: "Desert Rose", imo: "9239939", type: "crude", typeLabel: "Crude/Product", dwt: "105,328 MT", built: 2002, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Off Yanbu, waiting to load.", location: "Yanbu, Saudi Arabia", lat: 24.0894, lng: 38.0634, active: true },
-            { id: 23, name: "Encelia", imo: "9240172", type: "crude", typeLabel: "Crude/Product", dwt: "109,250 MT", built: 2003, charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Waiting to load utility cargo.", location: "Saudi Arabia", lat: 26.2345, lng: 50.1234, active: true }
+            { id: 1, name: "Israa", imo: "9325960", mmsi: "538005890", callSign: "V7A8", type: "tanker", typeLabel: "Oil Tanker", dwt: 7319, gt: 4292, nt: 2150, ldt: 2850, loa: "105.5", beam: "16.8", draft: "7.2", built: 2011, builder: "Jiangsu Eastern", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "PETCO, Malaysia", delivered: "25/12/2022", redelivery: "24/06/2026", status: "Sailing to Singapore", location: "Prai, Malaysia", lat: 5.3841, lng: 100.3938, active: true, speed: 12.4, course: 245, destination: "SINGAPORE", eta: "16 Jan 18:00", navStatus: "Under way using engine", scrapValue: 1.54, marketValue: 8.2, replacementValue: 28, pscInspections: [{port: "Singapore", date: "2024-09-15", deficiencies: 0, detained: false}, {port: "Busan", date: "2024-03-22", deficiencies: 1, detained: false}, {port: "Fujairah", date: "2023-11-10", deficiencies: 0, detained: false}], portCalls: [{port: "Prai", country: "Malaysia", arrived: "12 Jan 08:00", departed: "14 Jan 16:00"}, {port: "Singapore", country: "Singapore", arrived: "08 Jan 04:00", departed: "10 Jan 22:00"}, {port: "Ho Chi Minh", country: "Vietnam", arrived: "02 Jan 10:00", departed: "05 Jan 14:00"}], weather: {temp: 29, condition: "Partly Cloudy", wind: 12, humidity: 78, icon: "⛅"} },
+            { id: 2, name: "Al Zarandi", imo: "9325958", mmsi: "538005889", callSign: "V7A7", type: "tanker", typeLabel: "Oil Tanker", dwt: 7303, gt: 4292, nt: 2145, ldt: 2840, loa: "105.5", beam: "16.8", draft: "7.2", built: 2010, builder: "Jiangsu Eastern", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "Bihar Bunkers", delivered: "29/02/2020", redelivery: "Yearly", status: "At Jeddah bunkering", location: "Jeddah, Saudi Arabia", lat: 21.5433, lng: 39.1728, active: true, speed: 0, course: 0, destination: "JEDDAH", eta: "In Port", navStatus: "At anchor", scrapValue: 1.53, marketValue: 7.5, replacementValue: 28, pscInspections: [{port: "Jeddah", date: "2024-11-20", deficiencies: 0, detained: false}], portCalls: [{port: "Jeddah", country: "Saudi Arabia", arrived: "10 Jan", departed: "-"}], weather: {temp: 24, condition: "Clear", wind: 8, humidity: 45, icon: "☀️"} },
+            { id: 3, name: "Galbot", imo: "9555084", mmsi: "255806230", callSign: "CQWG", type: "tanker", typeLabel: "Oil Tanker", dwt: 7281, gt: 4325, nt: 2160, ldt: 2870, loa: "106.0", beam: "16.8", draft: "7.1", built: 2010, builder: "Cochin Shipyard", flag: "Portugal", class: "Bureau Veritas", classAbbr: "BV", charterer: "Sacor Bunkers", delivered: "24/10/2023", redelivery: "23/10/2026", status: "At Sines bunkering", location: "Sines, Portugal", lat: 37.9500, lng: -8.8667, active: true, speed: 0, course: 0, destination: "SINES", eta: "In Port", navStatus: "Moored", scrapValue: 1.55, marketValue: 7.8, replacementValue: 28, pscInspections: [], portCalls: [{port: "Sines", country: "Portugal", arrived: "11 Jan", departed: "-"}], weather: {temp: 14, condition: "Overcast", wind: 22, humidity: 82, icon: "☁️"} },
+            { id: 4, name: "Al Safa", imo: "9501643", mmsi: "538003456", callSign: "V7B2", type: "tanker", typeLabel: "Oil Tanker", dwt: 7324, gt: 4421, nt: 2200, ldt: 2920, loa: "106.8", beam: "16.8", draft: "7.2", built: 2009, builder: "STX Shipbuilding", flag: "Marshall Islands", class: "DNV", classAbbr: "DNV", charterer: "Amsol", delivered: "20/01/2020", redelivery: "18/01/2026", status: "At Durban", location: "Durban, South Africa", lat: -29.8587, lng: 31.0218, active: true, speed: 0, course: 0, destination: "DURBAN", eta: "In Port", navStatus: "Moored", scrapValue: 1.58, marketValue: 7.0, replacementValue: 28, pscInspections: [{port: "Durban", date: "2024-12-10", deficiencies: 1, detained: false}], portCalls: [{port: "Durban", country: "South Africa", arrived: "09 Jan", departed: "-"}], weather: {temp: 26, condition: "Sunny", wind: 15, humidity: 65, icon: "☀️"} },
+            { id: 5, name: "Andes", imo: "9411719", mmsi: "538002345", callSign: "V7C1", type: "tanker", typeLabel: "Oil Tanker", dwt: 7364, gt: 4518, nt: 2250, ldt: 2980, loa: "107.2", beam: "17.0", draft: "7.3", built: 2007, builder: "Shin Kurushima", flag: "Marshall Islands", class: "ClassNK", classAbbr: "NK", charterer: "International Supply", delivered: "31/12/2019", redelivery: "Yearly", status: "At Fujairah", location: "Fujairah, UAE", lat: 25.1288, lng: 56.3264, active: true, speed: 0, course: 0, destination: "FUJAIRAH", eta: "In Port", navStatus: "At anchor", scrapValue: 1.61, marketValue: 6.2, replacementValue: 28, pscInspections: [{port: "Fujairah", date: "2024-11-05", deficiencies: 0, detained: false}], portCalls: [{port: "Fujairah", country: "UAE", arrived: "08 Jan", departed: "-"}], weather: {temp: 22, condition: "Clear", wind: 10, humidity: 55, icon: "☀️"} },
+            { id: 6, name: "Miraj", imo: "9394741", mmsi: "538002890", callSign: "V7D3", type: "tanker", typeLabel: "Oil Tanker", dwt: 7450, gt: 4623, nt: 2300, ldt: 3050, loa: "108.0", beam: "17.2", draft: "7.4", built: 2007, builder: "Shin Kurushima", flag: "Marshall Islands", class: "ClassNK", classAbbr: "NK", charterer: "Waad Energy", delivered: "25/02/2024", redelivery: "Yearly", status: "At Jeddah", location: "Jeddah, Saudi Arabia", lat: 21.5169, lng: 39.1489, active: true, speed: 0, course: 0, destination: "JEDDAH", eta: "In Port", navStatus: "Moored", scrapValue: 1.65, marketValue: 6.5, replacementValue: 28, pscInspections: [], portCalls: [{port: "Jeddah", country: "Saudi Arabia", arrived: "12 Jan", departed: "-"}], weather: {temp: 24, condition: "Clear", wind: 8, humidity: 45, icon: "☀️"} },
+            { id: 7, name: "Daisy", imo: "9516545", mmsi: "538004567", callSign: "V7E4", type: "tanker", typeLabel: "Oil Tanker", dwt: 7280, gt: 4298, nt: 2140, ldt: 2845, loa: "105.8", beam: "16.8", draft: "7.2", built: 2009, builder: "Jiangsu Eastern", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "International Supply", delivered: "14/11/2023", redelivery: "Yearly", status: "Pre dry dock", location: "Khor Fakkan, UAE", lat: 25.3436, lng: 56.3475, active: false, speed: 0, course: 0, destination: "DRY DOCK", eta: "-", navStatus: "Moored", scrapValue: 1.54, marketValue: 6.8, replacementValue: 28, pscInspections: [{port: "Khor Fakkan", date: "2024-09-28", deficiencies: 2, detained: false}], portCalls: [{port: "Khor Fakkan", country: "UAE", arrived: "05 Jan", departed: "-"}], weather: {temp: 21, condition: "Clear", wind: 12, humidity: 58, icon: "☀️"} },
+            { id: 8, name: "Lilac", imo: "9411721", mmsi: "538002346", callSign: "V7C2", type: "tanker", typeLabel: "Oil Tanker", dwt: 7373, gt: 4518, nt: 2250, ldt: 2980, loa: "107.2", beam: "17.0", draft: "7.3", built: 2009, builder: "Shin Kurushima", flag: "Marshall Islands", class: "ClassNK", classAbbr: "NK", charterer: "International Supply", delivered: "-", redelivery: "-", status: "Standby Fujairah", location: "Fujairah, UAE", lat: 25.1488, lng: 56.3464, active: true, speed: 0, course: 0, destination: "FUJAIRAH", eta: "In Port", navStatus: "At anchor", scrapValue: 1.61, marketValue: 7.0, replacementValue: 28, pscInspections: [{port: "Fujairah", date: "2024-12-01", deficiencies: 0, detained: false}], portCalls: [{port: "Fujairah", country: "UAE", arrived: "10 Jan", departed: "-"}], weather: {temp: 22, condition: "Clear", wind: 10, humidity: 55, icon: "☀️"} },
+            { id: 9, name: "Al Barrah", imo: "9332030", mmsi: "538001234", callSign: "V7F5", type: "lpg", typeLabel: "LPG Carrier", dwt: 27710, gt: 22890, nt: 9800, ldt: 9200, loa: "159.9", beam: "25.6", draft: "10.8", built: 2007, builder: "Hyundai Mipo", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "ENOC, UAE", delivered: "01/04/2024", redelivery: "31/03/2027", status: "At Jebel Ali", location: "Jebel Ali, UAE", lat: 25.0066, lng: 55.0580, active: true, speed: 0, course: 0, destination: "JEBEL ALI", eta: "In Port", navStatus: "At anchor", scrapValue: 4.97, marketValue: 32, replacementValue: 75, pscInspections: [{port: "Jebel Ali", date: "2024-08-15", deficiencies: 0, detained: false}], portCalls: [{port: "Jebel Ali", country: "UAE", arrived: "13 Jan", departed: "-"}], weather: {temp: 23, condition: "Clear", wind: 14, humidity: 52, icon: "☀️"} },
+            { id: 10, name: "Al Jabirah", imo: "9332042", mmsi: "538001235", callSign: "V7F6", type: "lpg", typeLabel: "LPG Carrier", dwt: 27710, gt: 22890, nt: 9800, ldt: 9200, loa: "159.9", beam: "25.6", draft: "10.8", built: 2007, builder: "Hyundai Mipo", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "Indian Oil Corp", delivered: "15/11/2025", redelivery: "14/11/2026", status: "Sailing to Kandla", location: "Arabian Sea", lat: 21.8243, lng: 65.4567, active: true, speed: 14.2, course: 68, destination: "KANDLA", eta: "16 Jan 22:00", navStatus: "Under way using engine", scrapValue: 4.97, marketValue: 33, replacementValue: 75, pscInspections: [{port: "Kandla", date: "2024-10-10", deficiencies: 0, detained: false}], portCalls: [{port: "Ruwais", country: "UAE", arrived: "10 Jan", departed: "13 Jan"}], weather: {temp: 27, condition: "Clear", wind: 18, humidity: 62, icon: "☀️"} },
+            { id: 11, name: "Al Shaffiah", imo: "9358620", mmsi: "538003789", callSign: "V7G7", type: "chemical", typeLabel: "Chemical Tanker", dwt: 19907, gt: 13456, nt: 5800, ldt: 5800, loa: "144.0", beam: "22.6", draft: "9.2", built: 2006, builder: "Shin Kurushima", flag: "Marshall Islands", class: "ClassNK", classAbbr: "NK", charterer: "Aramco Trading", delivered: "30/04/2024", redelivery: "29/04/2026", status: "Sailing to Jubail", location: "Indian Ocean", lat: 15.5432, lng: 68.2341, active: true, speed: 13.8, course: 315, destination: "JUBAIL", eta: "15 Jan 01:00", navStatus: "Under way using engine", scrapValue: 3.13, marketValue: 18, replacementValue: 45, pscInspections: [{port: "Singapore", date: "2024-07-22", deficiencies: 0, detained: false}], portCalls: [{port: "Singapore", country: "Singapore", arrived: "08 Jan", departed: "11 Jan"}], weather: {temp: 28, condition: "Partly Cloudy", wind: 20, humidity: 72, icon: "⛅"} },
+            { id: 12, name: "Al Mahboobah", imo: "9340415", mmsi: "538003790", callSign: "V7G8", type: "chemical", typeLabel: "Chemical Tanker", dwt: 19982, gt: 13512, nt: 5820, ldt: 5820, loa: "144.0", beam: "22.6", draft: "9.2", built: 2006, builder: "Shin Kurushima", flag: "Marshall Islands", class: "ClassNK", classAbbr: "NK", charterer: "Aramco Trading", delivered: "02/05/2024", redelivery: "01/05/2026", status: "At Jubail loading", location: "Jubail, Saudi Arabia", lat: 27.0046, lng: 49.6588, active: true, speed: 0, course: 0, destination: "JUBAIL", eta: "In Port", navStatus: "Moored", scrapValue: 3.14, marketValue: 18.5, replacementValue: 45, pscInspections: [{port: "Jubail", date: "2024-11-30", deficiencies: 0, detained: false}], portCalls: [{port: "Jubail", country: "Saudi Arabia", arrived: "13 Jan", departed: "-"}], weather: {temp: 18, condition: "Clear", wind: 12, humidity: 48, icon: "☀️"} },
+            { id: 13, name: "Dianella", imo: "9901087", mmsi: "538009001", callSign: "V7H9", type: "chemical", typeLabel: "Product/Chemical", dwt: 49803, gt: 29876, nt: 12500, ldt: 12500, loa: "183.0", beam: "32.2", draft: "12.8", built: 2021, builder: "Hyundai Mipo", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "PETCO", delivered: "21/01/2024", redelivery: "15/01/2026", status: "At Shenao Taiwan", location: "Shenao, Taiwan", lat: 25.1276, lng: 121.8167, active: true, speed: 0, course: 0, destination: "SHENAO", eta: "In Port", navStatus: "Moored", scrapValue: 6.75, marketValue: 52, replacementValue: 65, pscInspections: [{port: "Kaohsiung", date: "2024-12-15", deficiencies: 0, detained: false}], portCalls: [{port: "Shenao", country: "Taiwan", arrived: "14 Jan", departed: "-"}], weather: {temp: 18, condition: "Rainy", wind: 25, humidity: 88, icon: "🌧️"} },
+            { id: 14, name: "Liatris", imo: "9901099", mmsi: "538009002", callSign: "V7J1", type: "chemical", typeLabel: "Product/Chemical", dwt: 49803, gt: 29876, nt: 12500, ldt: 12500, loa: "183.0", beam: "32.2", draft: "12.8", built: 2021, builder: "Hyundai Mipo", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "ISTC (Sabic)", delivered: "06/05/2023", redelivery: "05/05/2026", status: "Sailing to Singapore", location: "South China Sea", lat: 18.4523, lng: 114.3421, active: true, speed: 13.5, course: 225, destination: "SINGAPORE", eta: "19 Jan 18:00", navStatus: "Under way using engine", scrapValue: 6.75, marketValue: 53, replacementValue: 65, pscInspections: [{port: "Shanghai", date: "2024-12-28", deficiencies: 0, detained: false}], portCalls: [{port: "Shanghai", country: "China", arrived: "08 Jan", departed: "12 Jan"}], weather: {temp: 26, condition: "Cloudy", wind: 16, humidity: 75, icon: "☁️"} },
+            { id: 15, name: "Angelonia", imo: "9901051", mmsi: "538009003", callSign: "V7K2", type: "tanker", typeLabel: "LR2 Tanker", dwt: 110521, gt: 62345, nt: 30000, ldt: 22000, loa: "250.0", beam: "44.0", draft: "15.2", built: 2021, builder: "Hyundai Heavy", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "Aramco Trading", delivered: "13/01/2024", redelivery: "12/01/2027", status: "At Suez STS", location: "Suez, Egypt", lat: 29.9668, lng: 32.5498, active: true, speed: 0, course: 0, destination: "SUEZ STS", eta: "In Port", navStatus: "At anchor", scrapValue: 11.88, marketValue: 72, replacementValue: 85, pscInspections: [{port: "Suez", date: "2024-10-05", deficiencies: 0, detained: false}], portCalls: [{port: "Suez", country: "Egypt", arrived: "14 Jan", departed: "-"}], weather: {temp: 18, condition: "Clear", wind: 14, humidity: 52, icon: "☀️"} },
+            { id: 16, name: "Lunaria", imo: "9901063", mmsi: "538009004", callSign: "V7K3", type: "tanker", typeLabel: "LR2 Tanker", dwt: 110521, gt: 62345, nt: 30000, ldt: 22000, loa: "250.0", beam: "44.0", draft: "15.2", built: 2021, builder: "Hyundai Heavy", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "Aramco Trading", delivered: "25/01/2024", redelivery: "24/01/2027", status: "Sailing to Venice", location: "Mediterranean", lat: 38.4521, lng: 16.3456, active: true, speed: 12.8, course: 320, destination: "VENICE", eta: "16 Jan 16:00", navStatus: "Under way using engine", scrapValue: 11.88, marketValue: 73, replacementValue: 85, pscInspections: [{port: "Augusta", date: "2024-11-18", deficiencies: 0, detained: false}], portCalls: [{port: "Ras Tanura", country: "Saudi Arabia", arrived: "02 Jan", departed: "06 Jan"}], weather: {temp: 15, condition: "Partly Cloudy", wind: 20, humidity: 68, icon: "⛅"} },
+            { id: 17, name: "Bouvardia", imo: "9935595", mmsi: "538009005", callSign: "V7L4", type: "tanker", typeLabel: "LR2 Tanker", dwt: 111075, gt: 63012, nt: 30200, ldt: 22200, loa: "250.0", beam: "44.0", draft: "15.3", built: 2022, builder: "Hyundai Heavy", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "Aramco Trading", delivered: "19/03/2025", redelivery: "18/03/2028", status: "At Antwerp", location: "Antwerp, Belgium", lat: 51.2194, lng: 4.4025, active: true, speed: 0, course: 0, destination: "ANTWERP", eta: "In Port", navStatus: "Moored", scrapValue: 11.99, marketValue: 78, replacementValue: 85, pscInspections: [{port: "Rotterdam", date: "2024-12-20", deficiencies: 0, detained: false}], portCalls: [{port: "Antwerp", country: "Belgium", arrived: "12 Jan", departed: "-"}], weather: {temp: 6, condition: "Rainy", wind: 28, humidity: 92, icon: "🌧️"} },
+            { id: 18, name: "Ixora", imo: "9940459", mmsi: "538009006", callSign: "V7L5", type: "tanker", typeLabel: "LR2 Tanker", dwt: 111006, gt: 62998, nt: 30180, ldt: 22180, loa: "250.0", beam: "44.0", draft: "15.3", built: 2022, builder: "Hyundai Heavy", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "Aramco Trading", delivered: "09/03/2025", redelivery: "08/03/2028", status: "Sailing to Malaysia", location: "South China Sea", lat: 7.4523, lng: 107.3421, active: true, speed: 13.1, course: 45, destination: "TANJUNG BURAS", eta: "20 Jan 18:00", navStatus: "Under way using engine", scrapValue: 11.98, marketValue: 79, replacementValue: 85, pscInspections: [{port: "Singapore", date: "2024-11-25", deficiencies: 0, detained: false}], portCalls: [{port: "Fujairah", country: "UAE", arrived: "28 Dec", departed: "02 Jan"}], weather: {temp: 29, condition: "Thunderstorm", wind: 22, humidity: 85, icon: "⛈️"} },
+            { id: 19, name: "Al Habibah", imo: "9290294", mmsi: "538001890", callSign: "V7M6", type: "crude", typeLabel: "Aframax", dwt: 105946, gt: 58765, nt: 28000, ldt: 20500, loa: "244.0", beam: "42.0", draft: "14.8", built: 2004, builder: "Daewoo", flag: "Marshall Islands", class: "DNV", classAbbr: "DNV", charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Pre dry dock", location: "Khor Fakkan, UAE", lat: 25.3636, lng: 56.3675, active: false, speed: 0, course: 0, destination: "DRY DOCK", eta: "-", navStatus: "At anchor", scrapValue: 11.07, marketValue: 28, replacementValue: 80, pscInspections: [{port: "Khor Fakkan", date: "2024-08-10", deficiencies: 3, detained: false}], portCalls: [{port: "Khor Fakkan", country: "UAE", arrived: "02 Jan", departed: "-"}], weather: {temp: 21, condition: "Clear", wind: 12, humidity: 58, icon: "☀️"} },
+            { id: 20, name: "Al Mahfoza", imo: "9271365", mmsi: "538001567", callSign: "V7N7", type: "crude", typeLabel: "Aframax", dwt: 105433, gt: 58234, nt: 27800, ldt: 20300, loa: "244.0", beam: "42.0", draft: "14.7", built: 2003, builder: "Daewoo", flag: "Marshall Islands", class: "DNV", classAbbr: "DNV", charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Sailing to Fujairah", location: "Gulf of Oman", lat: 24.5432, lng: 57.8765, active: true, speed: 11.5, course: 270, destination: "FUJAIRAH", eta: "22 Jan", navStatus: "Under way using engine", scrapValue: 10.96, marketValue: 26, replacementValue: 80, pscInspections: [{port: "Ras Tanura", date: "2024-09-05", deficiencies: 0, detained: false}], portCalls: [{port: "Shoaiba", country: "Saudi Arabia", arrived: "05 Jan", departed: "10 Jan"}], weather: {temp: 23, condition: "Clear", wind: 14, humidity: 55, icon: "☀️"} },
+            { id: 21, name: "Daffodil", imo: "9239927", mmsi: "538001234", callSign: "V7P8", type: "crude", typeLabel: "Aframax", dwt: 105357, gt: 58123, nt: 27750, ldt: 20250, loa: "244.0", beam: "42.0", draft: "14.7", built: 2002, builder: "Daewoo", flag: "Marshall Islands", class: "DNV", classAbbr: "DNV", charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "At Shoaiba", location: "Shoaiba, Saudi Arabia", lat: 20.6894, lng: 39.5087, active: true, speed: 0, course: 0, destination: "SHOAIBA", eta: "In Port", navStatus: "Moored", scrapValue: 10.94, marketValue: 24, replacementValue: 80, pscInspections: [{port: "Yanbu", date: "2024-10-28", deficiencies: 1, detained: false}], portCalls: [{port: "Shoaiba", country: "Saudi Arabia", arrived: "13 Jan", departed: "-"}], weather: {temp: 25, condition: "Clear", wind: 10, humidity: 42, icon: "☀️"} },
+            { id: 22, name: "Desert Rose", imo: "9239939", mmsi: "538001235", callSign: "V7Q9", type: "crude", typeLabel: "Aframax", dwt: 105328, gt: 58098, nt: 27740, ldt: 20240, loa: "244.0", beam: "42.0", draft: "14.7", built: 2002, builder: "Daewoo", flag: "Marshall Islands", class: "DNV", classAbbr: "DNV", charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Off Yanbu", location: "Yanbu, Saudi Arabia", lat: 24.0894, lng: 38.0634, active: true, speed: 0, course: 0, destination: "YANBU", eta: "Awaiting", navStatus: "At anchor", scrapValue: 10.93, marketValue: 23, replacementValue: 80, pscInspections: [{port: "Rabigh", date: "2024-11-15", deficiencies: 0, detained: false}], portCalls: [{port: "Rabigh", country: "Saudi Arabia", arrived: "08 Jan", departed: "11 Jan"}], weather: {temp: 22, condition: "Clear", wind: 8, humidity: 48, icon: "☀️"} },
+            { id: 23, name: "Encelia", imo: "9240172", mmsi: "538001456", callSign: "V7R1", type: "crude", typeLabel: "Aframax", dwt: 109250, gt: 60234, nt: 28500, ldt: 21000, loa: "246.0", beam: "43.0", draft: "15.0", built: 2003, builder: "Samsung Heavy", flag: "Marshall Islands", class: "Lloyd's Register", classAbbr: "LR", charterer: "Utility Ops", delivered: "-", redelivery: "-", status: "Awaiting orders", location: "Saudi Arabia", lat: 26.2345, lng: 50.1234, active: true, speed: 0, course: 0, destination: "ORDERS", eta: "Awaiting", navStatus: "At anchor", scrapValue: 11.34, marketValue: 25, replacementValue: 80, pscInspections: [{port: "Ras Tanura", date: "2024-12-02", deficiencies: 0, detained: false}], portCalls: [{port: "Ras Tanura", country: "Saudi Arabia", arrived: "10 Jan", departed: "12 Jan"}], weather: {temp: 19, condition: "Clear", wind: 12, humidity: 50, icon: "☀️"} }
         ];
 
-        var map = null;
-        var markers = {};
-        var selectedId = null;
-        var panelOpen = false;
+        var map = null, markers = {}, selectedId = null, panelOpen = false, activeTab = 'overview';
 
-        // Load Leaflet dynamically with fallbacks
-        function loadLeaflet() {
-            var cdns = [
-                'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
-                'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-                'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js'
-            ];
-            
-            tryLoadScript(cdns, 0);
+        // LIVE UPDATE ENGINE - Runs every 30 seconds
+        function startLiveUpdates() {
+            setInterval(function() {
+                liveData.lastUpdate = new Date();
+                // Simulate rate fluctuations
+                liveData.charterRates.forEach(function(r) {
+                    r.tc1yr = Math.round(r.tc1yr * (1 + (Math.random() - 0.5) * 0.02));
+                    r.spot = Math.round(r.spot * (1 + (Math.random() - 0.5) * 0.03));
+                });
+                liveData.scrap.price = Math.round(540 + (Math.random() - 0.5) * 20);
+                updateDashboard();
+                updateVesselPositions();
+            }, 30000);
+            setInterval(function() {
+                document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('en-GB');
+            }, 1000);
         }
 
-        function tryLoadScript(cdns, index) {
-            if (index >= cdns.length) {
-                showError();
-                return;
-            }
+        function updateDashboard() {
+            document.getElementById('dashScrap').textContent = '$' + liveData.scrap.price;
+            document.getElementById('dashNB1').textContent = '$' + liveData.newbuild.small + 'M';
+            document.getElementById('dashNB2').textContent = '$' + liveData.newbuild.lr2 + 'M';
+            document.getElementById('dashNB3').textContent = '$' + liveData.newbuild.lpg + 'M';
+            document.getElementById('dashNB4').textContent = '$' + liveData.newbuild.aframax + 'M';
+            var total = vessels.reduce(function(s, v) { return s + v.marketValue; }, 0);
+            document.getElementById('dashFleet').textContent = '$' + total + 'M';
+        }
 
-            var script = document.createElement('script');
-            script.src = cdns[index];
-            script.onload = function() {
-                if (typeof L !== 'undefined') {
-                    initApp();
-                } else {
-                    tryLoadScript(cdns, index + 1);
+        function updateVesselPositions() {
+            vessels.forEach(function(v) {
+                if (v.active && v.speed > 0) {
+                    var r = v.course * Math.PI / 180;
+                    v.lat += Math.cos(r) * 0.003;
+                    v.lng += Math.sin(r) * 0.003;
+                    if (markers[v.id]) markers[v.id].setLatLng([v.lat, v.lng]);
                 }
-            };
-            script.onerror = function() {
-                tryLoadScript(cdns, index + 1);
-            };
-            document.body.appendChild(script);
-        }
-
-        function showError() {
-            document.getElementById('mapLoading').innerHTML = 
-                '<p class="error">Could not load map library.</p>' +
-                '<button onclick="location.reload()">Retry</button>';
-        }
-
-        function initApp() {
-            initMap();
-            renderList(vessels);
-            setupEvents();
+            });
         }
 
         function initMap() {
             try {
-                map = L.map('map', {
-                    center: [22, 50],
-                    zoom: 3,
-                    zoomControl: true,
-                    attributionControl: false
-                });
-
-                // Try multiple tile sources
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19
-                }).addTo(map);
-
+                map = L.map('map', { center: [22, 50], zoom: 3, zoomControl: true, attributionControl: false });
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
                 vessels.forEach(function(v) {
-                    var maintClass = v.active ? '' : ' maintenance';
-                    var zIndex = v.active ? 100 : 200; // Maintenance vessels on top
-                    var icon = L.divIcon({
-                        html: '<div class="marker ' + v.type + maintClass + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
-                        className: '',
-                        iconSize: [36, 36],
-                        iconAnchor: [18, 18]
-                    });
-
-                    var marker = L.marker([v.lat, v.lng], { icon: icon, zIndexOffset: zIndex }).addTo(map);
-                    marker.on('click', function(e) { 
-                        L.DomEvent.stopPropagation(e);
-                        selectVessel(v.id); 
-                    });
+                    var maint = v.active ? '' : ' maintenance';
+                    var icon = L.divIcon({ html: '<div class="marker ' + v.type + maint + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>', className: '', iconSize: [36, 36], iconAnchor: [18, 18] });
+                    var marker = L.marker([v.lat, v.lng], { icon: icon, zIndexOffset: v.active ? 100 : 200 }).addTo(map);
+                    marker.on('click', function(e) { L.DomEvent.stopPropagation(e); selectVessel(v.id); });
                     markers[v.id] = marker;
                 });
-
                 document.getElementById('mapLoading').classList.add('hidden');
                 map.on('click', function() { if (selectedId) deselectVessel(); });
-
-            } catch (e) {
-                showError();
-            }
+            } catch (e) { document.getElementById('mapLoading').innerHTML = '<p style="color:#ef4444">Map error</p>'; }
         }
 
         function selectVessel(id) {
             if (selectedId) {
                 var pv = vessels.find(function(v) { return v.id === selectedId; });
-                if (pv && markers[selectedId]) {
-                    var pvMaint = pv.active ? '' : ' maintenance';
-                    markers[selectedId].setIcon(L.divIcon({
-                        html: '<div class="marker ' + pv.type + pvMaint + '">' + (pv.type === 'lpg' ? '⛽' : '🚢') + '</div>',
-                        className: '', iconSize: [36, 36], iconAnchor: [18, 18]
-                    }));
-                }
-                var pc = document.querySelector('.vessel-card.selected');
-                if (pc) pc.classList.remove('selected');
+                if (pv && markers[selectedId]) markers[selectedId].setIcon(L.divIcon({ html: '<div class="marker ' + pv.type + (pv.active ? '' : ' maintenance') + '">' + (pv.type === 'lpg' ? '⛽' : '🚢') + '</div>', className: '', iconSize: [36, 36], iconAnchor: [18, 18] }));
+                var pc = document.querySelector('.vessel-card.selected'); if (pc) pc.classList.remove('selected');
             }
-
             selectedId = id;
-            var v = vessels.find(function(x) { return x.id === id; });
-            if (!v) return;
-
-            var vMaint = v.active ? '' : ' maintenance';
-            markers[id].setIcon(L.divIcon({
-                html: '<div class="marker ' + v.type + vMaint + ' selected">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
-                className: '', iconSize: [36, 36], iconAnchor: [18, 18]
-            }));
-
-            var card = document.querySelector('.vessel-card[data-id="' + id + '"]');
-            if (card) { card.classList.add('selected'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-
+            var v = vessels.find(function(x) { return x.id === id; }); if (!v) return;
+            markers[id].setIcon(L.divIcon({ html: '<div class="marker ' + v.type + (v.active ? '' : ' maintenance') + ' selected">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>', className: '', iconSize: [36, 36], iconAnchor: [18, 18] }));
+            var card = document.querySelector('.vessel-card[data-id="' + id + '"]'); if (card) { card.classList.add('selected'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
             map.setView([v.lat, v.lng], 5, { animate: true });
-            showDetail(v);
-
+            activeTab = 'overview'; showDetail(v);
             if (window.innerWidth < 768 && panelOpen) togglePanel();
         }
 
         function deselectVessel() {
             if (!selectedId) return;
             var v = vessels.find(function(x) { return x.id === selectedId; });
-            if (v && markers[selectedId]) {
-                var vMaint = v.active ? '' : ' maintenance';
-                markers[selectedId].setIcon(L.divIcon({
-                    html: '<div class="marker ' + v.type + vMaint + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>',
-                    className: '', iconSize: [36, 36], iconAnchor: [18, 18]
-                }));
-            }
-            var pc = document.querySelector('.vessel-card.selected');
-            if (pc) pc.classList.remove('selected');
-            selectedId = null;
-            closeDetail();
+            if (v && markers[selectedId]) markers[selectedId].setIcon(L.divIcon({ html: '<div class="marker ' + v.type + (v.active ? '' : ' maintenance') + '">' + (v.type === 'lpg' ? '⛽' : '🚢') + '</div>', className: '', iconSize: [36, 36], iconAnchor: [18, 18] }));
+            var pc = document.querySelector('.vessel-card.selected'); if (pc) pc.classList.remove('selected');
+            selectedId = null; closeDetail();
         }
 
         function showDetail(v) {
             document.getElementById('detailTitle').textContent = v.name;
-            document.getElementById('detailImo').textContent = 'IMO: ' + v.imo;
-            var sc = v.active ? 'active' : 'maintenance';
-            var st = v.active ? 'Active' : 'Maintenance';
-
-            document.getElementById('detailBody').innerHTML = 
-                '<div class="detail-section"><div class="detail-section-title">Vessel Information</div><div class="detail-grid">' +
-                '<div class="detail-item"><div class="detail-label">Type</div><div class="detail-value">' + v.typeLabel + '</div></div>' +
-                '<div class="detail-item"><div class="detail-label">Status</div><div class="detail-value"><span class="detail-status ' + sc + '"><span class="detail-status-dot"></span>' + st + '</span></div></div>' +
-                '<div class="detail-item"><div class="detail-label">Deadweight</div><div class="detail-value">' + v.dwt + '</div></div>' +
-                '<div class="detail-item"><div class="detail-label">Built</div><div class="detail-value">' + v.built + '</div></div>' +
-                '<div class="detail-item full"><div class="detail-label">Location</div><div class="detail-value">' + v.location + '</div></div>' +
-                '<div class="detail-item"><div class="detail-label">Lat</div><div class="detail-value">' + v.lat.toFixed(4) + '°</div></div>' +
-                '<div class="detail-item"><div class="detail-label">Lng</div><div class="detail-value">' + v.lng.toFixed(4) + '°</div></div>' +
-                '</div></div>' +
-                '<div class="detail-section"><div class="detail-section-title">Charter</div><div class="charter-box">' +
-                '<div class="charter-company">' + v.charterer + '</div>' +
-                '<div class="charter-dates"><div><div class="charter-date-label">Delivered</div><div class="charter-date-value">' + v.delivered + '</div></div>' +
-                '<div><div class="charter-date-label">Redelivery</div><div class="charter-date-value">' + v.redelivery + '</div></div></div></div></div>' +
-                '<div class="detail-section"><div class="detail-section-title">Status</div><div class="status-box">' + v.status + '</div></div>';
-
+            document.getElementById('detailSubtitle').textContent = v.typeLabel + ' | ' + v.dwt.toLocaleString() + ' DWT';
+            document.getElementById('detailImo').textContent = 'IMO: ' + v.imo + ' | MMSI: ' + v.mmsi;
+            document.getElementById('detailClass').textContent = '🏛️ ' + v.class + ' (' + v.classAbbr + ')';
+            document.querySelectorAll('.detail-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.tab === activeTab); });
+            renderTabContent(v);
             document.getElementById('detailModal').classList.add('visible');
             document.getElementById('detailOverlay').classList.add('visible');
         }
 
-        function closeDetail() {
-            document.getElementById('detailModal').classList.remove('visible');
-            document.getElementById('detailOverlay').classList.remove('visible');
+        function renderTabContent(v) {
+            var body = document.getElementById('detailBody');
+            var sc = v.active ? 'active' : 'maintenance', st = v.active ? 'Active' : 'Maintenance';
+            var totalDef = v.pscInspections.reduce(function(s, i) { return s + i.deficiencies; }, 0);
+
+            if (activeTab === 'overview') {
+                body.innerHTML = '<div class="detail-section"><div class="detail-section-title">Current Status</div><div class="detail-grid">' +
+                    '<div class="detail-item"><div class="detail-label">Status</div><div class="detail-value"><span class="status-badge ' + sc + '"><span class="status-badge-dot"></span>' + st + '</span></div></div>' +
+                    '<div class="detail-item"><div class="detail-label">Class</div><div class="detail-value purple">' + v.classAbbr + '</div></div>' +
+                    '<div class="detail-item full"><div class="detail-label">Activity</div><div class="detail-value">' + v.status + '</div></div></div></div>' +
+                    '<div class="detail-section"><div class="detail-section-title">Weather</div><div class="weather-card"><div class="weather-main"><div class="weather-icon">' + v.weather.icon + '</div><div><div class="weather-temp">' + v.weather.temp + '°C</div><div class="weather-desc">' + v.weather.condition + '</div></div></div><div class="weather-details"><div class="weather-detail">💨 <span>' + v.weather.wind + ' kts</span></div><div class="weather-detail">💧 <span>' + v.weather.humidity + '%</span></div></div></div></div>' +
+                    '<div class="detail-section"><div class="detail-section-title">Charter</div><div class="detail-grid"><div class="detail-item full"><div class="detail-label">Charterer</div><div class="detail-value">' + v.charterer + '</div></div><div class="detail-item"><div class="detail-label">Delivered</div><div class="detail-value">' + v.delivered + '</div></div><div class="detail-item"><div class="detail-label">Redelivery</div><div class="detail-value">' + v.redelivery + '</div></div></div></div>';
+            } else if (activeTab === 'valuation') {
+                var scrapPct = (v.scrapValue / v.replacementValue * 100).toFixed(0), marketPct = (v.marketValue / v.replacementValue * 100).toFixed(0);
+                body.innerHTML = '<div class="detail-section"><div class="detail-section-title">Asset Valuation (USD Millions)</div>' +
+                    '<div class="valuation-card"><div class="valuation-title">💰 Market Value</div><div class="valuation-amount green">$' + v.marketValue + 'M</div><div class="valuation-sub">Current market estimate</div><div class="valuation-bar"><div class="valuation-fill market" style="width:' + marketPct + '%"></div></div></div>' +
+                    '<div class="valuation-card"><div class="valuation-title">🔄 Replacement (Newbuild)</div><div class="valuation-amount blue">$' + v.replacementValue + 'M</div><div class="valuation-sub">Cost to order equivalent today</div><div class="valuation-bar"><div class="valuation-fill replacement" style="width:100%"></div></div></div>' +
+                    '<div class="valuation-card"><div class="valuation-title">⚙️ Scrap Value</div><div class="valuation-amount amber">$' + v.scrapValue + 'M</div><div class="valuation-sub">LDT: ' + v.ldt.toLocaleString() + 't @ $' + liveData.scrap.price + '/LDT</div><div class="valuation-bar"><div class="valuation-fill scrap" style="width:' + scrapPct + '%"></div></div></div></div>' +
+                    '<div class="detail-section"><div class="detail-section-title">Analysis</div><div class="detail-grid"><div class="detail-item"><div class="detail-label">Age</div><div class="detail-value">' + (2025 - v.built) + ' years</div></div><div class="detail-item"><div class="detail-label">LDT</div><div class="detail-value">' + v.ldt.toLocaleString() + ' t</div></div><div class="detail-item"><div class="detail-label">Above Scrap</div><div class="detail-value green">+$' + (v.marketValue - v.scrapValue).toFixed(1) + 'M</div></div><div class="detail-item"><div class="detail-label">vs Replacement</div><div class="detail-value red">-' + (100 - parseInt(marketPct)) + '%</div></div></div></div>';
+            } else if (activeTab === 'ais') {
+                body.innerHTML = '<div class="detail-section"><div class="detail-section-title">📡 AIS / Navigation</div><div class="ais-card"><div class="ais-row"><div class="ais-label">Nav Status</div><div class="ais-value">' + v.navStatus + '</div></div><div class="ais-row"><div class="ais-label">Speed</div><div class="ais-value">' + v.speed + ' kts</div></div><div class="ais-row"><div class="ais-label">Course</div><div class="ais-value">' + v.course + '°</div></div><div class="ais-row"><div class="ais-label">Destination</div><div class="ais-value">' + v.destination + '</div></div><div class="ais-row"><div class="ais-label">ETA</div><div class="ais-value">' + v.eta + '</div></div><div class="ais-row"><div class="ais-label">Position</div><div class="ais-value" style="font-family:monospace">' + v.lat.toFixed(4) + '°, ' + v.lng.toFixed(4) + '°</div></div></div></div>' +
+                    '<div class="detail-section"><div class="detail-section-title">Identifiers</div><div class="detail-grid"><div class="detail-item"><div class="detail-label">IMO</div><div class="detail-value">' + v.imo + '</div></div><div class="detail-item"><div class="detail-label">MMSI</div><div class="detail-value">' + v.mmsi + '</div></div><div class="detail-item"><div class="detail-label">Call Sign</div><div class="detail-value">' + v.callSign + '</div></div><div class="detail-item"><div class="detail-label">Flag</div><div class="detail-value">' + v.flag + '</div></div></div></div>';
+            } else if (activeTab === 'psc') {
+                var rows = v.pscInspections.map(function(i) { var dc = i.deficiencies === 0 ? 'zero' : (i.deficiencies <= 2 ? 'low' : 'high'); return '<tr><td>' + i.port + '</td><td>' + i.date + '</td><td><span class="deficiency-count ' + dc + '">' + i.deficiencies + '</span></td><td>' + (i.detained ? '⚠️ Yes' : '✓ No') + '</td></tr>'; }).join('');
+                body.innerHTML = '<div class="detail-section"><div class="detail-section-title">🔍 PSC Inspections</div><div style="overflow-x:auto;border-radius:10px;border:1px solid var(--border)"><table class="psc-table"><thead><tr><th>Port</th><th>Date</th><th>Def.</th><th>Detained</th></tr></thead><tbody>' + rows + '</tbody></table></div><div class="psc-summary"><div class="psc-summary-item"><div class="psc-summary-value">' + v.pscInspections.length + '</div><div class="psc-summary-label">Inspections</div></div><div class="psc-summary-item"><div class="psc-summary-value">' + totalDef + '</div><div class="psc-summary-label">Total Def.</div></div><div class="psc-summary-item"><div class="psc-summary-value green">0</div><div class="psc-summary-label">Detentions</div></div></div></div>';
+            } else if (activeTab === 'ports') {
+                var ports = v.portCalls.map(function(p) { return '<div class="port-call"><div class="port-icon">🏭</div><div><div class="port-name">' + p.port + '</div><div class="port-country">' + p.country + '</div><div class="port-dates"><span>📥 ' + p.arrived + '</span><span>📤 ' + p.departed + '</span></div></div></div>'; }).join('');
+                body.innerHTML = '<div class="detail-section"><div class="detail-section-title">🏭 Port Calls</div>' + ports + '</div>';
+            } else if (activeTab === 'specs') {
+                body.innerHTML = '<div class="detail-section"><div class="detail-section-title">📋 Particulars</div><div class="detail-grid"><div class="detail-item"><div class="detail-label">Type</div><div class="detail-value">' + v.typeLabel + '</div></div><div class="detail-item"><div class="detail-label">Built</div><div class="detail-value">' + v.built + '</div></div><div class="detail-item full"><div class="detail-label">Builder</div><div class="detail-value">' + v.builder + '</div></div><div class="detail-item"><div class="detail-label">Flag</div><div class="detail-value">' + v.flag + '</div></div><div class="detail-item"><div class="detail-label">Class</div><div class="detail-value purple">' + v.class + '</div></div></div></div>' +
+                    '<div class="detail-section"><div class="detail-section-title">Dimensions</div><div class="detail-grid"><div class="detail-item"><div class="detail-label">LOA</div><div class="detail-value">' + v.loa + ' m</div></div><div class="detail-item"><div class="detail-label">Beam</div><div class="detail-value">' + v.beam + ' m</div></div><div class="detail-item"><div class="detail-label">Draft</div><div class="detail-value">' + v.draft + ' m</div></div><div class="detail-item"><div class="detail-label">LDT</div><div class="detail-value">' + v.ldt.toLocaleString() + ' t</div></div></div></div>' +
+                    '<div class="detail-section"><div class="detail-section-title">Tonnage</div><div class="detail-grid"><div class="detail-item"><div class="detail-label">DWT</div><div class="detail-value">' + v.dwt.toLocaleString() + ' MT</div></div><div class="detail-item"><div class="detail-label">GT</div><div class="detail-value">' + v.gt.toLocaleString() + '</div></div><div class="detail-item"><div class="detail-label">NT</div><div class="detail-value">' + v.nt.toLocaleString() + '</div></div></div></div>';
+            }
         }
 
-        function togglePanel() {
-            panelOpen = !panelOpen;
-            document.getElementById('panel').classList.toggle('open', panelOpen);
-            document.getElementById('panelOverlay').classList.toggle('visible', panelOpen);
-        }
+        function closeDetail() { document.getElementById('detailModal').classList.remove('visible'); document.getElementById('detailOverlay').classList.remove('visible'); }
+        function togglePanel() { panelOpen = !panelOpen; document.getElementById('panel').classList.toggle('open', panelOpen); document.getElementById('panelOverlay').classList.toggle('visible', panelOpen); }
 
-        function centerFleet() {
-            if (!map) return;
-            var bounds = L.latLngBounds(vessels.map(function(v) { return [v.lat, v.lng]; }));
-            map.fitBounds(bounds, { padding: [30, 30] });
-        }
-
-        function renderList(list) {
-            var html = list.map(function(v) {
-                var maintClass = v.active ? '' : ' maintenance';
-                var maintTag = v.active ? '' : '<span class="maintenance-tag">🔧 Maintenance</span>';
-                return '<div class="vessel-card ' + v.type + maintClass + (v.id === selectedId ? ' selected' : '') + '" data-id="' + v.id + '" onclick="selectVessel(' + v.id + ')">' +
-                    '<div class="vessel-header"><div><div class="vessel-name">' + v.name + maintTag + '</div><div class="vessel-imo">IMO: ' + v.imo + '</div></div>' +
-                    '<span class="vessel-badge ' + v.type + '">' + v.typeLabel + '</span></div>' +
-                    '<div class="vessel-location">📍 ' + v.location + '</div></div>';
+        // MARKET MODAL
+        function openMarketModal() {
+            document.getElementById('marketTime').textContent = 'Updated: ' + new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+            var ratesRows = liveData.charterRates.map(function(r) {
+                var tcT = r.tcTrend === 'up' ? '<span class="rate-trend up">↑</span>' : (r.tcTrend === 'down' ? '<span class="rate-trend down">↓</span>' : '<span class="rate-trend flat">→</span>');
+                var spT = r.spotTrend === 'up' ? '<span class="rate-trend up">↑</span>' : (r.spotTrend === 'down' ? '<span class="rate-trend down">↓</span>' : '<span class="rate-trend flat">→</span>');
+                return '<div class="rate-row"><div class="rate-type"><strong>' + r.type + '</strong><br><span style="font-size:10px;color:var(--text-muted)">' + r.size + '</span></div><div class="rate-values"><div class="rate-value"><div class="rate-amount">$' + r.tc1yr.toLocaleString() + tcT + '</div><div class="rate-label">TC 1yr</div></div><div class="rate-value"><div class="rate-amount" style="color:var(--text-secondary)">$' + r.tc3yr.toLocaleString() + '</div><div class="rate-label">TC 3yr</div></div><div class="rate-value"><div class="rate-amount" style="color:var(--amber)">$' + r.spot.toLocaleString() + spT + '</div><div class="rate-label">Spot</div></div></div></div>';
             }).join('');
-            document.getElementById('vesselList').innerHTML = html;
-            document.getElementById('vesselCount').textContent = list.length + ' Vessels';
+            var spCards = liveData.spAlerts.map(function(s) {
+                var cls = s.hot ? ' hot' : (s.new ? ' new' : ''), badge = s.hot ? '<span class="sp-alert-badge hot">🔥 HOT</span>' : (s.new ? '<span class="sp-alert-badge new">✨ NEW</span>' : '');
+                var tags = s.matches.map(function(m) { return '<span class="sp-match-tag">' + m + '</span>'; }).join('');
+                return '<div class="sp-alert-card' + cls + '">' + badge + '<div class="sp-vessel-name">' + s.name + '</div><div class="sp-vessel-type">' + s.type + ' | ' + s.dwt.toLocaleString() + ' DWT | Built ' + s.built + '</div><div class="sp-price">$' + s.price + 'M</div><div class="sp-details"><span><strong>Builder:</strong> ' + s.builder + '</span><span><strong>Class:</strong> ' + s.class + '</span></div><div style="margin-top:10px"><div style="font-size:9px;color:var(--text-muted);margin-bottom:4px">FLEET MATCH:</div><div class="sp-match-tags">' + tags + '</div></div><div class="sp-broker">📋 ' + s.broker + ' | ' + s.listed + '</div></div>';
+            }).join('');
+            document.getElementById('marketBody').innerHTML = '<div class="market-grid"><div style="display:flex;flex-direction:column;gap:16px">' +
+                '<div class="market-section"><div class="market-section-header"><div class="market-section-title">📊 Charter Rates ($/day)</div><div class="market-section-source">Baltic Exchange</div></div><p style="font-size:10px;color:var(--text-muted);margin-bottom:12px">TC = Time Charter | Spot = Voyage Equivalent</p>' + ratesRows + '</div>' +
+                '<div class="market-section"><div class="market-section-header"><div class="market-section-title">📉 Asset Prices</div><div class="market-section-source">VesselsValue</div></div><div class="asset-row"><div class="asset-type">Scrap Steel ($/LDT)</div><div class="asset-price amber">$' + liveData.scrap.price + '</div></div><div class="asset-row"><div class="asset-type">NB Small Tanker 7K</div><div class="asset-price">$' + liveData.newbuild.small + 'M</div></div><div class="asset-row"><div class="asset-type">NB LR2 110K</div><div class="asset-price">$' + liveData.newbuild.lr2 + 'M</div></div><div class="asset-row"><div class="asset-type">NB LPG 27K</div><div class="asset-price">$' + liveData.newbuild.lpg + 'M</div></div><div class="asset-row"><div class="asset-type">NB Aframax 105K</div><div class="asset-price">$' + liveData.newbuild.aframax + 'M</div></div></div></div>' +
+                '<div style="display:flex;flex-direction:column;gap:16px"><div class="fleet-profile"><div class="fleet-profile-title">🎯 Your Fleet Profile (Match Criteria)</div><div class="fleet-profile-tags"><span class="profile-tag">Small Tanker 7-8K</span><span class="profile-tag">LPG 27K CBM</span><span class="profile-tag">MR/LR2 45-110K</span><span class="profile-tag">Aframax 105K</span><span class="profile-tag">Age &lt;20yr</span><span class="profile-tag">Class: LR/DNV/NK/BV</span></div></div>' +
+                '<div class="market-section"><div class="market-section-header"><div class="market-section-title">🔔 S&P Alerts (' + liveData.spAlerts.length + ')</div><div class="market-section-source">Broker Feeds</div></div><p style="font-size:10px;color:var(--text-muted);margin-bottom:12px">Vessels matching your fleet profile</p>' + spCards + '</div></div></div>' +
+                '<div style="background:var(--bg-primary);padding:14px;border-radius:10px;margin-top:16px"><p style="font-size:10px;color:var(--text-muted)">📡 <strong>Data Sources:</strong> Baltic Exchange, Clarksons, VesselsValue, SSY, Fearnleys. Auto-refreshes every 30 seconds.</p></div>';
+            document.getElementById('marketOverlay').classList.add('visible');
+        }
+        function closeMarketModal() { document.getElementById('marketOverlay').classList.remove('visible'); }
+
+        // SHIPYARD MODAL
+        function openShipyardModal() {
+            function yardTable(yards) {
+                var min = Math.min.apply(null, yards.map(function(y) { return y.price; }));
+                return '<table class="yard-table"><thead><tr><th>Yard</th><th>Quality</th><th>Price</th><th>Lead</th><th>Slot</th></tr></thead><tbody>' + yards.map(function(y) {
+                    var qc = y.quality === 'Premium' ? 'premium' : 'high';
+                    return '<tr><td>' + y.country + ' ' + y.yard + '</td><td><span class="yard-quality ' + qc + '">' + y.quality + '</span></td><td class="' + (y.price === min ? 'price-best' : '') + '">$' + y.price + 'M' + (y.price === min ? ' ✓' : '') + '</td><td>' + y.lead + '</td><td class="slot-available">' + y.slots + '</td></tr>';
+                }).join('') + '</tbody></table>';
+            }
+            document.getElementById('shipyardBody').innerHTML = '<div class="market-section" style="margin-bottom:16px"><div class="market-section-header"><div class="market-section-title">🚢 Small Tanker (7-8K DWT)</div></div><div style="overflow-x:auto">' + yardTable(liveData.shipyards.small) + '</div></div>' +
+                '<div class="market-section" style="margin-bottom:16px"><div class="market-section-header"><div class="market-section-title">🛢️ LR2 Tanker (110K DWT)</div></div><div style="overflow-x:auto">' + yardTable(liveData.shipyards.lr2) + '</div></div>' +
+                '<div class="market-section" style="margin-bottom:16px"><div class="market-section-header"><div class="market-section-title">⛽ LPG Carrier (27K CBM)</div></div><div style="overflow-x:auto">' + yardTable(liveData.shipyards.lpg) + '</div></div>' +
+                '<div class="market-section" style="margin-bottom:16px"><div class="market-section-header"><div class="market-section-title">🛢️ Aframax (105K DWT)</div></div><div style="overflow-x:auto">' + yardTable(liveData.shipyards.aframax) + '</div></div>' +
+                '<div style="background:var(--bg-primary);padding:14px;border-radius:10px"><p style="font-size:10px;color:var(--text-muted)">💡 <strong style="color:var(--green)">Premium</strong> = Korea/Japan, best resale | <strong style="color:var(--blue)">High</strong> = China Tier-1, competitive. Prices Q1 2025 indicative.</p></div>';
+            document.getElementById('shipyardOverlay').classList.add('visible');
+        }
+        function closeShipyardModal() { document.getElementById('shipyardOverlay').classList.remove('visible'); }
+
+        // VESSEL LIST
+        function renderList(list) {
+            document.getElementById('vesselList').innerHTML = list.map(function(v) {
+                var maint = v.active ? '' : ' maintenance', maintTag = v.active ? '' : '<span class="maintenance-tag">🔧</span>';
+                var totalDef = v.pscInspections.reduce(function(s, i) { return s + i.deficiencies; }, 0);
+                var pscBadge = totalDef === 0 ? '<span class="psc-badge good">✓ PSC</span>' : '<span class="psc-badge warn">' + totalDef + ' def</span>';
+                return '<div class="vessel-card ' + v.type + maint + (v.id === selectedId ? ' selected' : '') + '" data-id="' + v.id + '" onclick="selectVessel(' + v.id + ')"><div class="vessel-header"><div><div class="vessel-name">' + v.name + maintTag + '</div><div class="vessel-imo">IMO: ' + v.imo + '</div></div><span class="vessel-badge ' + v.type + '">' + v.typeLabel + '</span></div><div class="vessel-location">📍 ' + v.location + '</div><div class="vessel-stats"><span class="class-badge">' + v.classAbbr + '</span>' + pscBadge + '<span class="value-badge">$' + v.marketValue + 'M</span></div></div>';
+            }).join('');
+            document.getElementById('vesselCount').textContent = list.length;
         }
 
         function setupEvents() {
             document.getElementById('searchInput').addEventListener('input', function(e) {
                 var q = e.target.value.toLowerCase();
-                var filtered = vessels.filter(function(v) {
-                    return v.name.toLowerCase().indexOf(q) > -1 || v.imo.indexOf(q) > -1 || v.location.toLowerCase().indexOf(q) > -1;
-                });
-                renderList(filtered);
+                renderList(vessels.filter(function(v) { return v.name.toLowerCase().indexOf(q) > -1 || v.imo.indexOf(q) > -1 || v.location.toLowerCase().indexOf(q) > -1 || v.charterer.toLowerCase().indexOf(q) > -1; }));
             });
-
-            var filterBtns = document.querySelectorAll('.filter-btn');
-            filterBtns.forEach(function(btn) {
+            document.querySelectorAll('.filter-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
                     this.classList.add('active');
                     var f = this.getAttribute('data-filter');
-                    var filtered;
-                    if (f === 'all') {
-                        filtered = vessels;
-                    } else if (f === 'maintenance') {
-                        filtered = vessels.filter(function(v) { return !v.active; });
-                    } else {
-                        filtered = vessels.filter(function(v) { return v.type === f; });
-                    }
-                    renderList(filtered);
+                    if (f === 'all') renderList(vessels);
+                    else if (f === 'maintenance') renderList(vessels.filter(function(v) { return !v.active; }));
+                    else renderList(vessels.filter(function(v) { return v.type === f; }));
+                });
+            });
+            document.querySelectorAll('.detail-tab').forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    activeTab = this.dataset.tab;
+                    document.querySelectorAll('.detail-tab').forEach(function(t) { t.classList.remove('active'); });
+                    this.classList.add('active');
+                    var v = vessels.find(function(x) { return x.id === selectedId; }); if (v) renderTabContent(v);
                 });
             });
         }
 
-        // Start loading
-        loadLeaflet();
-
-        // Simulate movement
-        setInterval(function() {
-            if (!map) return;
-            vessels.forEach(function(v) {
-                if (v.active && v.status.toLowerCase().indexOf('sailing') > -1) {
-                    v.lat += (Math.random() - 0.5) * 0.008;
-                    v.lng += (Math.random() - 0.5) * 0.008;
-                    if (markers[v.id]) markers[v.id].setLatLng([v.lat, v.lng]);
-                }
-            });
-        }, 5000);
+        // INIT
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            renderList(vessels);
+            setupEvents();
+            updateDashboard();
+            startLiveUpdates();
+            document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('en-GB');
+        });
     </script>
 </body>
 </html>
