@@ -255,6 +255,43 @@
         .price-best { color: var(--green); font-weight: 600; }
         .slot-available { color: var(--green); font-size: 10px; }
 
+        /* NB Cycle Chart Styles */
+        .nb-chart-container { background: var(--bg-primary); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .nb-chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .nb-chart-title { font-size: 14px; font-weight: 600; }
+        .nb-chart-class { font-size: 11px; color: var(--amber); background: rgba(245,158,11,0.15); padding: 4px 10px; border-radius: 6px; }
+        .nb-chart { position: relative; height: 180px; display: flex; align-items: flex-end; gap: 4px; padding: 0 4px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+        .nb-bar { flex: 1; background: var(--bg-tertiary); border-radius: 4px 4px 0 0; position: relative; min-width: 16px; transition: all 0.3s; cursor: pointer; }
+        .nb-bar:hover { opacity: 0.8; }
+        .nb-bar.current { background: linear-gradient(180deg, var(--amber), #d97706); box-shadow: 0 0 10px rgba(245,158,11,0.4); }
+        .nb-bar.low { background: linear-gradient(180deg, var(--green), #16a34a); }
+        .nb-bar.high { background: linear-gradient(180deg, var(--red), #dc2626); }
+        .nb-bar-tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--bg-secondary); border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; font-size: 10px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; }
+        .nb-bar:hover .nb-bar-tooltip { opacity: 1; }
+        .nb-chart-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); }
+        .nb-chart-axis { position: absolute; left: -40px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: var(--text-muted); padding: 4px 0; }
+        .nb-signal { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; margin-bottom: 12px; }
+        .nb-signal.buy { background: rgba(34,197,94,0.15); border: 1px solid var(--green); }
+        .nb-signal.hold { background: rgba(245,158,11,0.15); border: 1px solid var(--amber); }
+        .nb-signal.wait { background: rgba(239,68,68,0.15); border: 1px solid var(--red); }
+        .nb-signal-icon { font-size: 28px; }
+        .nb-signal-text { flex: 1; }
+        .nb-signal-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+        .nb-signal.buy .nb-signal-title { color: var(--green); }
+        .nb-signal.hold .nb-signal-title { color: var(--amber); }
+        .nb-signal.wait .nb-signal-title { color: var(--red); }
+        .nb-signal-desc { font-size: 11px; color: var(--text-secondary); }
+        .nb-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+        .nb-stat { background: var(--bg-primary); border-radius: 10px; padding: 12px; text-align: center; }
+        .nb-stat-value { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+        .nb-stat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
+        .nb-events { background: var(--bg-primary); border-radius: 10px; padding: 14px; }
+        .nb-events-title { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; }
+        .nb-event { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+        .nb-event:last-child { border-bottom: none; }
+        .nb-event-year { color: var(--amber); font-weight: 600; min-width: 40px; }
+        .nb-event-text { color: var(--text-secondary); }
+
         @media (min-width: 768px) {
             .header { padding-left: 24px; padding-right: 24px; }
             .header-btn { display: flex; }
@@ -345,6 +382,7 @@
             <div class="detail-tabs">
                 <button class="detail-tab active" data-tab="overview">Overview</button>
                 <button class="detail-tab" data-tab="valuation">💰 Valuation</button>
+                <button class="detail-tab" data-tab="nbcycle">📈 NB Cycle</button>
                 <button class="detail-tab" data-tab="ais">📡 AIS</button>
                 <button class="detail-tab" data-tab="psc">🔍 PSC</button>
                 <button class="detail-tab" data-tab="ports">🏭 Ports</button>
@@ -393,7 +431,49 @@
                 lr2: [{ yard: 'Hyundai Heavy', country: '🇰🇷', quality: 'Premium', price: 88, lead: '28-32 mo', slots: 'Q1 2028' },{ yard: 'Samsung Heavy', country: '🇰🇷', quality: 'Premium', price: 86, lead: '30-34 mo', slots: 'Q2 2028' },{ yard: 'Dalian', country: '🇨🇳', quality: 'High', price: 72, lead: '24-28 mo', slots: 'Q3 2027' },{ yard: 'New Times', country: '🇨🇳', quality: 'High', price: 70, lead: '22-26 mo', slots: 'Q2 2027' }],
                 lpg: [{ yard: 'Hyundai Mipo', country: '🇰🇷', quality: 'Premium', price: 78, lead: '28-32 mo', slots: 'Q1 2028' },{ yard: 'Kawasaki', country: '🇯🇵', quality: 'Premium', price: 76, lead: '30-34 mo', slots: 'Q2 2028' },{ yard: 'Jiangnan', country: '🇨🇳', quality: 'High', price: 65, lead: '24-28 mo', slots: 'Q4 2027' }],
                 aframax: [{ yard: 'Samsung Heavy', country: '🇰🇷', quality: 'Premium', price: 82, lead: '30-34 mo', slots: 'Q2 2028' },{ yard: 'Hyundai Heavy', country: '🇰🇷', quality: 'Premium', price: 84, lead: '28-32 mo', slots: 'Q1 2028' },{ yard: 'Dalian', country: '🇨🇳', quality: 'High', price: 68, lead: '24-28 mo', slots: 'Q3 2027' }]
-            }
+            },
+            // Historical Newbuild Prices (2010-2025) - $M USD
+            nbHistory: {
+                smallTanker: { label: 'Small Tanker 7K DWT', prices: [
+                    {year: 2010, price: 32}, {year: 2011, price: 30}, {year: 2012, price: 28}, {year: 2013, price: 26},
+                    {year: 2014, price: 25}, {year: 2015, price: 22}, {year: 2016, price: 20}, {year: 2017, price: 21},
+                    {year: 2018, price: 23}, {year: 2019, price: 24}, {year: 2020, price: 22}, {year: 2021, price: 24},
+                    {year: 2022, price: 26}, {year: 2023, price: 27}, {year: 2024, price: 28}, {year: 2025, price: 28}
+                ]},
+                lr2: { label: 'LR2 Tanker 110K DWT', prices: [
+                    {year: 2010, price: 72}, {year: 2011, price: 68}, {year: 2012, price: 62}, {year: 2013, price: 58},
+                    {year: 2014, price: 55}, {year: 2015, price: 48}, {year: 2016, price: 45}, {year: 2017, price: 48},
+                    {year: 2018, price: 52}, {year: 2019, price: 55}, {year: 2020, price: 52}, {year: 2021, price: 58},
+                    {year: 2022, price: 68}, {year: 2023, price: 78}, {year: 2024, price: 82}, {year: 2025, price: 85}
+                ]},
+                lpg: { label: 'LPG Carrier 27K CBM', prices: [
+                    {year: 2010, price: 68}, {year: 2011, price: 65}, {year: 2012, price: 60}, {year: 2013, price: 55},
+                    {year: 2014, price: 52}, {year: 2015, price: 48}, {year: 2016, price: 45}, {year: 2017, price: 48},
+                    {year: 2018, price: 52}, {year: 2019, price: 55}, {year: 2020, price: 52}, {year: 2021, price: 58},
+                    {year: 2022, price: 65}, {year: 2023, price: 70}, {year: 2024, price: 73}, {year: 2025, price: 75}
+                ]},
+                aframax: { label: 'Aframax 105K DWT', prices: [
+                    {year: 2010, price: 68}, {year: 2011, price: 62}, {year: 2012, price: 58}, {year: 2013, price: 52},
+                    {year: 2014, price: 50}, {year: 2015, price: 45}, {year: 2016, price: 42}, {year: 2017, price: 45},
+                    {year: 2018, price: 48}, {year: 2019, price: 52}, {year: 2020, price: 48}, {year: 2021, price: 55},
+                    {year: 2022, price: 62}, {year: 2023, price: 72}, {year: 2024, price: 78}, {year: 2025, price: 80}
+                ]},
+                chemical: { label: 'Chemical/MR 50K DWT', prices: [
+                    {year: 2010, price: 48}, {year: 2011, price: 45}, {year: 2012, price: 42}, {year: 2013, price: 38},
+                    {year: 2014, price: 36}, {year: 2015, price: 32}, {year: 2016, price: 30}, {year: 2017, price: 32},
+                    {year: 2018, price: 35}, {year: 2019, price: 37}, {year: 2020, price: 35}, {year: 2021, price: 38},
+                    {year: 2022, price: 42}, {year: 2023, price: 44}, {year: 2024, price: 45}, {year: 2025, price: 45}
+                ]}
+            },
+            marketEvents: [
+                { year: 2008, event: 'Global Financial Crisis - Market Peak' },
+                { year: 2010, event: 'Post-crisis recovery begins' },
+                { year: 2015, event: 'Oil price crash - NB prices bottom' },
+                { year: 2016, event: 'Best ordering window (cycle low)' },
+                { year: 2020, event: 'COVID-19 disruption' },
+                { year: 2022, event: 'Post-COVID surge begins' },
+                { year: 2024, event: 'Near cycle peak - High prices' }
+            ]
         };
 
         // Fleet Data
@@ -533,6 +613,77 @@
                     '<div class="valuation-card"><div class="valuation-title">🔄 Replacement (Newbuild)</div><div class="valuation-amount blue">$' + v.replacementValue + 'M</div><div class="valuation-sub">Cost to order equivalent today</div><div class="valuation-bar"><div class="valuation-fill replacement" style="width:100%"></div></div></div>' +
                     '<div class="valuation-card"><div class="valuation-title">⚙️ Scrap Value</div><div class="valuation-amount amber">$' + v.scrapValue + 'M</div><div class="valuation-sub">LDT: ' + v.ldt.toLocaleString() + 't @ $' + liveData.scrap.price + '/LDT</div><div class="valuation-bar"><div class="valuation-fill scrap" style="width:' + scrapPct + '%"></div></div></div></div>' +
                     '<div class="detail-section"><div class="detail-section-title">Analysis</div><div class="detail-grid"><div class="detail-item"><div class="detail-label">Age</div><div class="detail-value">' + (2025 - v.built) + ' years</div></div><div class="detail-item"><div class="detail-label">LDT</div><div class="detail-value">' + v.ldt.toLocaleString() + ' t</div></div><div class="detail-item"><div class="detail-label">Above Scrap</div><div class="detail-value green">+$' + (v.marketValue - v.scrapValue).toFixed(1) + 'M</div></div><div class="detail-item"><div class="detail-label">vs Replacement</div><div class="detail-value red">-' + (100 - parseInt(marketPct)) + '%</div></div></div></div>';
+            } else if (activeTab === 'nbcycle') {
+                // Determine vessel class for NB history
+                var nbKey = 'smallTanker';
+                if (v.dwt > 100000) nbKey = v.type === 'crude' ? 'aframax' : 'lr2';
+                else if (v.type === 'lpg') nbKey = 'lpg';
+                else if (v.type === 'chemical' || v.dwt > 40000) nbKey = 'chemical';
+                
+                var nbData = liveData.nbHistory[nbKey];
+                var prices = nbData.prices;
+                var maxPrice = Math.max.apply(null, prices.map(function(p) { return p.price; }));
+                var minPrice = Math.min.apply(null, prices.map(function(p) { return p.price; }));
+                var avgPrice = Math.round(prices.reduce(function(s, p) { return s + p.price; }, 0) / prices.length);
+                var currentPrice = prices[prices.length - 1].price;
+                var lowYear = prices.find(function(p) { return p.price === minPrice; }).year;
+                var highYear = prices.find(function(p) { return p.price === maxPrice; }).year;
+                
+                // Calculate position in cycle (0-100%)
+                var cyclePosition = Math.round((currentPrice - minPrice) / (maxPrice - minPrice) * 100);
+                
+                // Determine signal
+                var signal, signalClass, signalIcon, signalDesc;
+                if (cyclePosition <= 25) {
+                    signal = 'STRONG BUY'; signalClass = 'buy'; signalIcon = '🟢';
+                    signalDesc = 'Prices near 15-year low. Excellent ordering window.';
+                } else if (cyclePosition <= 50) {
+                    signal = 'CONSIDER BUYING'; signalClass = 'buy'; signalIcon = '🟡';
+                    signalDesc = 'Prices below average. Good time to order if planning fleet renewal.';
+                } else if (cyclePosition <= 75) {
+                    signal = 'HOLD / WAIT'; signalClass = 'hold'; signalIcon = '🟠';
+                    signalDesc = 'Prices above average. Consider waiting for better entry point.';
+                } else {
+                    signal = 'WAIT FOR DIP'; signalClass = 'wait'; signalIcon = '🔴';
+                    signalDesc = 'Prices near cycle peak. Not ideal ordering window.';
+                }
+                
+                // Build chart bars
+                var bars = prices.map(function(p, i) {
+                    var height = ((p.price - minPrice * 0.8) / (maxPrice - minPrice * 0.8) * 100);
+                    var barClass = '';
+                    if (i === prices.length - 1) barClass = ' current';
+                    else if (p.price === minPrice) barClass = ' low';
+                    else if (p.price === maxPrice) barClass = ' high';
+                    return '<div class="nb-bar' + barClass + '" style="height:' + height + '%"><div class="nb-bar-tooltip"><strong>' + p.year + '</strong><br>$' + p.price + 'M</div></div>';
+                }).join('');
+                
+                // Market events
+                var events = liveData.marketEvents.map(function(e) {
+                    return '<div class="nb-event"><div class="nb-event-year">' + e.year + '</div><div class="nb-event-text">' + e.event + '</div></div>';
+                }).join('');
+                
+                body.innerHTML = 
+                    '<div class="nb-signal ' + signalClass + '"><div class="nb-signal-icon">' + signalIcon + '</div><div class="nb-signal-text"><div class="nb-signal-title">' + signal + '</div><div class="nb-signal-desc">' + signalDesc + '</div></div></div>' +
+                    
+                    '<div class="nb-chart-container"><div class="nb-chart-header"><div class="nb-chart-title">15-Year Newbuild Price History</div><div class="nb-chart-class">' + nbData.label + '</div></div>' +
+                    '<div class="nb-chart">' + bars + '</div>' +
+                    '<div class="nb-chart-labels"><span>2010</span><span>2015</span><span>2020</span><span>2025</span></div></div>' +
+                    
+                    '<div class="nb-stats">' +
+                    '<div class="nb-stat"><div class="nb-stat-value amber">$' + currentPrice + 'M</div><div class="nb-stat-label">Current Price</div></div>' +
+                    '<div class="nb-stat"><div class="nb-stat-value green">$' + minPrice + 'M</div><div class="nb-stat-label">15yr Low (' + lowYear + ')</div></div>' +
+                    '<div class="nb-stat"><div class="nb-stat-value red">$' + maxPrice + 'M</div><div class="nb-stat-label">15yr High (' + highYear + ')</div></div>' +
+                    '</div>' +
+                    
+                    '<div class="detail-grid" style="margin-bottom:16px">' +
+                    '<div class="detail-item"><div class="detail-label">15yr Average</div><div class="detail-value">$' + avgPrice + 'M</div></div>' +
+                    '<div class="detail-item"><div class="detail-label">Cycle Position</div><div class="detail-value ' + (cyclePosition > 50 ? 'red' : 'green') + '">' + cyclePosition + '% (of range)</div></div>' +
+                    '<div class="detail-item"><div class="detail-label">vs Average</div><div class="detail-value ' + (currentPrice > avgPrice ? 'red' : 'green') + '">' + (currentPrice > avgPrice ? '+' : '') + (currentPrice - avgPrice) + 'M</div></div>' +
+                    '<div class="detail-item"><div class="detail-label">Potential Savings</div><div class="detail-value green">$' + (currentPrice - minPrice) + 'M at cycle low</div></div>' +
+                    '</div>' +
+                    
+                    '<div class="nb-events"><div class="nb-events-title">📅 Key Market Events</div>' + events + '</div>';
             } else if (activeTab === 'ais') {
                 body.innerHTML = '<div class="detail-section"><div class="detail-section-title">📡 AIS / Navigation</div><div class="ais-card"><div class="ais-row"><div class="ais-label">Nav Status</div><div class="ais-value">' + v.navStatus + '</div></div><div class="ais-row"><div class="ais-label">Speed</div><div class="ais-value">' + v.speed + ' kts</div></div><div class="ais-row"><div class="ais-label">Course</div><div class="ais-value">' + v.course + '°</div></div><div class="ais-row"><div class="ais-label">Destination</div><div class="ais-value">' + v.destination + '</div></div><div class="ais-row"><div class="ais-label">ETA</div><div class="ais-value">' + v.eta + '</div></div><div class="ais-row"><div class="ais-label">Position</div><div class="ais-value" style="font-family:monospace">' + v.lat.toFixed(4) + '°, ' + v.lng.toFixed(4) + '°</div></div></div></div>' +
                     '<div class="detail-section"><div class="detail-section-title">Identifiers</div><div class="detail-grid"><div class="detail-item"><div class="detail-label">IMO</div><div class="detail-value">' + v.imo + '</div></div><div class="detail-item"><div class="detail-label">MMSI</div><div class="detail-value">' + v.mmsi + '</div></div><div class="detail-item"><div class="detail-label">Call Sign</div><div class="detail-value">' + v.callSign + '</div></div><div class="detail-item"><div class="detail-label">Flag</div><div class="detail-value">' + v.flag + '</div></div></div></div>';
