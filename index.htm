@@ -504,23 +504,36 @@
         ];
 
         var map = null, markers = {}, selectedId = null, panelOpen = false, activeTab = 'overview';
+        var updateCount = 0;
 
-        // LIVE UPDATE ENGINE - Runs every 30 seconds
+        // LIVE UPDATE ENGINE - Vessel positions every 5 seconds, market data every 30 seconds
         function startLiveUpdates() {
+            // Position updates every 5 seconds
+            setInterval(function() {
+                updateVesselPositions();
+                updateCount++;
+                // Flash the live dot to show update
+                var dot = document.querySelector('.live-dot');
+                if (dot) { dot.style.background = '#fbbf24'; setTimeout(function() { dot.style.background = '#22c55e'; }, 200); }
+            }, 5000);
+            
+            // Market data updates every 30 seconds
             setInterval(function() {
                 liveData.lastUpdate = new Date();
-                // Simulate rate fluctuations
                 liveData.charterRates.forEach(function(r) {
                     r.tc1yr = Math.round(r.tc1yr * (1 + (Math.random() - 0.5) * 0.02));
                     r.spot = Math.round(r.spot * (1 + (Math.random() - 0.5) * 0.03));
                 });
                 liveData.scrap.price = Math.round(540 + (Math.random() - 0.5) * 20);
                 updateDashboard();
-                updateVesselPositions();
             }, 30000);
+            
+            // Clock every second
             setInterval(function() {
                 document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('en-GB');
             }, 1000);
+            
+            console.log('🚢 BIHAR Fleet Live Tracking Started - Updates every 5 seconds');
         }
 
         function updateDashboard() {
@@ -534,14 +547,43 @@
         }
 
         function updateVesselPositions() {
+            var moved = 0;
             vessels.forEach(function(v) {
                 if (v.active && v.speed > 0) {
-                    var r = v.course * Math.PI / 180;
-                    v.lat += Math.cos(r) * 0.003;
-                    v.lng += Math.sin(r) * 0.003;
-                    if (markers[v.id]) markers[v.id].setLatLng([v.lat, v.lng]);
+                    // Convert course to radians and calculate movement
+                    // Speed in knots, update every 5 sec = speed * 5/3600 nautical miles
+                    // 1 nautical mile = 1/60 degree at equator
+                    var speedFactor = v.speed * (5/3600) * (1/60) * 10; // 10x exaggeration for visibility
+                    var courseRad = v.course * Math.PI / 180;
+                    
+                    // Update position (lat moves with cos, lng with sin)
+                    v.lat += Math.cos(courseRad) * speedFactor;
+                    v.lng += Math.sin(courseRad) * speedFactor;
+                    
+                    // Update marker on map
+                    if (markers[v.id]) {
+                        markers[v.id].setLatLng([v.lat, v.lng]);
+                        moved++;
+                    }
+                    
+                    // Update vessel card location text
+                    var card = document.querySelector('.vessel-card[data-id="' + v.id + '"] .vessel-location');
+                    if (card) {
+                        card.innerHTML = '📍 ' + v.lat.toFixed(2) + '°N, ' + v.lng.toFixed(2) + '°E <span style="color:var(--green);font-size:10px">● MOVING</span>';
+                    }
                 }
             });
+            
+            // Update detail modal if open and showing AIS tab
+            if (selectedId && activeTab === 'ais') {
+                var v = vessels.find(function(x) { return x.id === selectedId; });
+                if (v) {
+                    var posEl = document.querySelector('.ais-card .ais-row:last-child .ais-value');
+                    if (posEl) posEl.textContent = v.lat.toFixed(4) + '°, ' + v.lng.toFixed(4) + '°';
+                }
+            }
+            
+            if (moved > 0) console.log('📍 Updated ' + moved + ' vessel positions');
         }
 
         function initMap() {
