@@ -81,11 +81,11 @@ function renderCorridorStrip(corridors) {
     return;
   }
   el.innerHTML = corridors.map(function(c) {
-    var name = (c.corridor || c.name || '').replace(/_/g, ' ');
+    var name = (c.name || c.corridor_id || '').replace(/_/g, ' ');
     return '<div class="corridor-card" onclick="switchView(\'threatmap\')">' +
       '<div class="corridor-name">' + _esc(name) + '</div>' +
       '<div class="corridor-status ' + _esc(c.status) + '">' + _esc(c.status) + '</div>' +
-      '<div class="corridor-incidents">' + (c.incidentCount || 0) + ' incidents (7d)</div>' +
+      '<div class="corridor-incidents">' + (c.incident_count_7d || 0) + ' incidents (7d)</div>' +
     '</div>';
   }).join('');
 }

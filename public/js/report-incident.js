@@ -189,9 +189,9 @@ function renderThreatCorridorsSidebar(corridors) {
   if (!el) return;
   el.innerHTML = corridors.map(function(c) {
     return '<div class="corridor-card">' +
-      '<div class="corridor-name">' + _esc((c.corridor || c.name || '').replace(/_/g, ' ')) + '</div>' +
+      '<div class="corridor-name">' + _esc((c.name || c.corridor_id || '').replace(/_/g, ' ')) + '</div>' +
       '<div class="corridor-status ' + _esc(c.status) + '">' + _esc(c.status) + '</div>' +
-      '<div class="corridor-incidents">' + (c.incidentCount || 0) + ' incidents (7d)</div>' +
+      '<div class="corridor-incidents">' + (c.incident_count_7d || 0) + ' incidents (7d)</div>' +
     '</div>';
   }).join('');
 }
