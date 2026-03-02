@@ -244,10 +244,12 @@ function handleProximityAlert(data) {
   var banner = document.getElementById('alertBanner');
   var text = document.getElementById('alertBannerText');
   if (!banner || !text) return;
-  var msg = Array.isArray(data) ? data[0] : data;
-  if (!msg) return;
-  text.textContent = (msg.tier || 'ALERT') + ': ' + (msg.vessel_name || 'Vessel') + ' within ' +
-    (msg.distance_nm ? msg.distance_nm.toFixed(1) + 'nm' : '--') + ' of ' + (msg.incident_title || 'incident');
+  var msgs = Array.isArray(data) ? data : [data];
+  msgs = msgs.filter(function(m) { return m && m.distance_nm && m.vessel_name; });
+  if (msgs.length === 0) { banner.style.display = 'none'; return; }
+  var msg = msgs[0];
+  text.textContent = (msg.tier || msg.alert_level || 'ALERT') + ': ' + msg.vessel_name + ' within ' +
+    msg.distance_nm.toFixed(1) + 'nm of ' + (msg.incident_title || 'incident');
   banner.style.display = 'flex';
 
   document.getElementById('alertBannerDismiss').onclick = function() { banner.style.display = 'none'; };

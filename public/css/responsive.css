@@ -1,20 +1,106 @@
-/* Responsive -- Media queries for tablet and desktop */
+/* Responsive -- Media queries for all views
+   Mobile-first: base styles are mobile, progressively enhance for larger screens */
 
-/* Mobile-first overrides */
-@media (max-width: 900px) { .market-grid { grid-template-columns: 1fr; } }
+/* ═══════════════════════════════════════════════════
+   MOBILE (max-width: 767px)
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 767px) {
 
-@media (max-width: 768px) {
-    .nav-btn { font-size: 10px; padding: 6px 10px; }
-    .dash-stats { grid-template-columns: repeat(3, 1fr); }
+    /* ── Header ── */
+    .header { padding-left: 10px; padding-right: 10px; gap: 0; }
+    .logo-img { width: 28px; height: 28px; }
+    .logo { gap: 8px; }
+    .logo-text h1 { font-size: 12px; letter-spacing: 1px; }
+    .logo-text p { display: none; }
+    .header-nav { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 1; min-width: 0; }
+    .header-nav::-webkit-scrollbar { display: none; }
+    .nav-btn { font-size: 10px; padding: 6px 8px; white-space: nowrap; flex-shrink: 0; }
+    .header-right { gap: 2px; flex-shrink: 0; }
+    .report-btn span,
+    .refresh-text { display: none; }
+    .report-btn,
+    .refresh-btn { padding: 5px 8px; }
+    .data-sources { display: none; }
+    .live-indicator { padding: 4px 8px; margin-left: 4px; }
+    .live-time { font-size: 9px; }
+    .live-mode { font-size: 9px; }
+
+    /* ── Alert Banner ── */
+    .alert-banner { font-size: 11px; padding: 6px 10px; gap: 8px; }
+    .alert-banner-btn { font-size: 9px; padding: 2px 8px; }
+
+    /* ── Overview ── */
+    .corridor-strip { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .corridor-card { min-width: 100px; flex: 0 0 auto; }
+    .overview-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        overflow-y: auto;
+    }
+    .overview-left { border-right: none; border-bottom: 1px solid var(--border); order: 2; max-height: 300px; overflow-y: auto; }
+    .overview-center { order: 1; min-height: 300px; }
+    .overview-right { border-left: none; border-top: 1px solid var(--border); order: 3; max-height: 300px; overflow-y: auto; }
+    .overview-stats { flex-wrap: wrap; }
+    .ostat { flex: 1 1 calc(33.33% - 1px); min-width: 0; padding: 6px 4px; }
+    .ostat-value { font-size: 16px; }
+    .ostat-label { font-size: 8px; letter-spacing: 0.5px; }
+
+    /* ── Threat Map ── */
+    .threatmap-layout { flex-direction: column; }
+    .threatmap-main { min-height: 50vh; }
+    .threatmap-sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); max-height: 40vh; }
+    .threatmap-controls { flex-wrap: wrap; gap: 6px; }
+
+    /* ── Incidents ── */
+    .incidents-toolbar { flex-direction: column; align-items: stretch; padding: 8px 10px; gap: 8px; }
+    .incidents-filters { gap: 6px; }
+    .inc-search { width: 100%; }
+    .incidents-filters select { flex: 1; min-width: 0; font-size: 10px; }
+    .incidents-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .incidents-table { min-width: 700px; font-size: 11px; }
+    .incidents-table th,
+    .incidents-table td { padding: 6px 8px; }
+    .incident-detail-panel { width: 100%; }
+
+    /* ── Fleet Status ── */
+    .fleet-toolbar { flex-direction: column; align-items: stretch; padding: 8px 10px; gap: 8px; }
+    .fleet-search { width: 100%; }
+    .fleet-grid { padding: 8px; gap: 8px; grid-template-columns: 1fr; }
+    .fleet-detail-panel { width: 100%; }
+    .fleet-summary { flex-wrap: wrap; gap: 8px; }
+
+    /* ── Notices ── */
+    .notices-toolbar { padding: 0 10px; }
+    .ntab { font-size: 11px; padding: 8px 10px; }
+    .notices-content { padding: 10px; }
+    .recipients-grid { grid-template-columns: 1fr; }
+
+    /* ── Legacy dashboard (kept for compat) ── */
+    .dash-stats { grid-template-columns: repeat(2, 1fr); }
     .dash-main { grid-template-columns: 1fr; }
     .dash-map-area { min-height: 300px; }
-    .incident-detail-panel { width: 100%; }
+    .market-grid { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 480px) {
-    .dash-stats { grid-template-columns: repeat(2, 1fr); }
+
+/* ═══════════════════════════════════════════════════
+   TABLET (768px – 1023px)
+   ═══════════════════════════════════════════════════ */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .header { padding-left: 16px; padding-right: 16px; }
+    .overview-grid { grid-template-columns: 1fr 1fr; }
+    .overview-left { order: 2; }
+    .overview-center { order: 1; grid-column: 1 / -1; min-height: 350px; }
+    .overview-right { order: 3; }
+    .threatmap-sidebar { width: 260px; }
+    .fleet-detail-panel { width: 340px; }
+    .incident-detail-panel { width: 340px; }
 }
 
+
+/* ═══════════════════════════════════════════════════
+   DESKTOP (min-width: 768px) — shared enhancements
+   ═══════════════════════════════════════════════════ */
 @media (min-width: 768px) {
     .header { padding-left: 24px; padding-right: 24px; }
     .header-btn { display: flex; }
@@ -57,6 +143,10 @@
     .detail-handle { display: none; }
 }
 
+
+/* ═══════════════════════════════════════════════════
+   LARGE DESKTOP (min-width: 1200px)
+   ═══════════════════════════════════════════════════ */
 @media (min-width: 1200px) {
     .panel { width: 400px; }
     .detail-modal { width: 500px; }

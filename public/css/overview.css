@@ -6,7 +6,7 @@
 .view.active { display: flex; flex-direction: column; }
 
 /* ── Alert Banner ── */
-.alert-banner { background: var(--red-bg); border-bottom: 1px solid var(--red); padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--red); animation: fade-in 0.3s; }
+.alert-banner { position: fixed; top: var(--header-height); left: 0; right: 0; z-index: 900; background: var(--red-bg); border-bottom: 1px solid var(--red); padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--red); animation: fade-in 0.3s; }
 .alert-banner .alert-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse 1.5s infinite; flex-shrink: 0; }
 .alert-banner-text { flex: 1; font-weight: 600; }
 .alert-banner-btn { background: none; border: 1px solid var(--red); color: var(--red); padding: 2px 10px; font-size: 10px; font-weight: 700; cursor: pointer; letter-spacing: 1px; font-family: var(--font-mono); }
