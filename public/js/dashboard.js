@@ -3,6 +3,7 @@
 
 var dashMap = null;
 var dashMarkers = [];
+var dashJourneyLines = [];
 var dashboardInitialized = false;
 
 function initDashboard() {
@@ -69,19 +70,21 @@ function renderDashStats(vsl, alerts) {
 function renderDashMap(vsl) {
     dashMarkers.forEach(function(m) { dashMap.removeLayer(m); });
     dashMarkers = [];
+    dashJourneyLines.forEach(function(l) { dashMap.removeLayer(l); });
+    dashJourneyLines = [];
     vsl.forEach(function(v) {
         if (!v.lat && !v.lng) return;
-        var color = v.active ? getTypeColor(v.type) : '#555568';
-        var m = L.circleMarker([v.lat, v.lng], {
-            radius: 4,
-            fillColor: color,
-            color: 'rgba(255,255,255,0.2)',
-            weight: 1,
-            fillOpacity: 0.8
-        }).addTo(dashMap);
-        m.bindTooltip(v.name, { direction: 'top', offset: [0, -6] });
+        var riskLevel = v.riskLevel || 'LOW';
+        var heading = (v.speed > 0) ? (v.course || v.heading || 0) : 0;
+        var m = _createVesselMarker(dashMap, v.lat, v.lng, riskLevel, v.name, { heading: heading });
         m.on('click', function() { switchView('fleet'); setTimeout(function() { selectVessel(v.id); }, 300); });
         dashMarkers.push(m);
+
+        // Journey line for moving vessels
+        if (v.speed > 0 && v.destination) {
+            var line = _createJourneyLine(dashMap, v.lat, v.lng, v.destination, RISK_COLORS[riskLevel]);
+            if (line) dashJourneyLines.push(line);
+        }
     });
 }
 

@@ -73,3 +73,65 @@ function _formatTime(ts) {
 
 // Try to parse JSON, return original on failure
 function _tryParse(s) { try { return JSON.parse(s); } catch(e) { return s; } }
+
+// ========== MAP MARKER HELPERS ==========
+
+// Risk level → color mapping (shared across all maps)
+var RISK_COLORS = { CRITICAL: '#e05555', HIGH: '#c0392b', ELEVATED: '#d4a037', LOW: '#3cb371' };
+
+// Port coordinates lookup for journey lines
+var PORT_COORDS = {
+  'SINGAPORE': [1.26, 103.84], 'JEDDAH': [21.49, 39.17], 'SINES': [37.95, -8.87],
+  'DURBAN': [-29.87, 31.03], 'FUJAIRAH': [25.12, 56.33], 'JEBEL ALI': [25.01, 55.06],
+  'KANDLA': [23.03, 70.22], 'JUBAIL': [27.01, 49.66], 'SHENAO': [25.12, 121.80],
+  'SUEZ': [29.97, 32.55], 'SUEZ STS': [29.97, 32.55], 'VENICE': [45.44, 12.33],
+  'ANTWERP': [51.22, 4.40], 'TANJUNG BURAS': [2.05, 102.44],
+  'SHOAIBA': [20.68, 39.50], 'YANBU': [24.09, 38.06], 'RAS TANURA': [26.64, 50.15],
+  'PRAI': [5.38, 100.39], 'BUSAN': [35.10, 129.03], 'MUMBAI': [18.95, 72.84],
+  'DRY DOCK': null, 'ORDERS': null
+};
+
+// Create a triangle-shaped Leaflet divIcon for vessel markers
+// Triangle points in direction of travel (rotated by heading/course)
+function _vesselIcon(riskLevel, opts) {
+  var color = RISK_COLORS[riskLevel] || RISK_COLORS.LOW;
+  var size = (opts && opts.size) || 12;
+  var half = size / 2;
+  var heading = (opts && opts.heading != null) ? opts.heading : 0;
+  var filter = (riskLevel === 'CRITICAL') ? 'filter:drop-shadow(0 0 3px ' + color + ');' : '';
+  return L.divIcon({
+    className: '',
+    iconSize: [size, size],
+    iconAnchor: [half, half],
+    html: '<svg width="' + size + '" height="' + size + '" viewBox="0 0 12 12" ' +
+      'style="transform:rotate(' + heading + 'deg);' + filter + '">' +
+      '<polygon points="6,1 11,11 1,11" fill="' + color + '" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>' +
+    '</svg>'
+  });
+}
+
+// Create a vessel marker (triangle) at given coords
+// opts.heading: rotation in degrees (0=north, 90=east)
+function _createVesselMarker(map, lat, lng, riskLevel, tooltipText, opts) {
+  var icon = _vesselIcon(riskLevel, opts);
+  var marker = L.marker([lat, lng], { icon: icon }).addTo(map);
+  if (tooltipText) {
+    marker.bindTooltip(tooltipText, { className: 'sentinel-tooltip' });
+  }
+  return marker;
+}
+
+// Draw a dotted journey line from vessel position to destination port
+// Returns the polyline (or null if destination unknown)
+function _createJourneyLine(map, vesselLat, vesselLng, destination, color) {
+  if (!destination) return null;
+  var dest = destination.toUpperCase().trim();
+  var coords = PORT_COORDS[dest];
+  if (!coords) return null;
+  // Don't draw if vessel is basically at the destination (< 20nm)
+  if (haversineNm(vesselLat, vesselLng, coords[0], coords[1]) < 20) return null;
+  return L.polyline(
+    [[vesselLat, vesselLng], coords],
+    { color: color || 'rgba(255,255,255,0.15)', weight: 1, dashArray: '4 6', interactive: false }
+  ).addTo(map);
+}

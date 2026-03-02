@@ -5,6 +5,7 @@ var overviewMap = null;
 var overviewMarkers = {};
 var overviewHeatLayer = null;
 var overviewIncidentMarkers = [];
+var overviewJourneyLines = [];
 var overviewInitialized = false;
 
 function initOverview() {
@@ -35,7 +36,7 @@ function refreshOverview() {
   var headers = _authHeaders();
   Promise.all([
     fetch('/api/vessels', { headers: headers }).then(_handleAuth),
-    fetch('/api/incidents?status=active&limit=50', { headers: headers }).then(_handleAuth),
+    fetch('/api/incidents?status=active&limit=50&include_intel=true', { headers: headers }).then(_handleAuth),
     fetch('/api/alerts?active=true', { headers: headers }).then(_handleAuth).catch(function() { return []; }),
     fetch('/api/corridors', { headers: headers }).then(_handleAuth).catch(function() { return []; }),
     fetch('/api/recommendations?status=ACTIVE', { headers: headers }).then(_handleAuth).catch(function() { return []; }),
@@ -93,22 +94,28 @@ function renderCorridorStrip(corridors) {
 function renderOverviewMap(vessels, incidents) {
   if (!overviewMap) return;
 
-  // Clear existing markers
+  // Clear existing markers and journey lines
   Object.values(overviewMarkers).forEach(function(m) { overviewMap.removeLayer(m); });
   overviewMarkers = {};
   overviewIncidentMarkers.forEach(function(m) { overviewMap.removeLayer(m); });
   overviewIncidentMarkers = [];
+  overviewJourneyLines.forEach(function(l) { overviewMap.removeLayer(l); });
+  overviewJourneyLines = [];
 
-  // Vessel markers
+  // Vessel markers (triangle shape -- distinct from circular incident markers)
   vessels.forEach(function(v) {
     if (!v.lat || !v.lng) return;
     var riskLevel = v.riskLevel || 'LOW';
-    var color = { CRITICAL: '#e05555', HIGH: '#c0392b', ELEVATED: '#d4a037', LOW: '#3cb371' }[riskLevel] || '#3cb371';
-    var marker = L.circleMarker([v.lat, v.lng], {
-      radius: 4, fillColor: color, fillOpacity: 0.9, color: color, weight: 1, opacity: 0.6
-    }).addTo(overviewMap);
-    marker.bindTooltip(_esc(v.name || v.vessel_name) + ' [' + riskLevel + ']', { className: 'sentinel-tooltip' });
+    var heading = (v.speed > 0) ? (v.course || v.heading || 0) : 0;
+    var marker = _createVesselMarker(overviewMap, v.lat, v.lng, riskLevel,
+      _esc(v.name || v.vessel_name) + ' [' + riskLevel + ']', { heading: heading });
     overviewMarkers[v.id || v.imo] = marker;
+
+    // Journey line for moving vessels
+    if (v.speed > 0 && v.destination) {
+      var line = _createJourneyLine(overviewMap, v.lat, v.lng, v.destination, RISK_COLORS[riskLevel]);
+      if (line) overviewJourneyLines.push(line);
+    }
   });
 
   // Incident markers

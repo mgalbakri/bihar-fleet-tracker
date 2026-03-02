@@ -14,8 +14,11 @@ function switchView(view) {
   // Deactivate all views
   document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
 
-  // Update nav buttons
+  // Update nav buttons (header + mobile tab bar)
   document.querySelectorAll('.nav-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+  document.querySelectorAll('.mtab').forEach(function(btn) {
     btn.classList.toggle('active', btn.dataset.view === view);
   });
 
@@ -176,8 +179,15 @@ function manualRefresh() {
 // ========== INITIALIZATION ==========
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Nav button handlers
+  // Nav button handlers (header)
   document.querySelectorAll('.nav-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      switchView(this.dataset.view);
+    });
+  });
+
+  // Mobile tab bar handlers
+  document.querySelectorAll('.mtab').forEach(function(btn) {
     btn.addEventListener('click', function() {
       switchView(this.dataset.view);
     });

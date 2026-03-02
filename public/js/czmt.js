@@ -6,6 +6,7 @@ var czmt = {
   map: null,
   incidentMarkers: [],
   vesselMarkers: [],
+  journeyLines: [],
   proximityRings: [],
   zoneOverlays: [],
   corridors: [],
@@ -106,7 +107,7 @@ function refreshCZMTData() {
 
   Promise.all([
     fetch('/api/corridors', { headers: headers }).then(function(r) { return r.json(); }),
-    fetch('/api/incidents', { headers: headers }).then(function(r) { return r.json(); }),
+    fetch('/api/incidents?include_intel=true', { headers: headers }).then(function(r) { return r.json(); }),
     fetch('/api/alerts', { headers: headers }).then(function(r) { return r.json(); }),
     fetch('/api/vessels', { headers: headers }).then(function(r) { return r.json(); })
   ]).then(function(results) {
@@ -391,22 +392,25 @@ function renderIncidentDetailPanel(incident) {
 function renderCZMTVesselMarkers(vessels) {
   czmt.vesselMarkers.forEach(function(m) { czmt.map.removeLayer(m); });
   czmt.vesselMarkers = [];
+  czmt.journeyLines.forEach(function(l) { czmt.map.removeLayer(l); });
+  czmt.journeyLines = [];
   czmt.proximityRings.forEach(function(r) { czmt.map.removeLayer(r); });
   czmt.proximityRings = [];
 
   vessels.forEach(function(v) {
     if (!v.lat || !v.lng) return;
 
-    var color = v.inJWC ? '#ff6b6b' : '#64748b';
-    var size = v.inJWC ? 8 : 6;
+    var riskLevel = v.riskLevel || (v.inJWC ? 'ELEVATED' : 'LOW');
+    var size = v.inJWC ? 12 : 10;
+    var heading = (v.speed > 0) ? (v.course || v.heading || 0) : 0;
 
-    var marker = L.circleMarker([v.lat, v.lng], {
-      radius: size,
-      fillColor: color,
-      color: '#fff',
-      weight: 1,
-      fillOpacity: 0.8
-    }).addTo(czmt.map);
+    var marker = _createVesselMarker(czmt.map, v.lat, v.lng, riskLevel, null, { size: size, heading: heading });
+
+    // Journey line for moving vessels
+    if (v.speed > 0 && v.destination) {
+      var line = _createJourneyLine(czmt.map, v.lat, v.lng, v.destination, RISK_COLORS[riskLevel]);
+      if (line) czmt.journeyLines.push(line);
+    }
 
     var popup = document.createElement('div');
     popup.style.cssText = 'font-family:Inter,sans-serif;font-size:12px;';

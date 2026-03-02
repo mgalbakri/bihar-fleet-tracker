@@ -92,6 +92,7 @@ var threatMap = null;
 var threatMapInitialized = false;
 var threatMarkers = {};
 var threatIncidentMarkers = [];
+var threatJourneyLines = [];
 var threatHeatLayer = null;
 
 function initThreatMap() {
@@ -147,13 +148,22 @@ function renderThreatMapMarkers(vessels, incidents) {
   threatMarkers = {};
   threatIncidentMarkers.forEach(function(m) { threatMap.removeLayer(m); });
   threatIncidentMarkers = [];
+  threatJourneyLines.forEach(function(l) { threatMap.removeLayer(l); });
+  threatJourneyLines = [];
 
   vessels.forEach(function(v) {
     if (!v.lat || !v.lng) return;
-    var color = { CRITICAL: '#e05555', HIGH: '#c0392b', ELEVATED: '#d4a037', LOW: '#3cb371' }[v.riskLevel || 'LOW'] || '#3cb371';
-    var m = L.circleMarker([v.lat, v.lng], { radius: 4, fillColor: color, fillOpacity: 0.9, color: color, weight: 1 }).addTo(threatMap);
-    m.bindTooltip(_esc(v.name || v.vessel_name), { className: 'sentinel-tooltip' });
+    var riskLevel = v.riskLevel || 'LOW';
+    var heading = (v.speed > 0) ? (v.course || v.heading || 0) : 0;
+    var m = _createVesselMarker(threatMap, v.lat, v.lng, riskLevel,
+      _esc(v.name || v.vessel_name), { heading: heading });
     threatMarkers[v.id || v.imo] = m;
+
+    // Journey line for moving vessels
+    if (v.speed > 0 && v.destination) {
+      var line = _createJourneyLine(threatMap, v.lat, v.lng, v.destination, RISK_COLORS[riskLevel]);
+      if (line) threatJourneyLines.push(line);
+    }
   });
 
   incidents.forEach(function(inc) {
