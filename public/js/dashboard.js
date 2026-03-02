@@ -76,12 +76,11 @@ function renderDashMap(vsl) {
         if (!v.lat && !v.lng) return;
         var riskLevel = v.riskLevel || 'LOW';
         var heading = (v.speed > 0) ? (v.course || v.heading || 0) : 0;
-        var m = _createVesselMarker(dashMap, v.lat, v.lng, riskLevel, v.name, { heading: heading });
-        m.on('click', function() { switchView('fleet'); setTimeout(function() { selectVessel(v.id); }, 300); });
+        var m = _createVesselMarker(dashMap, v.lat, v.lng, riskLevel, v.name, { heading: heading, vessel: v });
         dashMarkers.push(m);
 
-        // Journey line for moving vessels
-        if (v.speed > 0 && v.destination) {
+        // Journey line for vessels with a destination
+        if (v.destination) {
             var line = _createJourneyLine(dashMap, v.lat, v.lng, v.destination, RISK_COLORS[riskLevel]);
             if (line) dashJourneyLines.push(line);
         }

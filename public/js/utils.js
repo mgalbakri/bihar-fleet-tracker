@@ -102,15 +102,46 @@ function _sourceBadgeHtml(source) {
 // Risk level → color mapping (shared across all maps)
 var RISK_COLORS = { CRITICAL: '#e05555', HIGH: '#c0392b', ELEVATED: '#d4a037', LOW: '#3cb371' };
 
-// Port coordinates lookup for journey lines
+// Port coordinates lookup for journey lines (synced with backend port-coords.js)
 var PORT_COORDS = {
-  'SINGAPORE': [1.26, 103.84], 'JEDDAH': [21.49, 39.17], 'SINES': [37.95, -8.87],
-  'DURBAN': [-29.87, 31.03], 'FUJAIRAH': [25.12, 56.33], 'JEBEL ALI': [25.01, 55.06],
-  'KANDLA': [23.03, 70.22], 'JUBAIL': [27.01, 49.66], 'SHENAO': [25.12, 121.80],
-  'SUEZ': [29.97, 32.55], 'SUEZ STS': [29.97, 32.55], 'VENICE': [45.44, 12.33],
-  'ANTWERP': [51.22, 4.40], 'TANJUNG BURAS': [2.05, 102.44],
-  'SHOAIBA': [20.68, 39.50], 'YANBU': [24.09, 38.06], 'RAS TANURA': [26.64, 50.15],
-  'PRAI': [5.38, 100.39], 'BUSAN': [35.10, 129.03], 'MUMBAI': [18.95, 72.84],
+  // UAE
+  'FUJAIRAH': [25.12, 56.35], 'JEBEL ALI': [25.01, 55.06],
+  'RUWAIS': [24.11, 52.73], 'KHOR FAKKAN': [25.34, 56.35],
+  // Saudi Arabia
+  'JEDDAH': [21.48, 39.17], 'JUBAIL': [27.00, 49.66],
+  'RAS TANURA': [26.64, 50.16], 'YANBU': [24.09, 38.06],
+  'SHOAIBA': [20.67, 39.50], 'RABIGH': [22.79, 39.02],
+  // India
+  'MUNDRA': [22.74, 69.72], 'KANDLA': [23.03, 70.22],
+  'PIPAVAV': [20.91, 71.52], 'MUMBAI': [18.95, 72.84],
+  'COCHIN': [9.97, 76.27], 'CHENNAI': [13.08, 80.29],
+  // Singapore & SE Asia
+  'SINGAPORE': [1.27, 103.82], 'PORT KLANG': [3.00, 101.39],
+  'TANJUNG BURAS': [2.35, 111.83], 'PENANG': [5.42, 100.35],
+  'PRAI': [5.38, 100.39], 'HO CHI MINH': [10.77, 106.71],
+  // East Asia
+  'SHANGHAI': [31.36, 121.62], 'YOKOHAMA': [35.44, 139.64],
+  'SHENAO': [25.13, 121.82], 'KAOHSIUNG': [22.62, 120.27],
+  'BUSAN': [35.10, 129.04],
+  // Mediterranean
+  'VENICE': [45.42, 12.34], 'AUGUSTA': [37.23, 15.22],
+  'SINES': [37.95, -8.87], 'ALGECIRAS': [36.13, -5.43],
+  // Red Sea & Egypt
+  'SUEZ STS': [29.97, 32.55], 'SUEZ': [29.97, 32.55],
+  'AQABA': [29.52, 35.01], 'PORT SUDAN': [19.62, 37.22],
+  // East Africa
+  'DURBAN': [-29.86, 31.02], 'MOMBASA': [-4.04, 39.67],
+  'DAR ES SALAAM': [-6.83, 39.29],
+  // Europe
+  'ANTWERP': [51.22, 4.40], 'ROTTERDAM': [51.90, 4.50],
+  'HOUSTON': [29.73, -95.02],
+  // Persian Gulf
+  'BAHRAIN': [26.23, 50.55], 'KUWAIT': [29.34, 47.96],
+  'BASRA': [30.50, 47.82], 'BANDAR ABBAS': [27.18, 56.28],
+  'SOHAR': [24.36, 56.74],
+  // Oman
+  'MUSCAT': [23.61, 58.54], 'SALALAH': [16.94, 54.00],
+  // Special
   'DRY DOCK': null, 'ORDERS': null
 };
 
@@ -135,13 +166,79 @@ function _vesselIcon(riskLevel, opts) {
 
 // Create a vessel marker (triangle) at given coords
 // opts.heading: rotation in degrees (0=north, 90=east)
+// opts.vessel: full vessel data object for popup/tooltip
 function _createVesselMarker(map, lat, lng, riskLevel, tooltipText, opts) {
   var icon = _vesselIcon(riskLevel, opts);
   var marker = L.marker([lat, lng], { icon: icon }).addTo(map);
-  if (tooltipText) {
+  var v = (opts && opts.vessel) || null;
+  if (v) {
+    marker.bindTooltip(_vesselTooltipHtml(v, riskLevel), {
+      className: 'sentinel-vessel-tooltip', direction: 'top', offset: [0, -8]
+    });
+    marker.bindPopup(_vesselPopupHtml(v, riskLevel), {
+      className: 'sentinel-vessel-popup', maxWidth: 320, minWidth: 260
+    });
+  } else if (tooltipText) {
     marker.bindTooltip(tooltipText, { className: 'sentinel-tooltip' });
   }
   return marker;
+}
+
+// Rich tooltip HTML for vessel hover (compact summary)
+function _vesselTooltipHtml(v, riskLevel) {
+  var name = _esc(v.name || v.vessel_name || 'Unknown');
+  var type = _esc(v.typeLabel || v.type || '');
+  var speed = v.speed || v.sog || 0;
+  var dest = _esc(v.destination || '--');
+  var flag = _esc(v.flag || '');
+  var color = RISK_COLORS[riskLevel] || RISK_COLORS.LOW;
+  return '<div style="font-family:var(--font-mono);font-size:11px;line-height:1.5;">' +
+    '<div style="font-weight:600;color:' + color + ';font-size:12px;">' + name + '</div>' +
+    '<div style="color:var(--text-muted);">' + type + (flag ? ' · ' + flag : '') + '</div>' +
+    '<div>' + speed.toFixed(1) + ' kn → ' + dest + '</div>' +
+  '</div>';
+}
+
+// Full popup HTML for vessel click (detailed info panel)
+function _vesselPopupHtml(v, riskLevel) {
+  var name = _esc(v.name || v.vessel_name || 'Unknown');
+  var color = RISK_COLORS[riskLevel] || RISK_COLORS.LOW;
+  var speed = v.speed || v.sog || 0;
+  var course = v.course || v.heading || v.cog || 0;
+  var rows = [
+    _popupRow('IMO', v.imo || '--'),
+    _popupRow('MMSI', v.mmsi || '--'),
+    _popupRow('Type', v.typeLabel || v.type || '--'),
+    _popupRow('Flag', v.flag || '--'),
+    _popupRow('Class', v.classAbbr || v['class'] || '--'),
+    _popupRow('Charterer', v.charterer || '--'),
+    _popupRow('DWT', v.dwt ? v.dwt.toLocaleString() + ' MT' : '--'),
+    _popupRow('Speed', speed.toFixed(1) + ' kn'),
+    _popupRow('Course', course.toFixed(0) + '\u00b0'),
+    _popupRow('Destination', v.destination || '--'),
+    _popupRow('ETA', v.eta || '--'),
+    _popupRow('Nav Status', v.navStatus || '--'),
+    _popupRow('Status', v.status || '--')
+  ];
+  if (v.cargo && v.cargo.type) {
+    rows.push(_popupRow('Cargo', _esc(v.cargo.type) + (v.cargo.quantity ? ' (' + _esc(v.cargo.quantity) + ')' : '')));
+  }
+  rows.push(_popupRow('Position', Number(v.lat).toFixed(4) + '\u00b0, ' + Number(v.lng).toFixed(4) + '\u00b0'));
+
+  return '<div style="font-family:var(--font-mono);font-size:11px;">' +
+    '<div style="font-size:13px;font-weight:700;color:' + color + ';padding-bottom:6px;border-bottom:1px solid var(--border,#333);margin-bottom:6px;">' +
+      '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + color + ';margin-right:6px;"></span>' +
+      name + ' <span style="font-weight:400;color:var(--text-muted,#888);font-size:10px;">[' + _esc(riskLevel) + ']</span>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:90px 1fr;gap:2px 8px;line-height:1.6;">' +
+      rows.join('') +
+    '</div>' +
+  '</div>';
+}
+
+function _popupRow(label, value) {
+  return '<span style="color:var(--text-muted,#888);font-size:10px;">' + _esc(label) + '</span>' +
+    '<span style="color:var(--text,#ddd);">' + _esc(String(value)) + '</span>';
 }
 
 // Draw a dotted journey line from vessel position to destination port

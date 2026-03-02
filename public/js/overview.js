@@ -108,11 +108,11 @@ function renderOverviewMap(vessels, incidents) {
     var riskLevel = v.riskLevel || 'LOW';
     var heading = (v.speed > 0) ? (v.course || v.heading || 0) : 0;
     var marker = _createVesselMarker(overviewMap, v.lat, v.lng, riskLevel,
-      _esc(v.name || v.vessel_name) + ' [' + riskLevel + ']', { heading: heading });
+      null, { heading: heading, vessel: v });
     overviewMarkers[v.id || v.imo] = marker;
 
-    // Journey line for moving vessels
-    if (v.speed > 0 && v.destination) {
+    // Journey line for vessels with a destination
+    if (v.destination) {
       var line = _createJourneyLine(overviewMap, v.lat, v.lng, v.destination, RISK_COLORS[riskLevel]);
       if (line) overviewJourneyLines.push(line);
     }
