@@ -52,6 +52,15 @@ function switchView(view) {
       if (!noticesInitialized) initNotices();
       else refreshNotices();
       break;
+
+    case 'czmt':
+      if (!czmt || !czmt.map) {
+        setTimeout(function() { if (typeof initCZMT === 'function') initCZMT(); }, 50);
+      } else {
+        czmt.map.invalidateSize();
+        refreshCZMTData();
+      }
+      break;
   }
 }
 
@@ -72,6 +81,11 @@ function refreshCurrentView(eventType) {
       break;
     case 'notices':
       refreshNotices();
+      break;
+    case 'czmt':
+      if (eventType === 'incidents' || eventType === 'positions' || eventType === 'corridors' || eventType === 'manual' || eventType === 'auto') {
+        if (typeof refreshCZMTData === 'function') refreshCZMTData();
+      }
       break;
   }
 }

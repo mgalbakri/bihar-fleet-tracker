@@ -45,6 +45,8 @@ function selectVessel(id) {
     map.setView([v.lat, v.lng], 5, { animate: true });
     // Highlight this vessel's route line
     if (typeof highlightRoute === 'function') highlightRoute(id);
+    // Load AIS track trail
+    if (typeof loadVesselTrack === 'function') loadVesselTrack(v);
     activeTab = 'overview';
     showDetail(v);
     if (window.innerWidth < 768 && panelOpen) togglePanel();
@@ -59,6 +61,8 @@ function deselectVessel() {
     selectedId = null;
     // Reset all route lines to default
     if (typeof resetRoutes === 'function') resetRoutes();
+    // Clear AIS track trail
+    if (typeof clearVesselTrack === 'function') clearVesselTrack();
     closeDetail();
 }
 

@@ -289,7 +289,7 @@ function renderIncidentDetailPanel(incident) {
     panel = document.createElement('div');
     panel.id = 'incident-detail-panel';
     panel.className = 'incident-detail-panel';
-    document.getElementById('czmt').appendChild(panel);
+    document.getElementById('view-czmt').appendChild(panel);
   }
 
   panel.textContent = '';
@@ -1045,8 +1045,7 @@ function initCZMTWebSocket() {
   czmt.wsInitialized = true;
 
   window.sentinelWS.on('positions', function() {
-    if (czmt.active) {
-      // Re-fetch full vessel data (includes risk scores, zone status)
+    if (typeof currentView !== 'undefined' && currentView === 'czmt') {
       var token = sessionStorage.getItem('sentinel_access_token');
       var headers = {};
       if (token) headers['Authorization'] = 'Bearer ' + token;
@@ -1060,33 +1059,31 @@ function initCZMTWebSocket() {
   });
 
   window.sentinelWS.on('incidents', function(data) {
-    if (czmt.active && data && data.length > 0) {
+    if (typeof currentView !== 'undefined' && currentView === 'czmt' && data && data.length > 0) {
       refreshCZMTData();
     }
   });
 
   window.sentinelWS.on('proximity_alerts', function(data) {
-    if (czmt.active) {
+    if (typeof currentView !== 'undefined' && currentView === 'czmt') {
       czmt.alerts = data;
       renderAlertBanner(data);
     }
   });
 
   window.sentinelWS.on('corridor_status', function(data) {
-    if (czmt.active) {
+    if (typeof currentView !== 'undefined' && currentView === 'czmt') {
       czmt.corridors = data;
       renderCorridorBar(data);
     }
   });
 
   window.sentinelWS.on('notice_generated', function(data) {
-    if (czmt.active) {
-      // Auto-refresh notices panel if it's visible
+    if (typeof currentView !== 'undefined' && currentView === 'czmt') {
       var noticesPanel = document.getElementById('czmt-notices');
       if (noticesPanel && noticesPanel.style.display !== 'none') {
         refreshNotices();
       }
-      // Flash the notices tab to indicate new notice
       var noticesTab = document.querySelector('[data-czmt-tab="notices"]');
       if (noticesTab && !noticesTab.classList.contains('active')) {
         noticesTab.style.color = '#ff6b6b';

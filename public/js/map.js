@@ -7,6 +7,84 @@ var routeLayerGroup = null;
 var destMarkers = {};
 var originMarkers = {};
 
+// AIS track trail state
+var trackLayer = null;
+var trackVesselId = null;
+
+function loadVesselTrack(vessel) {
+    var token = sessionStorage.getItem('sentinel_access_token');
+    var headers = {};
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+
+    fetch('/api/vessels/' + vessel.imo + '/track?hours=72&limit=100', { headers: headers })
+        .then(function(r) { return r.json(); })
+        .then(function(positions) {
+            clearVesselTrack();
+            if (!positions || positions.length < 2) return;
+
+            var color = getTypeColor(vessel.type);
+            var latlngs = positions.map(function(p) { return [p.lat, p.lng]; });
+
+            // Main track line — solid, vessel color
+            trackLayer = L.polyline(latlngs, {
+                color: color,
+                weight: 2.5,
+                opacity: 0.75,
+                lineJoin: 'round'
+            });
+
+            // Fade effect: draw progressively lighter segments from start to end
+            var total = latlngs.length;
+            for (var i = 0; i < total - 1; i++) {
+                var progress = i / total;
+                var segOpacity = 0.15 + progress * 0.6; // fades from 15% (old) to 75% (recent)
+                L.polyline([latlngs[i], latlngs[i + 1]], {
+                    color: color,
+                    weight: 2,
+                    opacity: segOpacity,
+                    interactive: false
+                }).addTo(map);
+            }
+
+            trackLayer.addTo(map);
+            trackVesselId = vessel.id;
+
+            // Dot at oldest known position
+            if (positions.length > 0) {
+                L.circleMarker([positions[0].lat, positions[0].lng], {
+                    radius: 3,
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.4,
+                    opacity: 0.5,
+                    interactive: false
+                }).addTo(map);
+            }
+        })
+        .catch(function() {}); // track is optional, don't break on error
+}
+
+function clearVesselTrack() {
+    if (!map) return;
+    // Remove all track-related layers
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.Polyline && layer !== trackLayer) {
+            var opts = layer.options;
+            if (opts && opts.interactive === false && opts.lineJoin !== 'round') {
+                map.removeLayer(layer);
+            }
+        }
+        if (layer instanceof L.CircleMarker && layer.options && layer.options.interactive === false) {
+            map.removeLayer(layer);
+        }
+    });
+    if (trackLayer) {
+        map.removeLayer(trackLayer);
+        trackLayer = null;
+    }
+    trackVesselId = null;
+}
+
 function initMap() {
     try {
         map = L.map('map', { center: [22, 50], zoom: 3, zoomControl: true, attributionControl: false });

@@ -119,6 +119,30 @@ router.get('/ais-gaps/active', (req, res) => {
   res.json(gapDetector.getActiveGaps());
 });
 
+// GET /api/vessels/:imo/track - AIS position history (oldest-first for polyline rendering)
+router.get('/:imo/track', (req, res) => {
+  try {
+    const db = require('../db/database');
+    const limit = Math.min(parseInt(req.query.limit) || 100, 500);
+    const hours = parseInt(req.query.hours) || 72;
+
+    const positions = db.prepare(`
+      SELECT lat, lon AS lng, sog AS speed, cog AS course, heading, nav_status,
+             destination, ais_timestamp, source
+      FROM vessel_positions
+      WHERE vessel_imo = ?
+        AND ais_timestamp > datetime('now', '-' || ? || ' hours')
+      ORDER BY ais_timestamp DESC
+      LIMIT ?
+    `).all(req.params.imo, hours, limit);
+
+    res.json(positions.reverse()); // oldest first so polyline draws in correct direction
+  } catch (err) {
+    console.error('[VESSELS] Track error:', err.message);
+    res.status(500).json({ error: 'Failed to load track' });
+  }
+});
+
 // GET /api/vessels/:imo - return single vessel detail (must come AFTER static routes)
 router.get('/:imo', (req, res) => {
   try {

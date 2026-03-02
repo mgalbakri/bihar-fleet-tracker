@@ -134,6 +134,19 @@ function generate(noticeType, vessel, triggerEvent, extraData) {
   const zoneId = extraData ? (extraData.JWC_ZONE_ID || null) : null;
   const incidentId = extraData ? (extraData.INCIDENT_ID || null) : null;
 
+  // DB-level dedup: skip if a live notice already exists for this vessel+type+zone within 24h
+  try {
+    const existing = db.prepare(`
+      SELECT id FROM insurer_notices
+      WHERE notice_type = ? AND vessel_imo = ?
+        AND (zone_id = ? OR (zone_id IS NULL AND ? IS NULL))
+        AND status IN ('PENDING', 'AUTO_QUEUED', 'REVIEWED')
+        AND generated_at > datetime('now', '-24 hours')
+      LIMIT 1
+    `).get(noticeType, vessel.imo, zoneId, zoneId);
+    if (existing) return null;
+  } catch (e) { /* table may not exist yet on first boot */ }
+
   try {
     const stmt = db.prepare(`
       INSERT INTO insurer_notices

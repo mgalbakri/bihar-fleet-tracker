@@ -76,6 +76,27 @@ router.delete('/recipients/:rid', (req, res) => {
   }
 });
 
+// POST /api/notices/bulk-dismiss -- dismiss all pending notices (optional: filter by vessel)
+router.post('/bulk-dismiss', (req, res) => {
+  try {
+    const db = require('../db/database');
+    const reason = req.body.reason || 'Bulk dismissed — stale startup notices';
+    const vesselImo = req.body.vessel_imo || null;
+    const now = new Date().toISOString();
+    const reviewer = req.user ? req.user.email : 'admin';
+
+    let query = `UPDATE insurer_notices SET status = 'DISMISSED', dismiss_reason = ?, reviewed_by = ?, reviewed_at = ?
+                 WHERE status IN ('PENDING', 'AUTO_QUEUED')`;
+    const params = [reason, reviewer, now];
+    if (vesselImo) { query += ' AND vessel_imo = ?'; params.push(vesselImo); }
+
+    const result = db.prepare(query).run(...params);
+    res.json({ dismissed: result.changes });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // --- Notice detail and actions (/:id routes) ---
 
 // GET /api/notices/:id -- single notice detail

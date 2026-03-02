@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="css/notices.css">
     <link rel="stylesheet" href="css/report-modal.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/czmt.css">
 </head>
 <body>
     <!-- ═══════════ HEADER ═══════════ -->
@@ -37,6 +38,7 @@
         <nav class="header-nav">
             <button class="nav-btn active" data-view="overview">Overview</button>
             <button class="nav-btn" data-view="threatmap">Threat Map</button>
+            <button class="nav-btn" data-view="czmt">⚡ Threat Center</button>
             <button class="nav-btn" data-view="incidents">Incidents</button>
             <button class="nav-btn" data-view="fleet">Fleet Status</button>
             <button class="nav-btn" data-view="notices">Notices</button>
@@ -242,6 +244,53 @@
         </div>
     </div>
 
+    <!-- ═══════════ VIEW: CONFLICT ZONE MONITORING TERMINAL (CZMT) ═══════════ -->
+    <div class="view view-czmt" id="view-czmt">
+        <!-- Corridor Status Bar -->
+        <div class="czmt-corridor-bar" id="czmt-corridor-bar"></div>
+
+        <!-- Critical Alert Banner -->
+        <div class="czmt-alert-banner" id="czmt-alert-banner" style="display:none">
+            <span class="czmt-alert-pulse"></span>
+            <span class="czmt-alert-text" id="czmt-alert-text"></span>
+            <button class="czmt-alert-btn" id="czmt-alert-view">VIEW</button>
+            <button class="czmt-alert-btn dismiss" id="czmt-alert-dismiss">DISMISS</button>
+        </div>
+
+        <!-- Main Layout: Map + Sidebar -->
+        <div class="czmt-content">
+            <!-- Map Column -->
+            <div class="czmt-map-area">
+                <div id="czmt-map"></div>
+                <div class="czmt-map-controls">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="czmt-heatmap-toggle" onchange="toggleHeatmap(this.checked)">
+                        <span>Heatmap</span>
+                    </label>
+                    <select id="heatmap-period" disabled onchange="updateHeatmapPeriod(this.value)">
+                        <option value="30d">30 days</option>
+                        <option value="90d" selected>90 days</option>
+                        <option value="180d">180 days</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Sidebar Column -->
+            <div class="czmt-panels">
+                <div class="czmt-panel-tabs">
+                    <button class="czmt-tab active" data-czmt-tab="feed">Threat Feed</button>
+                    <button class="czmt-tab" data-czmt-tab="risk">Fleet Risk</button>
+                    <button class="czmt-tab" data-czmt-tab="notices">Notices</button>
+                </div>
+                <div class="czmt-panel-body">
+                    <div id="czmt-feed"></div>
+                    <div id="czmt-risk" style="display:none"></div>
+                    <div id="czmt-notices" style="display:none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══════════ VIEW: NOTICES ═══════════ -->
     <div class="view view-notices" id="view-notices">
         <div class="notices-toolbar">
@@ -351,6 +400,10 @@
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 21l.4-2M7 21l.4-2m4.6 2l.4-2m4.6 2l.4-2M22 21l.4-2"/><path d="M3.5 14l-1.4 5h19.8l-1.4-5"/><path d="M5 14V7.5a2.5 2.5 0 0 1 5 0V14"/><path d="M14 14V9a3 3 0 0 1 6 0v5"/><line x1="12" y1="14" x2="12" y2="4"/><polygon points="12,1 14,4 10,4"/></svg>
             <span>Fleet</span>
         </button>
+        <button class="mtab" data-view="czmt">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>CZMT</span>
+        </button>
         <button class="mtab" data-view="notices">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             <span>Notices</span>
@@ -372,6 +425,7 @@
     <script src="/js/fleet-status.js"></script>
     <script src="/js/notices-view.js"></script>
     <script src="/js/report-incident.js"></script>
+    <script src="/js/czmt.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/websocket.js"></script>
     <script>
