@@ -1,0 +1,53 @@
+/* Modal -- Market intelligence, S&P alerts, fleet profile, yard tables */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; opacity: 0; visibility: hidden; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.modal-overlay.visible { opacity: 1; visibility: visible; }
+.modal { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; max-width: 1100px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 16px 48px rgba(0,0,0,0.4); position: relative; }
+.modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h2 { font-size: 16px; font-weight: 700; font-family: var(--font-display); display: flex; align-items: center; gap: 10px; }
+.modal-header .update-time { font-size: 10px; color: var(--text-muted); font-weight: 400; font-family: var(--font-mono); margin-left: 12px; }
+.modal-body { padding: 18px; overflow-y: auto; flex: 1; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.market-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; padding: 14px; transition: border-color 0.2s; }
+.market-section:hover { border-color: var(--border-bright); }
+.market-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.market-section-title { font-size: 12px; font-weight: 600; font-family: var(--font-display); }
+.market-section-source { font-size: 8px; color: var(--text-muted); background: var(--accent-bg); padding: 3px 8px; border-radius: 3px; font-family: var(--font-mono); letter-spacing: 0.5px; }
+.rate-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.rate-row:last-child { border-bottom: none; }
+.rate-type { font-size: 11px; color: var(--text-secondary); flex: 1; }
+.rate-values { display: flex; gap: 16px; align-items: center; }
+.rate-value { text-align: right; min-width: 70px; }
+.rate-amount { font-size: 13px; font-weight: 600; font-family: var(--font-display); }
+.rate-label { font-size: 8px; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); }
+.rate-trend { font-size: 10px; margin-left: 4px; }
+.rate-trend.up { color: var(--green); } .rate-trend.down { color: var(--red); } .rate-trend.flat { color: var(--text-muted); }
+.asset-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.asset-row:last-child { border-bottom: none; }
+.asset-type { font-size: 11px; color: var(--text-secondary); }
+.asset-price { font-size: 14px; font-weight: 600; font-family: var(--font-display); }
+.sp-alert-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; padding: 14px; margin-bottom: 10px; position: relative; transition: border-color 0.2s; }
+.sp-alert-card:hover { border-color: var(--border-bright); }
+.sp-alert-card.hot { border-color: rgba(224,85,85,0.3); }
+.sp-alert-card.new { border-color: rgba(60,179,113,0.3); }
+.sp-alert-badge { position: absolute; top: 10px; right: 10px; font-size: 8px; font-weight: 700; padding: 3px 8px; border-radius: 3px; font-family: var(--font-mono); letter-spacing: 0.5px; }
+.sp-alert-badge.hot { background: var(--red); color: white; }
+.sp-alert-badge.new { background: var(--green-dim); color: white; }
+.sp-vessel-name { font-size: 14px; font-weight: 600; font-family: var(--font-display); margin-bottom: 3px; }
+.sp-vessel-type { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; font-family: var(--font-mono); }
+.sp-price { font-size: 20px; font-weight: 700; color: var(--green); font-family: var(--font-display); margin-bottom: 8px; }
+.sp-details { display: flex; flex-wrap: wrap; gap: 10px; font-size: 10px; color: var(--text-secondary); margin-bottom: 8px; }
+.sp-match-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.sp-match-tag { font-size: 8px; padding: 3px 8px; border-radius: 3px; font-weight: 700; font-family: var(--font-mono); background: var(--green-bg); color: var(--green); border: 1px solid rgba(60,179,113,0.15); letter-spacing: 0.5px; }
+.sp-broker { font-size: 9px; color: var(--text-muted); margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); font-family: var(--font-mono); }
+.fleet-profile { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; padding: 12px; margin-bottom: 14px; }
+.fleet-profile-title { font-size: 11px; font-weight: 600; font-family: var(--font-display); margin-bottom: 8px; }
+.fleet-profile-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.profile-tag { font-size: 9px; padding: 4px 10px; background: var(--accent-bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text-secondary); font-family: var(--font-mono); }
+.yard-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.yard-table th, .yard-table td { padding: 8px; text-align: left; border-bottom: 1px solid var(--border); }
+.yard-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 9px; font-family: var(--font-mono); letter-spacing: 1px; background: rgba(0,0,0,0.2); }
+.yard-quality { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 8px; font-weight: 700; font-family: var(--font-mono); }
+.yard-quality.premium { background: var(--green-bg); color: var(--green); }
+.yard-quality.high { background: var(--accent-bg); color: var(--accent); }
+.price-best { color: var(--green); font-weight: 600; }
+.slot-available { color: var(--green); font-size: 9px; font-family: var(--font-mono); }

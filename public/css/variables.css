@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════════════
+   BIHAR SENTINEL — Design System Variables
+   Premium Bloomberg/Palantir terminal aesthetic
+   ═══════════════════════════════════════════════════ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+    /* Backgrounds — deep neutral black */
+    --bg-void: #0a0a0f;
+    --bg-primary: #0e0e14;
+    --bg-secondary: #141419;
+    --bg-tertiary: #1a1a22;
+    --bg-elevated: #1f1f2a;
+
+    /* Borders — subtle white-alpha */
+    --border: rgba(255, 255, 255, 0.08);
+    --border-bright: rgba(255, 255, 255, 0.15);
+
+    /* Text hierarchy */
+    --text-primary: #e0e0e8;
+    --text-secondary: #8888a0;
+    --text-muted: #555568;
+
+    /* Accent: Muted blue — primary interactive color */
+    --accent: #4a9eff;
+    --accent-dim: #3a7acc;
+    --accent-bg: rgba(74, 158, 255, 0.06);
+
+    /* Signal colors — muted, professional */
+    --amber: #d4a037;
+    --amber-light: #e0b84d;
+    --amber-bg: rgba(212, 160, 55, 0.08);
+
+    --red: #e05555;
+    --red-bg: rgba(224, 85, 85, 0.08);
+
+    --green: #3cb371;
+    --green-dim: #2d8f5a;
+    --green-bg: rgba(60, 179, 113, 0.08);
+
+    --blue: #4a7dcc;
+    --purple: #9070cc;
+    --teal: #3aa89a;
+
+    /* Layout */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --header-height: 56px;
+
+    /* Typography */
+    --font-display: 'Space Grotesk', 'Inter', sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Functional animations only */
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes slide-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spin { to { transform: rotate(360deg); } }

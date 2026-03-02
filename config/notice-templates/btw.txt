@@ -1,0 +1,32 @@
+TO:       {{WAR_RISK_UNDERWRITER}} via {{BROKER}}
+FROM:     BIHAR Shipping -- Fleet Operations
+DATE:     {{TIMESTAMP_UTC}}
+RE:       WAR RISK NOTIFICATION -- BREACH OF TRADING WARRANTY
+POLICY:   {{POLICY_NUMBER}}
+VESSEL:   {{VESSEL_NAME}}, IMO {{IMO}}, Flag {{FLAG}}
+
+Dear Sirs,
+
+We hereby notify you that the above-named vessel has entered the Joint War Committee Listed Area described as:
+
+  Zone:         {{JWC_ZONE_NAME}}
+  Circular:     {{JWC_CIRCULAR}}
+
+Vessel Details:
+  Current Position:    {{LAT}}N, {{LNG}}E (as of {{POSITION_TIME}} UTC)
+  Speed:               {{SPEED}} knots
+  Course:              {{COURSE}}
+  Destination:         {{DESTINATION}}
+  ETA to zone exit:    {{ETA_EXIT}}
+
+Cargo:    {{CARGO}}
+Voyage:   {{DEPARTURE_PORT}} to {{DESTINATION_PORT}}
+
+We request confirmation of cover for this transit.
+
+Please confirm Additional War Risk Premium (AWRP) applicable.
+
+Yours faithfully,
+{{DPA_NAME}}
+BIHAR Shipping
+{{DPA_CONTACT}}

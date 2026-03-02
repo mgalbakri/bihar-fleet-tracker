@@ -1,0 +1,73 @@
+/* ═══════════════════════════════════════════════════
+   FLEET STATUS — Vessel cards + detail panel
+   ═══════════════════════════════════════════════════ */
+
+.view-fleet { flex-direction: column; }
+
+/* ── Toolbar ── */
+.fleet-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); flex-shrink: 0; gap: 12px; flex-wrap: wrap; }
+.fleet-filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.fleet-search { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 10px; font-size: 12px; border-radius: 4px; width: 180px; font-family: var(--font-body); }
+.fleet-search:focus { outline: none; border-color: var(--accent); }
+.fleet-filters select { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); padding: 6px 8px; font-size: 11px; border-radius: 4px; font-family: var(--font-mono); cursor: pointer; }
+.fleet-summary { display: flex; gap: 16px; font-size: 11px; font-family: var(--font-mono); }
+.fleet-summary-stat { display: flex; align-items: center; gap: 4px; }
+.fleet-summary-stat .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* ── Grid ── */
+.fleet-grid { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; align-content: start; }
+
+/* ── Vessel Card ── */
+.vessel-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 12px; cursor: pointer; transition: all 0.15s; position: relative; }
+.vessel-card:hover { background: var(--bg-tertiary); border-color: var(--border-bright); }
+.vessel-card.risk-CRITICAL { border-left: 3px solid var(--red); }
+.vessel-card.risk-HIGH { border-left: 3px solid #c0392b; }
+.vessel-card.risk-ELEVATED { border-left: 3px solid var(--amber); }
+.vessel-card.risk-LOW { border-left: 3px solid var(--green); }
+
+.vc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.vc-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.vc-type { font-size: 10px; color: var(--text-muted); }
+.vc-risk-score { font-size: 20px; font-weight: 700; font-family: var(--font-display); }
+.vc-risk-score.CRITICAL { color: var(--red); }
+.vc-risk-score.HIGH { color: #c0392b; }
+.vc-risk-score.ELEVATED { color: var(--amber); }
+.vc-risk-score.LOW { color: var(--green); }
+
+.vc-details { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.vc-field { font-size: 10px; }
+.vc-field-label { color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.5px; }
+.vc-field-value { color: var(--text-secondary); font-weight: 500; }
+
+.vc-badges { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+.vc-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; font-family: var(--font-mono); letter-spacing: 0.5px; }
+.vc-badge.jwc { background: var(--red-bg); color: var(--red); }
+.vc-badge.alert { background: var(--amber-bg); color: var(--amber); }
+.vc-badge.ais-gap { background: rgba(144,112,204,0.15); color: var(--purple); }
+.vc-badge.rec { background: var(--accent-bg); color: var(--accent); }
+
+/* ── Fleet Detail Panel ── */
+.fleet-detail-panel { position: fixed; right: 0; top: var(--header-height); bottom: 0; width: 420px; background: var(--bg-primary); border-left: 1px solid var(--border); transform: translateX(100%); transition: transform 0.25s ease; z-index: 100; display: flex; flex-direction: column; overflow: hidden; }
+.fleet-detail-panel.open { transform: translateX(0); }
+.fdp-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.fdp-header h3 { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.fdp-close { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; padding: 0 4px; }
+.fdp-close:hover { color: var(--text-primary); }
+.fdp-body { flex: 1; overflow-y: auto; padding: 16px; }
+
+/* Detail sections */
+.fdp-section { margin-bottom: 16px; }
+.fdp-section-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+
+/* Risk breakdown */
+.risk-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.risk-factor { background: var(--bg-secondary); padding: 8px; border-radius: 4px; border: 1px solid var(--border); }
+.risk-factor-name { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-mono); }
+.risk-factor-value { font-size: 14px; font-weight: 700; font-family: var(--font-display); }
+.risk-factor-bar { height: 3px; background: var(--bg-tertiary); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.risk-factor-fill { height: 100%; border-radius: 2px; }
+
+/* Position info */
+.fdp-field { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.fdp-field-label { color: var(--text-muted); }
+.fdp-field-value { color: var(--text-primary); font-weight: 500; font-family: var(--font-mono); }

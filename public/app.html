@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>BIHAR SENTINEL</title>
+    <link rel="icon" type="image/jpeg" href="/assets/IMG_3164.jpeg">
+    <link rel="apple-touch-icon" href="/assets/IMG_3164.jpeg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="css/overview.css">
+    <link rel="stylesheet" href="css/incidents.css">
+    <link rel="stylesheet" href="css/recommendations.css">
+    <link rel="stylesheet" href="css/fleet-status.css">
+    <link rel="stylesheet" href="css/notices.css">
+    <link rel="stylesheet" href="css/report-modal.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- ═══════════ HEADER ═══════════ -->
+    <header class="header">
+        <div class="logo">
+            <img src="/assets/IMG_3164.jpeg" alt="Bihar" class="logo-img">
+            <div class="logo-text"><h1>BIHAR SENTINEL</h1><p>Maritime Security Operations</p></div>
+        </div>
+        <nav class="header-nav">
+            <button class="nav-btn active" data-view="overview">Overview</button>
+            <button class="nav-btn" data-view="threatmap">Threat Map</button>
+            <button class="nav-btn" data-view="incidents">Incidents</button>
+            <button class="nav-btn" data-view="fleet">Fleet Status</button>
+            <button class="nav-btn" data-view="notices">Notices</button>
+        </nav>
+        <div class="header-right">
+            <button class="report-btn" id="reportIncidentBtn" title="Report new incident">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Report</span>
+            </button>
+            <button class="refresh-btn" id="refreshBtn" onclick="manualRefresh()" title="Refresh all data">
+                <svg class="refresh-icon" id="refreshIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                </svg>
+                <span class="refresh-text">Refresh</span>
+            </button>
+            <div class="data-sources" id="dataSourceBadges"></div>
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span class="live-mode" style="font-weight:600;font-size:10px">--</span>
+                <span class="live-time" id="liveTime">--:--:--</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════ GLOBAL ALERT BANNER ═══════════ -->
+    <div class="alert-banner" id="alertBanner" style="display:none">
+        <span class="alert-pulse"></span>
+        <span class="alert-banner-text" id="alertBannerText"></span>
+        <button class="alert-banner-btn" id="alertBannerAction">VIEW</button>
+        <button class="alert-banner-btn dismiss" id="alertBannerDismiss">DISMISS</button>
+    </div>
+
+    <!-- ═══════════ VIEW: SITUATIONAL OVERVIEW ═══════════ -->
+    <div class="view view-overview active" id="view-overview">
+        <!-- Corridor Status Strip -->
+        <div class="corridor-strip" id="corridorStrip"></div>
+
+        <div class="overview-grid">
+            <!-- Left: Recommendations Panel -->
+            <div class="overview-left">
+                <div class="panel-section">
+                    <div class="panel-title">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        ACTIVE RECOMMENDATIONS
+                        <span class="badge" id="recCount">0</span>
+                    </div>
+                    <div class="rec-list" id="overviewRecList"></div>
+                </div>
+                <div class="panel-section">
+                    <div class="panel-title">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        ACTIVE ALERTS
+                        <span class="badge red" id="alertCount">0</span>
+                    </div>
+                    <div class="alert-list" id="overviewAlertList"></div>
+                </div>
+            </div>
+
+            <!-- Center: Map -->
+            <div class="overview-center">
+                <div class="overview-map-container">
+                    <div id="overview-map"></div>
+                    <div class="map-controls">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="heatmapToggle" onchange="toggleOverviewHeatmap(this.checked)">
+                            <span>Heatmap</span>
+                        </label>
+                        <label class="toggle-label">
+                            <input type="checkbox" id="jwcToggle" checked onchange="toggleOverviewJWC(this.checked)">
+                            <span>JWC Zones</span>
+                        </label>
+                        <label class="toggle-label">
+                            <input type="checkbox" id="vesselsToggle" checked onchange="toggleOverviewVessels(this.checked)">
+                            <span>Fleet</span>
+                        </label>
+                    </div>
+                </div>
+                <!-- Stats Strip below map -->
+                <div class="overview-stats" id="overviewStats">
+                    <div class="ostat"><div class="ostat-value" id="ostat-fleet">--</div><div class="ostat-label">Fleet</div></div>
+                    <div class="ostat"><div class="ostat-value red" id="ostat-jwc">0</div><div class="ostat-label">In JWC</div></div>
+                    <div class="ostat"><div class="ostat-value red" id="ostat-alerts">0</div><div class="ostat-label">Alerts</div></div>
+                    <div class="ostat"><div class="ostat-value amber" id="ostat-incidents">0</div><div class="ostat-label">Active Incidents</div></div>
+                    <div class="ostat"><div class="ostat-value" id="ostat-recs">0</div><div class="ostat-label">Recommendations</div></div>
+                    <div class="ostat"><div class="ostat-value" id="ostat-notices">0</div><div class="ostat-label">Pending Notices</div></div>
+                </div>
+            </div>
+
+            <!-- Right: Threat Feed + Fleet Strip -->
+            <div class="overview-right">
+                <div class="panel-section">
+                    <div class="panel-title">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        THREAT FEED
+                    </div>
+                    <div class="threat-feed" id="overviewThreatFeed"></div>
+                </div>
+                <div class="panel-section">
+                    <div class="panel-title">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+                        FLEET AT RISK
+                    </div>
+                    <div class="fleet-strip" id="overviewFleetStrip"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ VIEW: THREAT MAP ═══════════ -->
+    <div class="view view-threatmap" id="view-threatmap">
+        <div class="threatmap-layout">
+            <div class="threatmap-main">
+                <div id="threat-map"></div>
+                <div class="threatmap-controls">
+                    <label class="toggle-label"><input type="checkbox" id="tmHeatmap" onchange="toggleThreatHeatmap(this.checked)"><span>Heatmap</span></label>
+                    <label class="toggle-label"><input type="checkbox" id="tmJWC" checked onchange="toggleThreatJWC(this.checked)"><span>JWC Zones</span></label>
+                    <label class="toggle-label"><input type="checkbox" id="tmVessels" checked onchange="toggleThreatVessels(this.checked)"><span>Fleet</span></label>
+                    <label class="toggle-label"><input type="checkbox" id="tmIncidents" checked onchange="toggleThreatIncidents(this.checked)"><span>Incidents</span></label>
+                    <select id="tmPeriod" onchange="updateThreatPeriod(this.value)">
+                        <option value="7d">7 days</option>
+                        <option value="30d" selected>30 days</option>
+                        <option value="90d">90 days</option>
+                    </select>
+                </div>
+            </div>
+            <div class="threatmap-sidebar">
+                <div class="threatmap-tabs">
+                    <button class="tm-tab active" data-tm-tab="feed">Threat Feed</button>
+                    <button class="tm-tab" data-tm-tab="corridors">Corridors</button>
+                </div>
+                <div class="tm-panel-body">
+                    <div class="tm-feed" id="tmFeed"></div>
+                    <div class="tm-corridors" id="tmCorridors" style="display:none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ VIEW: INCIDENTS ═══════════ -->
+    <div class="view view-incidents" id="view-incidents">
+        <div class="incidents-toolbar">
+            <div class="incidents-filters">
+                <input type="text" class="inc-search" id="incSearch" placeholder="Search incidents...">
+                <select id="incTypeFilter"><option value="">All Types</option><option value="MISSILE_ATTACK">Missile Attack</option><option value="DRONE_ATTACK">Drone Attack</option><option value="MINE_THREAT">Mine Threat</option><option value="PIRACY">Piracy</option><option value="SEIZURE">Seizure</option><option value="SUSPICIOUS_APPROACH">Suspicious Approach</option><option value="MILITARY_ACTION">Military Action</option><option value="ADVISORY">Advisory</option></select>
+                <select id="incStatusFilter"><option value="">All Statuses</option><option value="active">Active</option><option value="monitoring">Monitoring</option><option value="resolved">Resolved</option></select>
+                <select id="incCorridorFilter"><option value="">All Corridors</option></select>
+                <select id="incSeverityFilter"><option value="">All Severity</option><option value="5">Critical (5)</option><option value="4">High (4)</option><option value="3">Medium (3)</option><option value="2">Low (2)</option><option value="1">Info (1)</option></select>
+            </div>
+            <div class="incidents-actions">
+                <span class="inc-count" id="incidentCount">0 incidents</span>
+                <button class="btn-secondary" id="exportIncidents">Export CSV</button>
+            </div>
+        </div>
+        <div class="incidents-content">
+            <div class="incidents-table-wrap">
+                <table class="incidents-table" id="incidentsTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="severity">Sev</th>
+                            <th data-sort="type">Type</th>
+                            <th data-sort="title">Title</th>
+                            <th data-sort="corridor">Corridor</th>
+                            <th data-sort="timestamp">Time</th>
+                            <th data-sort="status">Status</th>
+                            <th>Confidence</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="incidentsBody"></tbody>
+                </table>
+            </div>
+            <!-- Slide-in detail panel -->
+            <div class="incident-detail-panel" id="incidentDetailPanel">
+                <div class="idp-header">
+                    <h3 id="idpTitle">Incident Detail</h3>
+                    <button class="idp-close" onclick="closeIncidentDetail()">&times;</button>
+                </div>
+                <div class="idp-body" id="idpBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ VIEW: FLEET STATUS ═══════════ -->
+    <div class="view view-fleet" id="view-fleet">
+        <div class="fleet-toolbar">
+            <div class="fleet-filters">
+                <input type="text" class="fleet-search" id="fleetSearch" placeholder="Search vessel, IMO...">
+                <select id="fleetRiskFilter"><option value="">All Risk Levels</option><option value="CRITICAL">Critical</option><option value="HIGH">High</option><option value="ELEVATED">Elevated</option><option value="LOW">Low</option></select>
+                <select id="fleetTypeFilter"><option value="">All Types</option><option value="tanker">Tanker</option><option value="lpg">LPG</option><option value="chemical">Chemical</option><option value="crude">Crude</option></select>
+                <select id="fleetSortBy"><option value="risk">Sort: Risk (High→Low)</option><option value="name">Sort: Name</option><option value="jwc">Sort: In JWC First</option></select>
+            </div>
+            <div class="fleet-summary" id="fleetSummary"></div>
+        </div>
+        <div class="fleet-grid" id="fleetGrid"></div>
+        <!-- Fleet vessel detail slide-in -->
+        <div class="fleet-detail-panel" id="fleetDetailPanel">
+            <div class="fdp-header">
+                <h3 id="fdpTitle">Vessel Detail</h3>
+                <button class="fdp-close" onclick="closeFleetDetail()">&times;</button>
+            </div>
+            <div class="fdp-body" id="fdpBody"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════ VIEW: NOTICES ═══════════ -->
+    <div class="view view-notices" id="view-notices">
+        <div class="notices-toolbar">
+            <div class="notices-tabs">
+                <button class="ntab active" data-ntab="pending">Pending <span class="ntab-badge" id="pendingCount">0</span></button>
+                <button class="ntab" data-ntab="sent">Sent</button>
+                <button class="ntab" data-ntab="all">All Notices</button>
+                <button class="ntab" data-ntab="recipients">Recipients</button>
+            </div>
+        </div>
+        <div class="notices-content" id="noticesContent"></div>
+    </div>
+
+    <!-- ═══════════ REPORT INCIDENT MODAL ═══════════ -->
+    <div class="modal-overlay" id="reportOverlay">
+        <div class="report-modal">
+            <div class="report-header">
+                <h2>Report Security Incident</h2>
+                <button class="report-close" onclick="closeReportModal()">&times;</button>
+            </div>
+            <div class="report-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Incident Type</label>
+                        <select id="reportType" required>
+                            <option value="">Select type...</option>
+                            <option value="MISSILE_ATTACK">Missile Attack</option>
+                            <option value="DRONE_ATTACK">Drone/UAV Attack</option>
+                            <option value="MINE_THREAT">Mine Threat</option>
+                            <option value="PIRACY">Piracy / Armed Robbery</option>
+                            <option value="SEIZURE">Vessel Seizure</option>
+                            <option value="SUSPICIOUS_APPROACH">Suspicious Approach</option>
+                            <option value="MILITARY_ACTION">Military Action</option>
+                            <option value="ADVISORY">Security Advisory</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Severity</label>
+                        <select id="reportSeverity" required>
+                            <option value="3">Medium (3)</option>
+                            <option value="5">Critical (5)</option>
+                            <option value="4">High (4)</option>
+                            <option value="2">Low (2)</option>
+                            <option value="1">Info (1)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="reportTitle" placeholder="Brief description of the incident" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Latitude</label>
+                        <input type="number" id="reportLat" step="0.0001" placeholder="e.g. 12.5000">
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude</label>
+                        <input type="number" id="reportLon" step="0.0001" placeholder="e.g. 45.2000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Corridor</label>
+                    <select id="reportCorridor">
+                        <option value="">Unknown / Auto-detect</option>
+                        <option value="BAB_EL_MANDEB">Bab el-Mandeb</option>
+                        <option value="STRAIT_OF_HORMUZ">Strait of Hormuz</option>
+                        <option value="RED_SEA">Red Sea</option>
+                        <option value="GULF_OF_ADEN">Gulf of Aden</option>
+                        <option value="ARABIAN_SEA">Arabian Sea</option>
+                        <option value="GULF_OF_OMAN">Gulf of Oman</option>
+                        <option value="INDIAN_OCEAN">Indian Ocean</option>
+                        <option value="PERSIAN_GULF">Persian Gulf</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="reportDescription" rows="4" placeholder="Detailed description of the incident..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Source</label>
+                    <input type="text" id="reportSource" placeholder="e.g. UKMTO, MARAD, vessel report" value="MANUAL">
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" onclick="closeReportModal()">Cancel</button>
+                    <button class="btn-primary" id="submitReport">Submit Incident</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ SCRIPTS ═══════════ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="/js/constants.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/ports.js"></script>
+    <script src="/js/map.js"></script>
+    <script src="/js/vessels.js"></script>
+    <script src="/js/zones.js"></script>
+    <script src="/js/overview.js"></script>
+    <script src="/js/incidents.js"></script>
+    <script src="/js/recommendations.js"></script>
+    <script src="/js/fleet-status.js"></script>
+    <script src="/js/notices-view.js"></script>
+    <script src="/js/report-incident.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/websocket.js"></script>
+    <script>
+        if (window.sentinelWS) {
+            window.sentinelWS.on('heartbeat', function(data) {
+                document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('en-GB');
+            });
+
+            window.sentinelWS.on('positions', function(data) {
+                if (!Array.isArray(data) || data.length === 0) return;
+                data.forEach(function(pos) {
+                    var existing = window.vessels ? window.vessels.find(function(v) { return v.id === pos.id; }) : null;
+                    if (existing) {
+                        if (pos.lat != null) existing.lat = pos.lat;
+                        if (pos.lng != null) existing.lng = pos.lng;
+                        if (pos.speed != null) existing.speed = pos.speed;
+                        if (pos.course != null) existing.course = pos.course;
+                    }
+                });
+                if (typeof refreshCurrentView === 'function') refreshCurrentView('positions');
+            });
+
+            window.sentinelWS.on('incidents', function(data) {
+                if (typeof refreshCurrentView === 'function') refreshCurrentView('incidents');
+            });
+
+            window.sentinelWS.on('alerts', function(data) {
+                if (typeof refreshCurrentView === 'function') refreshCurrentView('alerts');
+            });
+
+            window.sentinelWS.on('proximity_alerts', function(data) {
+                if (typeof handleProximityAlert === 'function') handleProximityAlert(data);
+            });
+
+            window.sentinelWS.on('recommendations', function(data) {
+                if (typeof refreshCurrentView === 'function') refreshCurrentView('recommendations');
+            });
+
+            window.sentinelWS.on('corridor_status', function(data) {
+                if (typeof refreshCurrentView === 'function') refreshCurrentView('corridors');
+            });
+
+            window.sentinelWS.connect();
+        }
+    </script>
+</body>
+</html>

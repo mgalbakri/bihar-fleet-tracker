@@ -1,0 +1,38 @@
+TO:       {{WAR_RISK_UNDERWRITER}}, {{HM_INSURER}}, {{PI_CLUB}}
+FROM:     BIHAR Shipping -- Fleet Operations (URGENT)
+DATE:     {{TIMESTAMP_UTC}}
+RE:       SECURITY INCIDENT -- VESSEL PROXIMITY ALERT
+POLICY:   {{POLICY_NUMBER}}
+VESSEL:   {{VESSEL_NAME}}, IMO {{IMO}}
+
+URGENT NOTICE
+
+A security incident has been reported in proximity to our vessel:
+
+INCIDENT DETAILS:
+  Type:        {{INCIDENT_TYPE}}
+  Time:        {{INCIDENT_TIME}} UTC
+  Position:    {{INCIDENT_LAT}}N, {{INCIDENT_LNG}}E
+  Source:      {{INCIDENT_SOURCE}}
+  Description: {{INCIDENT_DESCRIPTION}}
+
+OUR VESSEL STATUS:
+  Vessel:      {{VESSEL_NAME}}, IMO {{IMO}}
+  Position:    {{LAT}}N, {{LNG}}E (as of {{POSITION_TIME}})
+  Distance:    {{DISTANCE_NM}} nautical miles from incident
+  Speed:       {{SPEED}} knots
+  Course:      {{COURSE}}
+  Status:      No damage reported
+  AIS:         Active
+
+CREW STATUS:    All safe
+
+ACTION TAKEN:   Vessel maintaining current route per master's assessment.
+                Situation is being monitored.
+
+We will provide updates as the situation develops.
+
+Yours faithfully,
+{{DPA_NAME}}
+BIHAR Shipping
+{{DPA_CONTACT}}

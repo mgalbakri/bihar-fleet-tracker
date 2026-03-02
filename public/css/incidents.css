@@ -1,0 +1,105 @@
+/* ═══════════════════════════════════════════════════
+   INCIDENTS — Table View + Detail Panel
+   ═══════════════════════════════════════════════════ */
+
+.view-incidents { flex-direction: column; }
+
+/* ── Toolbar ── */
+.incidents-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); flex-shrink: 0; gap: 12px; flex-wrap: wrap; }
+.incidents-filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.inc-search { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 10px; font-size: 12px; border-radius: 4px; width: 180px; font-family: var(--font-body); }
+.inc-search:focus { outline: none; border-color: var(--accent); }
+.incidents-filters select { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); padding: 6px 8px; font-size: 11px; border-radius: 4px; font-family: var(--font-mono); cursor: pointer; }
+.incidents-actions { display: flex; align-items: center; gap: 12px; }
+.inc-count { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+.btn-secondary { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); padding: 6px 12px; font-size: 11px; cursor: pointer; font-family: var(--font-mono); border-radius: 4px; transition: all 0.15s; }
+.btn-secondary:hover { background: var(--bg-elevated); color: var(--text-primary); border-color: var(--border-bright); }
+.btn-primary { background: var(--accent); border: none; color: #fff; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.15s; }
+.btn-primary:hover { background: var(--accent-dim); }
+
+/* ── Content Area ── */
+.incidents-content { flex: 1; display: flex; min-height: 0; position: relative; }
+.incidents-table-wrap { flex: 1; overflow: auto; }
+
+/* ── Table ── */
+.incidents-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.incidents-table thead { position: sticky; top: 0; z-index: 2; }
+.incidents-table th { background: var(--bg-tertiary); padding: 8px 10px; text-align: left; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap; user-select: none; }
+.incidents-table th:hover { color: var(--text-secondary); }
+.incidents-table th.sorted-asc::after { content: ' ▲'; }
+.incidents-table th.sorted-desc::after { content: ' ▼'; }
+.incidents-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: middle; }
+.incidents-table tr { cursor: pointer; transition: background 0.1s; }
+.incidents-table tr:hover { background: var(--bg-tertiary); }
+.incidents-table tr.selected { background: var(--accent-bg); }
+
+/* Severity badge */
+.sev-badge { display: inline-block; width: 22px; height: 22px; border-radius: 4px; text-align: center; line-height: 22px; font-weight: 700; font-size: 11px; font-family: var(--font-mono); }
+.sev-badge.sev-5 { background: var(--red); color: #fff; }
+.sev-badge.sev-4 { background: #c0392b; color: #fff; }
+.sev-badge.sev-3 { background: var(--amber); color: #000; }
+.sev-badge.sev-2 { background: var(--accent); color: #fff; }
+.sev-badge.sev-1 { background: var(--text-muted); color: #fff; }
+
+/* Type tag */
+.type-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 3px; font-family: var(--font-mono); letter-spacing: 0.3px; white-space: nowrap; }
+.type-tag.MISSILE_ATTACK { background: rgba(224,85,85,0.15); color: var(--red); }
+.type-tag.DRONE_ATTACK { background: rgba(192,57,43,0.15); color: #e74c3c; }
+.type-tag.MINE_THREAT { background: rgba(212,160,55,0.15); color: var(--amber); }
+.type-tag.PIRACY { background: rgba(144,112,204,0.15); color: var(--purple); }
+.type-tag.SEIZURE { background: rgba(224,85,85,0.15); color: var(--red); }
+.type-tag.SUSPICIOUS_APPROACH { background: rgba(74,125,204,0.15); color: var(--blue); }
+.type-tag.MILITARY_ACTION { background: rgba(224,85,85,0.15); color: var(--red); }
+.type-tag.ADVISORY { background: rgba(58,168,154,0.15); color: var(--teal); }
+
+/* Status tag */
+.status-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 3px; font-family: var(--font-mono); }
+.status-tag.active { background: var(--red-bg); color: var(--red); }
+.status-tag.monitoring { background: var(--amber-bg); color: var(--amber); }
+.status-tag.resolved { background: var(--green-bg); color: var(--green); }
+.status-tag.expired { background: rgba(85,85,104,0.15); color: var(--text-muted); }
+
+/* Confidence bar */
+.conf-bar { width: 50px; height: 4px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 4px; }
+.conf-fill { height: 100%; border-radius: 2px; }
+.conf-high { background: var(--green); }
+.conf-med { background: var(--amber); }
+.conf-low { background: var(--red); }
+
+/* ── Detail Panel (slide-in) ── */
+.incident-detail-panel { position: absolute; right: 0; top: 0; bottom: 0; width: 400px; background: var(--bg-primary); border-left: 1px solid var(--border); transform: translateX(100%); transition: transform 0.25s ease; z-index: 10; display: flex; flex-direction: column; overflow: hidden; }
+.incident-detail-panel.open { transform: translateX(0); }
+.idp-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.idp-header h3 { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.idp-close { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; padding: 0 4px; }
+.idp-close:hover { color: var(--text-primary); }
+.idp-body { flex: 1; overflow-y: auto; padding: 16px; }
+
+/* Detail sections */
+.idp-section { margin-bottom: 16px; }
+.idp-section-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.idp-field { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.idp-field-label { color: var(--text-muted); }
+.idp-field-value { color: var(--text-primary); font-weight: 500; text-align: right; max-width: 60%; }
+
+/* Lifecycle timeline */
+.lifecycle-timeline { padding: 8px 0; }
+.lifecycle-step { display: flex; gap: 10px; padding: 6px 0; position: relative; }
+.lifecycle-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--bg-elevated); border: 2px solid var(--text-muted); flex-shrink: 0; margin-top: 2px; z-index: 1; }
+.lifecycle-dot.active { border-color: var(--accent); background: var(--accent); }
+.lifecycle-dot.completed { border-color: var(--green); background: var(--green); }
+.lifecycle-line { position: absolute; left: 4px; top: 18px; bottom: -6px; width: 2px; background: var(--border); }
+.lifecycle-step:last-child .lifecycle-line { display: none; }
+.lifecycle-info { flex: 1; }
+.lifecycle-status { font-size: 11px; font-weight: 600; color: var(--text-primary); }
+.lifecycle-time { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* Related incidents */
+.related-incident { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: var(--bg-secondary); border-radius: 4px; margin-bottom: 4px; font-size: 11px; cursor: pointer; }
+.related-incident:hover { background: var(--bg-tertiary); }
+
+/* Incident actions */
+.idp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.idp-actions button { padding: 6px 12px; font-size: 11px; font-family: var(--font-mono); cursor: pointer; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-secondary); transition: all 0.15s; }
+.idp-actions button:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.idp-actions button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }

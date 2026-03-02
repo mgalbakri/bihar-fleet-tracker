@@ -1,0 +1,39 @@
+TO:       {{WAR_RISK_UNDERWRITER}}, {{HM_INSURER}}, {{PI_CLUB}}, {{DPA_NAME}}
+FROM:     BIHAR Shipping -- Fleet Operations (URGENT)
+DATE:     {{TIMESTAMP_UTC}}
+RE:       AIS SIGNAL LOSS -- VESSEL DARK ALERT
+POLICY:   {{POLICY_NUMBER}}
+VESSEL:   {{VESSEL_NAME}}, IMO {{IMO}}, Flag {{FLAG}}
+
+URGENT NOTICE -- AIS SIGNAL LOSS
+
+AIS transmission from the above vessel has been lost:
+
+SIGNAL DETAILS:
+  Last AIS Position:    {{LAST_LAT}}N, {{LAST_LNG}}E
+  Last Signal Time:     {{LAST_SIGNAL_TIME}} UTC
+  Silence Duration:     {{SILENCE_MINUTES}} minutes
+  In JWC Zone:          {{IN_JWC_ZONE}}
+  Zone Name:            {{JWC_ZONE_NAME}}
+
+VESSEL DETAILS:
+  Vessel:       {{VESSEL_NAME}}, IMO {{IMO}}
+  Last Speed:   {{SPEED}} knots
+  Last Course:  {{COURSE}}
+  Destination:  {{DESTINATION}}
+
+ASSESSMENT:
+  This AIS gap exceeds the monitoring threshold{{JWC_NOTE}}.
+  We are attempting to establish communication with the vessel.
+
+ACTION TAKEN:
+  1. Attempting VHF/satellite contact with vessel
+  2. Notifying relevant maritime authorities
+  3. Monitoring for signal restoration
+
+We will provide an update once contact is re-established or signal restored.
+
+Yours faithfully,
+{{DPA_NAME}}
+BIHAR Shipping
+{{DPA_CONTACT}}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>BIHAR SENTINEL</title>
+    <link rel="icon" type="image/jpeg" href="/assets/IMG_3164.jpeg">
+    <link rel="apple-touch-icon" href="/assets/IMG_3164.jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo-section">
+                <img src="assets/IMG_3164.jpeg" alt="BIHAR" class="logo-img">
+                <h1 class="sentinel-title">SENTINEL</h1>
+                <p class="sentinel-tagline">Maritime Intelligence</p>
+            </div>
+
+            <form id="loginForm" class="login-form" autocomplete="on">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required autocomplete="email"
+                           placeholder="operator@bihar.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required autocomplete="current-password"
+                               placeholder="Enter password">
+                        <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                            <span class="eye-icon">&#128065;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">SIGN IN</span>
+                    <span class="btn-spinner" style="display:none"></span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <div class="divider"></div>
+                <p class="confidential">BIHAR Shipping | Confidential</p>
+                <p class="warning">Unauthorized access prohibited</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

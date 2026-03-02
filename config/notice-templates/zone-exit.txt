@@ -1,0 +1,29 @@
+TO:       {{WAR_RISK_UNDERWRITER}} via {{BROKER}}
+FROM:     BIHAR Shipping -- Fleet Operations
+DATE:     {{TIMESTAMP_UTC}}
+RE:       JWC ZONE EXIT CONFIRMATION
+POLICY:   {{POLICY_NUMBER}}
+VESSEL:   {{VESSEL_NAME}}, IMO {{IMO}}
+
+Dear Sirs,
+
+We confirm that the above-named vessel has exited the Joint War Committee Listed Area:
+
+  Zone Exited:      {{JWC_ZONE_NAME}}
+  Exit Time:        {{EXIT_TIME}} UTC
+  Exit Position:    {{LAT}}N, {{LNG}}E
+  Entry Time:       {{ENTRY_TIME}} UTC
+  Time in Zone:     {{DURATION}}
+
+Vessel Status:
+  Current Position:    {{LAT}}N, {{LNG}}E
+  Speed:               {{SPEED}} knots
+  Destination:         {{DESTINATION}}
+  Status:              No incidents during transit
+
+Please close the AWRP period accordingly.
+
+Yours faithfully,
+{{DPA_NAME}}
+BIHAR Shipping
+{{DPA_CONTACT}}

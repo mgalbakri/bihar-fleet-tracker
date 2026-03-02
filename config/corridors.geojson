@@ -1,0 +1,98 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HORMUZ",
+        "name": "Strait of Hormuz",
+        "description": "TSS inbound/outbound lanes, Omani waters, Iranian waters"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [55.0, 25.5], [55.0, 27.0], [56.0, 27.0], [57.0, 26.8],
+          [57.5, 26.5], [57.5, 26.0], [57.0, 25.5], [56.0, 25.5],
+          [55.0, 25.5]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "BAB_EL_MANDEB",
+        "name": "Bab el-Mandeb Strait",
+        "description": "Narrowest point, Yemen coast, Djibouti coast, Perim Island"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [42.5, 12.0], [42.5, 13.5], [43.5, 13.5], [44.0, 13.0],
+          [44.0, 12.0], [43.5, 12.0], [42.5, 12.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "GULF_OF_ADEN",
+        "name": "Gulf of Aden",
+        "description": "IRTC corridor, approach to Bab el-Mandeb, Somali coast"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [43.0, 11.0], [43.0, 15.5], [45.0, 15.0], [48.0, 14.0],
+          [51.0, 13.0], [51.0, 11.0], [48.0, 11.0], [45.0, 11.0],
+          [43.0, 11.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SUEZ_APPROACH",
+        "name": "Suez Canal Approach",
+        "description": "Gulf of Suez, canal entrance, waiting anchorages"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [32.0, 28.0], [32.0, 31.5], [33.0, 31.5], [34.5, 30.5],
+          [34.5, 28.5], [33.5, 28.0], [32.0, 28.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ARABIAN_SEA",
+        "name": "Arabian Sea (Extended)",
+        "description": "Main shipping lanes, Houthi extended strike range (>2000km)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [55.0, 10.0], [55.0, 25.0], [60.0, 25.0], [65.0, 22.0],
+          [68.0, 18.0], [68.0, 10.0], [62.0, 10.0], [55.0, 10.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SOMALI_BASIN",
+        "name": "Somali Basin",
+        "description": "Piracy risk area, offshore Somalia"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [43.0, 0.0], [43.0, 11.0], [48.0, 11.0], [52.0, 8.0],
+          [55.0, 5.0], [55.0, 0.0], [50.0, 0.0], [45.0, 0.0],
+          [43.0, 0.0]
+        ]]
+      }
+    }
+  ]
+}

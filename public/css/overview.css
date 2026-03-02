@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════════════════
+   OVERVIEW — Situational Command Center
+   ═══════════════════════════════════════════════════ */
+
+.view { display: none; height: calc(100vh - var(--header-height)); margin-top: var(--header-height); overflow: hidden; }
+.view.active { display: flex; flex-direction: column; }
+
+/* ── Alert Banner ── */
+.alert-banner { background: var(--red-bg); border-bottom: 1px solid var(--red); padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--red); animation: fade-in 0.3s; }
+.alert-banner .alert-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse 1.5s infinite; flex-shrink: 0; }
+.alert-banner-text { flex: 1; font-weight: 600; }
+.alert-banner-btn { background: none; border: 1px solid var(--red); color: var(--red); padding: 2px 10px; font-size: 10px; font-weight: 700; cursor: pointer; letter-spacing: 1px; font-family: var(--font-mono); }
+.alert-banner-btn.dismiss { border-color: var(--text-muted); color: var(--text-muted); }
+.alert-banner-btn:hover { background: var(--red); color: #fff; }
+.alert-banner-btn.dismiss:hover { background: var(--text-muted); color: var(--bg-primary); }
+
+/* ── Corridor Strip ── */
+.corridor-strip { display: flex; gap: 0; border-bottom: 1px solid var(--border); flex-shrink: 0; overflow-x: auto; }
+.corridor-card { flex: 1; min-width: 120px; padding: 8px 12px; background: var(--bg-secondary); border-right: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+.corridor-card:hover { background: var(--bg-tertiary); }
+.corridor-card:last-child { border-right: none; }
+.corridor-name { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.corridor-status { font-size: 11px; font-weight: 700; margin-top: 2px; font-family: var(--font-mono); }
+.corridor-incidents { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.corridor-status.GREEN { color: var(--green); }
+.corridor-status.AMBER { color: var(--amber); }
+.corridor-status.RED { color: var(--red); }
+.corridor-status.BLACK { color: #fff; background: var(--red); padding: 0 4px; }
+
+/* ── Overview Grid ── */
+.overview-grid { display: grid; grid-template-columns: 280px 1fr 280px; flex: 1; min-height: 0; overflow: hidden; }
+.overview-left, .overview-right { overflow-y: auto; border-right: 1px solid var(--border); padding: 0; background: var(--bg-primary); }
+.overview-right { border-right: none; border-left: 1px solid var(--border); }
+.overview-center { display: flex; flex-direction: column; min-height: 0; }
+
+/* ── Panel Sections ── */
+.panel-section { border-bottom: 1px solid var(--border); }
+.panel-title { padding: 10px 12px; font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 1.5px; font-family: var(--font-mono); display: flex; align-items: center; gap: 6px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1; }
+.panel-title svg { opacity: 0.5; }
+.badge { background: var(--accent-bg); color: var(--accent); padding: 1px 6px; border-radius: 8px; font-size: 10px; font-weight: 700; margin-left: auto; }
+.badge.red { background: var(--red-bg); color: var(--red); }
+.badge.amber { background: var(--amber-bg); color: var(--amber); }
+
+/* ── Recommendation Cards ── */
+.rec-list { max-height: none; }
+.rec-card { padding: 10px 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+.rec-card:hover { background: var(--bg-tertiary); }
+.rec-card-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.rec-urgency { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 3px; letter-spacing: 0.5px; font-family: var(--font-mono); }
+.rec-urgency.CRITICAL { background: var(--red); color: #fff; }
+.rec-urgency.HIGH { background: #c0392b; color: #fff; }
+.rec-urgency.MEDIUM { background: var(--amber); color: #000; }
+.rec-urgency.LOW { background: var(--green-dim); color: #fff; }
+.rec-vessel { font-size: 11px; font-weight: 600; color: var(--text-primary); }
+.rec-action { font-size: 10px; font-weight: 600; color: var(--accent); margin-left: auto; font-family: var(--font-mono); }
+.rec-text { font-size: 11px; color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rec-meta { display: flex; gap: 8px; margin-top: 4px; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* ── Alert Cards ── */
+.alert-list { max-height: none; }
+.alert-card { padding: 10px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 8px; }
+.alert-severity { width: 3px; height: 100%; min-height: 32px; border-radius: 2px; flex-shrink: 0; }
+.alert-severity.DANGER { background: var(--red); }
+.alert-severity.CRITICAL { background: #c0392b; }
+.alert-severity.WARNING { background: var(--amber); }
+.alert-severity.WATCH { background: var(--accent); }
+.alert-info { flex: 1; min-width: 0; }
+.alert-title { font-size: 11px; font-weight: 600; color: var(--text-primary); }
+.alert-sub { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+.alert-time { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* ── Map Container ── */
+.overview-map-container { flex: 1; position: relative; min-height: 0; }
+.overview-map-container #overview-map { width: 100%; height: 100%; }
+.map-controls { position: absolute; bottom: 8px; left: 8px; display: flex; gap: 8px; z-index: 400; background: rgba(10,10,15,0.85); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); }
+.toggle-label { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-mono); }
+.toggle-label input { width: 12px; height: 12px; }
+
+/* ── Stats Strip ── */
+.overview-stats { display: flex; border-top: 1px solid var(--border); background: var(--bg-secondary); flex-shrink: 0; }
+.ostat { flex: 1; text-align: center; padding: 8px; border-right: 1px solid var(--border); }
+.ostat:last-child { border-right: none; }
+.ostat-value { font-size: 18px; font-weight: 700; color: var(--text-primary); font-family: var(--font-display); }
+.ostat-value.red { color: var(--red); }
+.ostat-value.amber { color: var(--amber); }
+.ostat-value.green { color: var(--green); }
+.ostat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); }
+
+/* ── Threat Feed ── */
+.threat-feed { max-height: none; }
+.threat-item { padding: 10px 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+.threat-item:hover { background: var(--bg-tertiary); }
+.threat-item-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.threat-sev { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.threat-sev.sev-5 { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.threat-sev.sev-4 { background: #c0392b; }
+.threat-sev.sev-3 { background: var(--amber); }
+.threat-sev.sev-2 { background: var(--accent); }
+.threat-sev.sev-1 { background: var(--text-muted); }
+.threat-type { font-size: 9px; font-weight: 700; color: var(--amber); letter-spacing: 0.5px; font-family: var(--font-mono); }
+.threat-time { font-size: 10px; color: var(--text-muted); margin-left: auto; font-family: var(--font-mono); }
+.threat-title { font-size: 11px; color: var(--text-primary); font-weight: 500; }
+.threat-location { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── Fleet Strip ── */
+.fleet-strip { max-height: none; }
+.fleet-strip-item { padding: 8px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background 0.15s; }
+.fleet-strip-item:hover { background: var(--bg-tertiary); }
+.fleet-risk-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.fleet-risk-dot.CRITICAL { background: var(--red); animation: pulse 1.5s infinite; }
+.fleet-risk-dot.HIGH { background: #c0392b; }
+.fleet-risk-dot.ELEVATED { background: var(--amber); }
+.fleet-risk-dot.LOW { background: var(--green); }
+.fleet-strip-info { flex: 1; min-width: 0; }
+.fleet-strip-name { font-size: 11px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fleet-strip-detail { font-size: 10px; color: var(--text-secondary); }
+.fleet-strip-score { font-size: 12px; font-weight: 700; font-family: var(--font-mono); }
+
+/* ── Empty States ── */
+.empty-state { padding: 24px 16px; text-align: center; color: var(--text-muted); font-size: 12px; }

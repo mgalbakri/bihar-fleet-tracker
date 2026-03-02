@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f4f4f4}
+.container{max-width:640px;margin:0 auto;background:#fff}
+.header{background:#0f172a;padding:24px;text-align:center}
+.header h1{color:#f8fafc;font-size:20px;margin:0;letter-spacing:2px}
+.header p{color:#94a3b8;font-size:12px;margin:4px 0 0}
+.badge{background:#22c55e;color:#fff;display:inline-block;padding:6px 16px;font-size:14px;font-weight:700;letter-spacing:1px;margin:16px 0}
+.content{padding:24px}
+.label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+.value{font-size:14px;color:#1e293b;font-weight:600}
+table{width:100%;border-collapse:collapse;margin:16px 0}
+td{padding:8px 12px;border:1px solid #e2e8f0;font-size:13px}
+.footer{background:#f8fafc;padding:16px 24px;font-size:11px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0}
+.confidential{color:#ef4444;font-weight:700;font-size:10px;letter-spacing:2px}
+</style></head><body>
+<div class="container">
+<div class="header"><h1>BIHAR SENTINEL</h1><p>Maritime Intelligence &bull; Threat Awareness &bull; Fleet Protection</p></div>
+<div style="text-align:center"><span class="badge">JWC ZONE EXIT CONFIRMATION</span></div>
+<div class="content">
+<p style="font-size:13px;color:#64748b">Date: {{TIMESTAMP_UTC}}</p>
+<p>Dear {{WAR_RISK_UNDERWRITER}},</p>
+<p>This notice confirms that the following vessel has <strong>safely exited</strong> the Joint War Committee Listed Area.</p>
+<table>
+<tr><td class="label">Vessel</td><td class="value">{{VESSEL_NAME}} (IMO: {{IMO}})</td></tr>
+<tr><td class="label">Flag</td><td class="value">{{FLAG}}</td></tr>
+<tr><td class="label">Exit Position</td><td class="value">{{LAT}}°N, {{LNG}}°E</td></tr>
+<tr><td class="label">Exit Time</td><td class="value">{{POSITION_TIME}}</td></tr>
+<tr><td class="label">Zone Exited</td><td class="value">{{JWC_ZONE_NAME}}</td></tr>
+<tr><td class="label">Time in Zone</td><td class="value">{{TIME_IN_ZONE}}</td></tr>
+<tr><td class="label">Current Destination</td><td class="value">{{DESTINATION}}</td></tr>
+</table>
+<p>AWRP calculation may now be finalized. Vessel has resumed standard security posture (SSP Level 1).</p>
+<p style="margin-top:24px">Respectfully,<br><strong>{{DPA_NAME}}</strong><br>{{DPA_CONTACT}}</p>
+</div>
+<div class="footer"><span class="confidential">CONFIDENTIAL</span><br>BIHAR SENTINEL | Policy: {{POLICY_NUMBER}} | JWC Circular: {{JWC_CIRCULAR}}</div>
+</div></body></html>

@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "IRTC_MAIN",
+        "name": "IRTC - Internationally Recommended Transit Corridor",
+        "description": "Gulf of Aden recommended transit corridor per UKMTO guidance",
+        "source": "UKMTO"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [45.0, 11.83], [46.0, 11.92], [47.0, 12.05],
+          [48.0, 12.15], [49.0, 12.30], [49.5, 12.40],
+          [50.0, 12.50], [51.0, 12.70]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "IRTC_NORTH",
+        "name": "IRTC Northern Boundary",
+        "description": "Northern boundary of recommended transit corridor"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [45.0, 12.08], [46.0, 12.17], [47.0, 12.30],
+          [48.0, 12.40], [49.0, 12.55], [49.5, 12.65],
+          [50.0, 12.75], [51.0, 12.95]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "IRTC_SOUTH",
+        "name": "IRTC Southern Boundary",
+        "description": "Southern boundary of recommended transit corridor"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [45.0, 11.58], [46.0, 11.67], [47.0, 11.80],
+          [48.0, 11.90], [49.0, 12.05], [49.5, 12.15],
+          [50.0, 12.25], [51.0, 12.45]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "TSS_HORMUZ_INBOUND",
+        "name": "Hormuz TSS Inbound Lane",
+        "description": "Traffic Separation Scheme - inbound lane through Strait of Hormuz"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [56.0, 25.4], [56.2, 25.8], [56.3, 26.1], [56.4, 26.4], [56.5, 26.6]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "TSS_HORMUZ_OUTBOUND",
+        "name": "Hormuz TSS Outbound Lane",
+        "description": "Traffic Separation Scheme - outbound lane through Strait of Hormuz"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [56.5, 26.6], [56.35, 26.3], [56.25, 26.0], [56.15, 25.7], [56.0, 25.3]
+        ]
+      }
+    }
+  ]
+}

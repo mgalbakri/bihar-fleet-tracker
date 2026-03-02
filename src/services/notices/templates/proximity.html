@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f4f4f4}
+.container{max-width:640px;margin:0 auto;background:#fff}
+.header{background:#0f172a;padding:24px;text-align:center}
+.header h1{color:#f8fafc;font-size:20px;margin:0;letter-spacing:2px}
+.header p{color:#94a3b8;font-size:12px;margin:4px 0 0}
+.badge{background:#f59e0b;color:#000;display:inline-block;padding:6px 16px;font-size:14px;font-weight:700;letter-spacing:1px;margin:16px 0}
+.content{padding:24px}
+.label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+.value{font-size:14px;color:#1e293b;font-weight:600}
+table{width:100%;border-collapse:collapse;margin:16px 0}
+td{padding:8px 12px;border:1px solid #e2e8f0;font-size:13px}
+.alert-box{background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;margin:16px 0;font-size:13px}
+.footer{background:#f8fafc;padding:16px 24px;font-size:11px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0}
+.confidential{color:#ef4444;font-weight:700;font-size:10px;letter-spacing:2px}
+</style></head><body>
+<div class="container">
+<div class="header"><h1>BIHAR SENTINEL</h1><p>Maritime Intelligence &bull; Threat Awareness &bull; Fleet Protection</p></div>
+<div style="text-align:center"><span class="badge">PROXIMITY ALERT NOTICE</span></div>
+<div class="content">
+<p style="font-size:13px;color:#64748b">Date: {{TIMESTAMP_UTC}}</p>
+<div class="alert-box"><strong>ALERT:</strong> Vessel is within proximity of an active security incident.</div>
+<table>
+<tr><td class="label">Vessel</td><td class="value">{{VESSEL_NAME}} (IMO: {{IMO}})</td></tr>
+<tr><td class="label">Vessel Position</td><td class="value">{{LAT}}°N, {{LNG}}°E</td></tr>
+<tr><td class="label">Incident Type</td><td class="value">{{INCIDENT_TYPE}}</td></tr>
+<tr><td class="label">Incident Title</td><td class="value">{{INCIDENT_TITLE}}</td></tr>
+<tr><td class="label">Distance</td><td class="value">{{DISTANCE_NM}} nautical miles</td></tr>
+<tr><td class="label">Alert Level</td><td class="value">{{ALERT_LEVEL}}</td></tr>
+<tr><td class="label">Corridor</td><td class="value">{{CORRIDOR}}</td></tr>
+</table>
+<p>The vessel Master has been notified. Enhanced lookout and security measures have been activated in accordance with the Ship Security Plan.</p>
+<p style="margin-top:24px">Respectfully,<br><strong>{{DPA_NAME}}</strong><br>{{DPA_CONTACT}}</p>
+</div>
+<div class="footer"><span class="confidential">CONFIDENTIAL</span><br>BIHAR SENTINEL | Policy: {{POLICY_NUMBER}}</div>
+</div></body></html>

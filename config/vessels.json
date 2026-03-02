@@ -1,0 +1,1479 @@
+[
+    {
+        "id": 1,
+        "name": "Israa",
+        "imo": "9325960",
+        "mmsi": "403096001",
+        "callSign": "V7A8",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7319,
+        "gt": 4292,
+        "nt": 2150,
+        "ldt": 2850,
+        "loa": "105.5",
+        "beam": "16.8",
+        "draft": "7.2",
+        "built": 2011,
+        "builder": "Jiangsu Eastern",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "PETCO, Malaysia",
+        "delivered": "25/12/2022",
+        "redelivery": "24/06/2026",
+        "status": "Sailing to Singapore",
+        "location": "Prai, Malaysia",
+        "lat": 5.3841,
+        "lng": 100.3938,
+        "active": true,
+        "speed": 12.4,
+        "course": 245,
+        "destination": "SINGAPORE",
+        "eta": "16 Jan 18:00",
+        "navStatus": "Under way using engine",
+        "scrapValue": 1.54,
+        "marketValue": 8.2,
+        "replacementValue": 28,
+        "pscInspections": [
+            {
+                "port": "Singapore",
+                "date": "2024-09-15",
+                "deficiencies": 0,
+                "detained": false
+            },
+            {
+                "port": "Busan",
+                "date": "2024-03-22",
+                "deficiencies": 1,
+                "detained": false
+            },
+            {
+                "port": "Fujairah",
+                "date": "2023-11-10",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Prai",
+                "country": "Malaysia",
+                "arrived": "12 Jan 08:00",
+                "departed": "14 Jan 16:00"
+            },
+            {
+                "port": "Singapore",
+                "country": "Singapore",
+                "arrived": "08 Jan 04:00",
+                "departed": "10 Jan 22:00"
+            },
+            {
+                "port": "Ho Chi Minh",
+                "country": "Vietnam",
+                "arrived": "02 Jan 10:00",
+                "departed": "05 Jan 14:00"
+            }
+        ],
+        "weather": {
+            "temp": 29,
+            "condition": "Partly Cloudy",
+            "wind": 12,
+            "humidity": 78,
+            "icon": "⛅"
+        },
+        "cargo": {
+            "type": "HSFO 380",
+            "quantity": "5,200 MT",
+            "grade": "High Sulphur Fuel Oil"
+        }
+    },
+    {
+        "id": 2,
+        "name": "Al Zarandi",
+        "imo": "9325958",
+        "mmsi": "403070000",
+        "callSign": "V7A7",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7303,
+        "gt": 4292,
+        "nt": 2145,
+        "ldt": 2840,
+        "loa": "105.5",
+        "beam": "16.8",
+        "draft": "7.2",
+        "built": 2010,
+        "builder": "Jiangsu Eastern",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "Bihar Bunkers",
+        "delivered": "29/02/2020",
+        "redelivery": "Yearly",
+        "status": "At Jeddah bunkering",
+        "location": "Jeddah, Saudi Arabia",
+        "lat": 21.5433,
+        "lng": 39.1728,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "JEDDAH",
+        "eta": "In Port",
+        "navStatus": "At anchor",
+        "scrapValue": 1.53,
+        "marketValue": 7.5,
+        "replacementValue": 28,
+        "pscInspections": [
+            {
+                "port": "Jeddah",
+                "date": "2024-11-20",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Jeddah",
+                "country": "Saudi Arabia",
+                "arrived": "10 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 24,
+            "condition": "Clear",
+            "wind": 8,
+            "humidity": 45,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "Gasoil",
+            "quantity": "6,800 MT",
+            "grade": "EN 590 10ppm"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Galbot",
+        "imo": "9555084",
+        "mmsi": "256594000",
+        "callSign": "CQWG",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7281,
+        "gt": 4325,
+        "nt": 2160,
+        "ldt": 2870,
+        "loa": "106.0",
+        "beam": "16.8",
+        "draft": "7.1",
+        "built": 2010,
+        "builder": "Cochin Shipyard",
+        "flag": "Portugal",
+        "class": "Bureau Veritas",
+        "classAbbr": "BV",
+        "charterer": "Sacor Bunkers",
+        "delivered": "24/10/2023",
+        "redelivery": "23/10/2026",
+        "status": "At Sines bunkering",
+        "location": "Sines, Portugal",
+        "lat": 37.95,
+        "lng": -8.8667,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "SINES",
+        "eta": "In Port",
+        "navStatus": "Moored",
+        "scrapValue": 1.55,
+        "marketValue": 7.8,
+        "replacementValue": 28,
+        "pscInspections": [],
+        "portCalls": [
+            {
+                "port": "Sines",
+                "country": "Portugal",
+                "arrived": "11 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 14,
+            "condition": "Overcast",
+            "wind": 22,
+            "humidity": 82,
+            "icon": "☁️"
+        },
+        "cargo": {
+            "type": "VLSFO",
+            "quantity": "5,500 MT",
+            "grade": "Very Low Sulphur Fuel Oil"
+        }
+    },
+    {
+        "id": 4,
+        "name": "Al Safa",
+        "imo": "9501643",
+        "mmsi": "325366000",
+        "callSign": "V7B2",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7324,
+        "gt": 4421,
+        "nt": 2200,
+        "ldt": 2920,
+        "loa": "106.8",
+        "beam": "16.8",
+        "draft": "7.2",
+        "built": 2009,
+        "builder": "STX Shipbuilding",
+        "flag": "Marshall Islands",
+        "class": "DNV",
+        "classAbbr": "DNV",
+        "charterer": "Amsol",
+        "delivered": "20/01/2020",
+        "redelivery": "18/01/2026",
+        "status": "At Durban",
+        "location": "Durban, South Africa",
+        "lat": -29.8587,
+        "lng": 31.0218,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "DURBAN",
+        "eta": "In Port",
+        "navStatus": "Moored",
+        "scrapValue": 1.58,
+        "marketValue": 7,
+        "replacementValue": 28,
+        "pscInspections": [
+            {
+                "port": "Durban",
+                "date": "2024-12-10",
+                "deficiencies": 1,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Durban",
+                "country": "South Africa",
+                "arrived": "09 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 26,
+            "condition": "Sunny",
+            "wind": 15,
+            "humidity": 65,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "Jet A-1",
+            "quantity": "7,100 MT",
+            "grade": "Aviation Turbine Fuel"
+        }
+    },
+    {
+        "id": 5,
+        "name": "Andes",
+        "imo": "9411719",
+        "mmsi": "325307000",
+        "callSign": "V7C1",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7364,
+        "gt": 4518,
+        "nt": 2250,
+        "ldt": 2980,
+        "loa": "107.2",
+        "beam": "17.0",
+        "draft": "7.3",
+        "built": 2007,
+        "builder": "Shin Kurushima",
+        "flag": "Marshall Islands",
+        "class": "ClassNK",
+        "classAbbr": "NK",
+        "charterer": "International Supply",
+        "delivered": "31/12/2019",
+        "redelivery": "Yearly",
+        "status": "At Fujairah",
+        "location": "Fujairah, UAE",
+        "lat": 25.1288,
+        "lng": 56.3264,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "FUJAIRAH",
+        "eta": "In Port",
+        "navStatus": "At anchor",
+        "scrapValue": 1.61,
+        "marketValue": 6.2,
+        "replacementValue": 28,
+        "pscInspections": [
+            {
+                "port": "Fujairah",
+                "date": "2024-11-05",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Fujairah",
+                "country": "UAE",
+                "arrived": "08 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 22,
+            "condition": "Clear",
+            "wind": 10,
+            "humidity": 55,
+            "icon": "☀️"
+        },
+        "cargo": null
+    },
+    {
+        "id": 6,
+        "name": "Miraj",
+        "imo": "9394741",
+        "mmsi": "325243000",
+        "callSign": "V7D3",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7450,
+        "gt": 4623,
+        "nt": 2300,
+        "ldt": 3050,
+        "loa": "108.0",
+        "beam": "17.2",
+        "draft": "7.4",
+        "built": 2007,
+        "builder": "Shin Kurushima",
+        "flag": "Marshall Islands",
+        "class": "ClassNK",
+        "classAbbr": "NK",
+        "charterer": "Waad Energy",
+        "delivered": "25/02/2024",
+        "redelivery": "Yearly",
+        "status": "At Jeddah",
+        "location": "Jeddah, Saudi Arabia",
+        "lat": 21.5169,
+        "lng": 39.1489,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "JEDDAH",
+        "eta": "In Port",
+        "navStatus": "Moored",
+        "scrapValue": 1.65,
+        "marketValue": 6.5,
+        "replacementValue": 28,
+        "pscInspections": [],
+        "portCalls": [
+            {
+                "port": "Jeddah",
+                "country": "Saudi Arabia",
+                "arrived": "12 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 24,
+            "condition": "Clear",
+            "wind": 8,
+            "humidity": 45,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "Naphtha",
+            "quantity": "6,200 MT",
+            "grade": "Full Range Naphtha"
+        }
+    },
+    {
+        "id": 7,
+        "name": "Daisy",
+        "imo": "9516545",
+        "mmsi": "325847000",
+        "callSign": "V7E4",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7280,
+        "gt": 4298,
+        "nt": 2140,
+        "ldt": 2845,
+        "loa": "105.8",
+        "beam": "16.8",
+        "draft": "7.2",
+        "built": 2009,
+        "builder": "Jiangsu Eastern",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "International Supply",
+        "delivered": "14/11/2023",
+        "redelivery": "Yearly",
+        "status": "Pre dry dock",
+        "location": "Khor Fakkan, UAE",
+        "lat": 25.3436,
+        "lng": 56.3475,
+        "active": false,
+        "speed": 0,
+        "course": 0,
+        "destination": "DRY DOCK",
+        "eta": "-",
+        "navStatus": "Moored",
+        "scrapValue": 1.54,
+        "marketValue": 6.8,
+        "replacementValue": 28,
+        "pscInspections": [
+            {
+                "port": "Khor Fakkan",
+                "date": "2024-09-28",
+                "deficiencies": 2,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Khor Fakkan",
+                "country": "UAE",
+                "arrived": "05 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 21,
+            "condition": "Clear",
+            "wind": 12,
+            "humidity": 58,
+            "icon": "☀️"
+        },
+        "cargo": null
+    },
+    {
+        "id": 8,
+        "name": "Lilac",
+        "imo": "9411721",
+        "mmsi": "325946000",
+        "callSign": "V7C2",
+        "type": "tanker",
+        "typeLabel": "Oil Tanker",
+        "dwt": 7373,
+        "gt": 4518,
+        "nt": 2250,
+        "ldt": 2980,
+        "loa": "107.2",
+        "beam": "17.0",
+        "draft": "7.3",
+        "built": 2009,
+        "builder": "Shin Kurushima",
+        "flag": "Marshall Islands",
+        "class": "ClassNK",
+        "classAbbr": "NK",
+        "charterer": "International Supply",
+        "delivered": "-",
+        "redelivery": "-",
+        "status": "Standby Fujairah",
+        "location": "Fujairah, UAE",
+        "lat": 25.1488,
+        "lng": 56.3464,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "FUJAIRAH",
+        "eta": "In Port",
+        "navStatus": "At anchor",
+        "scrapValue": 1.61,
+        "marketValue": 7,
+        "replacementValue": 28,
+        "pscInspections": [
+            {
+                "port": "Fujairah",
+                "date": "2024-12-01",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Fujairah",
+                "country": "UAE",
+                "arrived": "10 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 22,
+            "condition": "Clear",
+            "wind": 10,
+            "humidity": 55,
+            "icon": "☀️"
+        },
+        "cargo": null
+    },
+    {
+        "id": 9,
+        "name": "Al Barrah",
+        "imo": "9332030",
+        "mmsi": "403573000",
+        "callSign": "V7F5",
+        "type": "lpg",
+        "typeLabel": "LPG Carrier",
+        "dwt": 27710,
+        "gt": 22890,
+        "nt": 9800,
+        "ldt": 9200,
+        "loa": "159.9",
+        "beam": "25.6",
+        "draft": "10.8",
+        "built": 2007,
+        "builder": "Hyundai Mipo",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "ENOC, UAE",
+        "delivered": "01/04/2024",
+        "redelivery": "31/03/2027",
+        "status": "At Jebel Ali",
+        "location": "Jebel Ali, UAE",
+        "lat": 25.0066,
+        "lng": 55.058,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "JEBEL ALI",
+        "eta": "In Port",
+        "navStatus": "At anchor",
+        "scrapValue": 4.97,
+        "marketValue": 32,
+        "replacementValue": 75,
+        "pscInspections": [
+            {
+                "port": "Jebel Ali",
+                "date": "2024-08-15",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Jebel Ali",
+                "country": "UAE",
+                "arrived": "13 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 23,
+            "condition": "Clear",
+            "wind": 14,
+            "humidity": 52,
+            "icon": "☀️"
+        },
+        "cargo": null
+    },
+    {
+        "id": 10,
+        "name": "Al Jabirah",
+        "imo": "9332042",
+        "mmsi": "403574000",
+        "callSign": "V7F6",
+        "type": "lpg",
+        "typeLabel": "LPG Carrier",
+        "dwt": 27710,
+        "gt": 22890,
+        "nt": 9800,
+        "ldt": 9200,
+        "loa": "159.9",
+        "beam": "25.6",
+        "draft": "10.8",
+        "built": 2007,
+        "builder": "Hyundai Mipo",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "Indian Oil Corp",
+        "delivered": "15/11/2025",
+        "redelivery": "14/11/2026",
+        "status": "Sailing to Kandla",
+        "location": "Arabian Sea",
+        "lat": 21.8243,
+        "lng": 65.4567,
+        "active": true,
+        "speed": 14.2,
+        "course": 68,
+        "destination": "KANDLA",
+        "eta": "16 Jan 22:00",
+        "navStatus": "Under way using engine",
+        "scrapValue": 4.97,
+        "marketValue": 33,
+        "replacementValue": 75,
+        "pscInspections": [
+            {
+                "port": "Kandla",
+                "date": "2024-10-10",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Ruwais",
+                "country": "UAE",
+                "arrived": "10 Jan",
+                "departed": "13 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 27,
+            "condition": "Clear",
+            "wind": 18,
+            "humidity": 62,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "LPG Mix",
+            "quantity": "3,800 MT",
+            "grade": "Propane/Butane 60:40"
+        }
+    },
+    {
+        "id": 11,
+        "name": "Al Shaffiah",
+        "imo": "9358620",
+        "mmsi": "403004000",
+        "callSign": "V7G7",
+        "type": "chemical",
+        "typeLabel": "Chemical Tanker",
+        "dwt": 19907,
+        "gt": 13456,
+        "nt": 5800,
+        "ldt": 5800,
+        "loa": "144.0",
+        "beam": "22.6",
+        "draft": "9.2",
+        "built": 2006,
+        "builder": "Shin Kurushima",
+        "flag": "Marshall Islands",
+        "class": "ClassNK",
+        "classAbbr": "NK",
+        "charterer": "Aramco Trading",
+        "delivered": "30/04/2024",
+        "redelivery": "29/04/2026",
+        "status": "Sailing to Jubail",
+        "location": "Indian Ocean",
+        "lat": 15.5432,
+        "lng": 68.2341,
+        "active": true,
+        "speed": 13.8,
+        "course": 315,
+        "destination": "JUBAIL",
+        "eta": "15 Jan 01:00",
+        "navStatus": "Under way using engine",
+        "scrapValue": 3.13,
+        "marketValue": 18,
+        "replacementValue": 45,
+        "pscInspections": [
+            {
+                "port": "Singapore",
+                "date": "2024-07-22",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Singapore",
+                "country": "Singapore",
+                "arrived": "08 Jan",
+                "departed": "11 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 28,
+            "condition": "Partly Cloudy",
+            "wind": 20,
+            "humidity": 72,
+            "icon": "⛅"
+        },
+        "cargo": {
+            "type": "Methanol",
+            "quantity": "4,200 MT",
+            "grade": "AA Grade Methanol"
+        }
+    },
+    {
+        "id": 12,
+        "name": "Al Mahboobah",
+        "imo": "9340415",
+        "mmsi": "403086000",
+        "callSign": "V7G8",
+        "type": "chemical",
+        "typeLabel": "Chemical Tanker",
+        "dwt": 19982,
+        "gt": 13512,
+        "nt": 5820,
+        "ldt": 5820,
+        "loa": "144.0",
+        "beam": "22.6",
+        "draft": "9.2",
+        "built": 2006,
+        "builder": "Shin Kurushima",
+        "flag": "Marshall Islands",
+        "class": "ClassNK",
+        "classAbbr": "NK",
+        "charterer": "Aramco Trading",
+        "delivered": "02/05/2024",
+        "redelivery": "01/05/2026",
+        "status": "At Jubail loading",
+        "location": "Jubail, Saudi Arabia",
+        "lat": 27.0046,
+        "lng": 49.6588,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "JUBAIL",
+        "eta": "In Port",
+        "navStatus": "Moored",
+        "scrapValue": 3.14,
+        "marketValue": 18.5,
+        "replacementValue": 45,
+        "pscInspections": [
+            {
+                "port": "Jubail",
+                "date": "2024-11-30",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Jubail",
+                "country": "Saudi Arabia",
+                "arrived": "13 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 18,
+            "condition": "Clear",
+            "wind": 12,
+            "humidity": 48,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "MEG",
+            "quantity": "3,500 MT",
+            "grade": "Monoethylene Glycol"
+        }
+    },
+    {
+        "id": 13,
+        "name": "Dianella",
+        "imo": "9901087",
+        "mmsi": "636020822",
+        "callSign": "V7H9",
+        "type": "chemical",
+        "typeLabel": "Product/Chemical",
+        "dwt": 49803,
+        "gt": 29876,
+        "nt": 12500,
+        "ldt": 12500,
+        "loa": "183.0",
+        "beam": "32.2",
+        "draft": "12.8",
+        "built": 2021,
+        "builder": "Hyundai Mipo",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "PETCO",
+        "delivered": "21/01/2024",
+        "redelivery": "15/01/2026",
+        "status": "At Shenao Taiwan",
+        "location": "Shenao, Taiwan",
+        "lat": 25.1276,
+        "lng": 121.8167,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "SHENAO",
+        "eta": "In Port",
+        "navStatus": "Moored",
+        "scrapValue": 6.75,
+        "marketValue": 52,
+        "replacementValue": 65,
+        "pscInspections": [
+            {
+                "port": "Kaohsiung",
+                "date": "2024-12-15",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Shenao",
+                "country": "Taiwan",
+                "arrived": "14 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 18,
+            "condition": "Rainy",
+            "wind": 25,
+            "humidity": 88,
+            "icon": "🌧️"
+        },
+        "cargo": {
+            "type": "Caustic Soda",
+            "quantity": "2,800 MT",
+            "grade": "50% NaOH Solution"
+        }
+    },
+    {
+        "id": 14,
+        "name": "Liatris",
+        "imo": "9901099",
+        "mmsi": "636020823",
+        "callSign": "V7J1",
+        "type": "chemical",
+        "typeLabel": "Product/Chemical",
+        "dwt": 49803,
+        "gt": 29876,
+        "nt": 12500,
+        "ldt": 12500,
+        "loa": "183.0",
+        "beam": "32.2",
+        "draft": "12.8",
+        "built": 2021,
+        "builder": "Hyundai Mipo",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "ISTC (Sabic)",
+        "delivered": "06/05/2023",
+        "redelivery": "05/05/2026",
+        "status": "Sailing to Singapore",
+        "location": "South China Sea",
+        "lat": 18.4523,
+        "lng": 114.3421,
+        "active": true,
+        "speed": 13.5,
+        "course": 225,
+        "destination": "SINGAPORE",
+        "eta": "19 Jan 18:00",
+        "navStatus": "Under way using engine",
+        "scrapValue": 6.75,
+        "marketValue": 53,
+        "replacementValue": 65,
+        "pscInspections": [
+            {
+                "port": "Shanghai",
+                "date": "2024-12-28",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Shanghai",
+                "country": "China",
+                "arrived": "08 Jan",
+                "departed": "12 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 26,
+            "condition": "Cloudy",
+            "wind": 16,
+            "humidity": 75,
+            "icon": "☁️"
+        },
+        "cargo": {
+            "type": "Phosphoric Acid",
+            "quantity": "3,100 MT",
+            "grade": "Technical Grade 85%"
+        }
+    },
+    {
+        "id": 15,
+        "name": "Angelonia",
+        "imo": "9901051",
+        "mmsi": "636020820",
+        "callSign": "V7K2",
+        "type": "tanker",
+        "typeLabel": "LR2 Tanker",
+        "dwt": 110521,
+        "gt": 62345,
+        "nt": 30000,
+        "ldt": 22000,
+        "loa": "250.0",
+        "beam": "44.0",
+        "draft": "15.2",
+        "built": 2021,
+        "builder": "Hyundai Heavy",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "Aramco Trading",
+        "delivered": "13/01/2024",
+        "redelivery": "12/01/2027",
+        "status": "At Suez STS",
+        "location": "Suez, Egypt",
+        "lat": 29.9668,
+        "lng": 32.5498,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "SUEZ STS",
+        "eta": "In Port",
+        "navStatus": "At anchor",
+        "scrapValue": 11.88,
+        "marketValue": 72,
+        "replacementValue": 85,
+        "pscInspections": [
+            {
+                "port": "Suez",
+                "date": "2024-10-05",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Suez",
+                "country": "Egypt",
+                "arrived": "14 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 18,
+            "condition": "Clear",
+            "wind": 14,
+            "humidity": 52,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "HSFO 380",
+            "quantity": "4,800 MT",
+            "grade": "High Sulphur Fuel Oil"
+        }
+    },
+    {
+        "id": 16,
+        "name": "Lunaria",
+        "imo": "9901063",
+        "mmsi": "636020821",
+        "callSign": "V7K3",
+        "type": "tanker",
+        "typeLabel": "LR2 Tanker",
+        "dwt": 110521,
+        "gt": 62345,
+        "nt": 30000,
+        "ldt": 22000,
+        "loa": "250.0",
+        "beam": "44.0",
+        "draft": "15.2",
+        "built": 2021,
+        "builder": "Hyundai Heavy",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "Aramco Trading",
+        "delivered": "25/01/2024",
+        "redelivery": "24/01/2027",
+        "status": "Sailing to Venice",
+        "location": "Mediterranean",
+        "lat": 38.4521,
+        "lng": 16.3456,
+        "active": true,
+        "speed": 12.8,
+        "course": 320,
+        "destination": "VENICE",
+        "eta": "16 Jan 16:00",
+        "navStatus": "Under way using engine",
+        "scrapValue": 11.88,
+        "marketValue": 73,
+        "replacementValue": 85,
+        "pscInspections": [
+            {
+                "port": "Augusta",
+                "date": "2024-11-18",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Ras Tanura",
+                "country": "Saudi Arabia",
+                "arrived": "02 Jan",
+                "departed": "06 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 15,
+            "condition": "Partly Cloudy",
+            "wind": 20,
+            "humidity": 68,
+            "icon": "⛅"
+        },
+        "cargo": {
+            "type": "Gasoil",
+            "quantity": "7,500 MT",
+            "grade": "EN 590 50ppm"
+        }
+    },
+    {
+        "id": 17,
+        "name": "Bouvardia",
+        "imo": "9935595",
+        "mmsi": "636021772",
+        "callSign": "V7L4",
+        "type": "tanker",
+        "typeLabel": "LR2 Tanker",
+        "dwt": 111075,
+        "gt": 63012,
+        "nt": 30200,
+        "ldt": 22200,
+        "loa": "250.0",
+        "beam": "44.0",
+        "draft": "15.3",
+        "built": 2022,
+        "builder": "Hyundai Heavy",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "Aramco Trading",
+        "delivered": "19/03/2025",
+        "redelivery": "18/03/2028",
+        "status": "At Antwerp",
+        "location": "Antwerp, Belgium",
+        "lat": 51.2194,
+        "lng": 4.4025,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "ANTWERP",
+        "eta": "In Port",
+        "navStatus": "Moored",
+        "scrapValue": 11.99,
+        "marketValue": 78,
+        "replacementValue": 85,
+        "pscInspections": [
+            {
+                "port": "Rotterdam",
+                "date": "2024-12-20",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Antwerp",
+                "country": "Belgium",
+                "arrived": "12 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 6,
+            "condition": "Rainy",
+            "wind": 28,
+            "humidity": 92,
+            "icon": "🌧️"
+        },
+        "cargo": {
+            "type": "VLSFO",
+            "quantity": "5,900 MT",
+            "grade": "Very Low Sulphur Fuel Oil"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Ixora",
+        "imo": "9940459",
+        "mmsi": "636022216",
+        "callSign": "V7L5",
+        "type": "tanker",
+        "typeLabel": "LR2 Tanker",
+        "dwt": 111006,
+        "gt": 62998,
+        "nt": 30180,
+        "ldt": 22180,
+        "loa": "250.0",
+        "beam": "44.0",
+        "draft": "15.3",
+        "built": 2022,
+        "builder": "Hyundai Heavy",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "Aramco Trading",
+        "delivered": "09/03/2025",
+        "redelivery": "08/03/2028",
+        "status": "Sailing to Malaysia",
+        "location": "South China Sea",
+        "lat": 7.4523,
+        "lng": 107.3421,
+        "active": true,
+        "speed": 13.1,
+        "course": 45,
+        "destination": "TANJUNG BURAS",
+        "eta": "20 Jan 18:00",
+        "navStatus": "Under way using engine",
+        "scrapValue": 11.98,
+        "marketValue": 79,
+        "replacementValue": 85,
+        "pscInspections": [
+            {
+                "port": "Singapore",
+                "date": "2024-11-25",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Fujairah",
+                "country": "UAE",
+                "arrived": "28 Dec",
+                "departed": "02 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 29,
+            "condition": "Thunderstorm",
+            "wind": 22,
+            "humidity": 85,
+            "icon": "⛈️"
+        },
+        "cargo": {
+            "type": "Jet A-1",
+            "quantity": "6,400 MT",
+            "grade": "Aviation Turbine Fuel"
+        }
+    },
+    {
+        "id": 19,
+        "name": "Al Habibah",
+        "imo": "9290294",
+        "mmsi": "403101001",
+        "callSign": "V7M6",
+        "type": "crude",
+        "typeLabel": "Aframax",
+        "dwt": 105946,
+        "gt": 58765,
+        "nt": 28000,
+        "ldt": 20500,
+        "loa": "244.0",
+        "beam": "42.0",
+        "draft": "14.8",
+        "built": 2004,
+        "builder": "Daewoo",
+        "flag": "Marshall Islands",
+        "class": "DNV",
+        "classAbbr": "DNV",
+        "charterer": "Utility Ops",
+        "delivered": "-",
+        "redelivery": "-",
+        "status": "Pre dry dock",
+        "location": "Khor Fakkan, UAE",
+        "lat": 25.3636,
+        "lng": 56.3675,
+        "active": false,
+        "speed": 0,
+        "course": 0,
+        "destination": "DRY DOCK",
+        "eta": "-",
+        "navStatus": "At anchor",
+        "scrapValue": 11.07,
+        "marketValue": 28,
+        "replacementValue": 80,
+        "pscInspections": [
+            {
+                "port": "Khor Fakkan",
+                "date": "2024-08-10",
+                "deficiencies": 3,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Khor Fakkan",
+                "country": "UAE",
+                "arrived": "02 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 21,
+            "condition": "Clear",
+            "wind": 12,
+            "humidity": 58,
+            "icon": "☀️"
+        },
+        "cargo": null
+    },
+    {
+        "id": 20,
+        "name": "Al Mahfoza",
+        "imo": "9271365",
+        "mmsi": "403098000",
+        "callSign": "V7N7",
+        "type": "crude",
+        "typeLabel": "Aframax",
+        "dwt": 105433,
+        "gt": 58234,
+        "nt": 27800,
+        "ldt": 20300,
+        "loa": "244.0",
+        "beam": "42.0",
+        "draft": "14.7",
+        "built": 2003,
+        "builder": "Daewoo",
+        "flag": "Marshall Islands",
+        "class": "DNV",
+        "classAbbr": "DNV",
+        "charterer": "Utility Ops",
+        "delivered": "-",
+        "redelivery": "-",
+        "status": "Sailing to Fujairah",
+        "location": "Gulf of Oman",
+        "lat": 24.5432,
+        "lng": 57.8765,
+        "active": true,
+        "speed": 11.5,
+        "course": 270,
+        "destination": "FUJAIRAH",
+        "eta": "22 Jan",
+        "navStatus": "Under way using engine",
+        "scrapValue": 10.96,
+        "marketValue": 26,
+        "replacementValue": 80,
+        "pscInspections": [
+            {
+                "port": "Ras Tanura",
+                "date": "2024-09-05",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Shoaiba",
+                "country": "Saudi Arabia",
+                "arrived": "05 Jan",
+                "departed": "10 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 23,
+            "condition": "Clear",
+            "wind": 14,
+            "humidity": 55,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "Arabian Light",
+            "quantity": "95,000 MT",
+            "grade": "API 32.8"
+        }
+    },
+    {
+        "id": 21,
+        "name": "Daffodil",
+        "imo": "9239927",
+        "mmsi": "403127000",
+        "callSign": "V7P8",
+        "type": "crude",
+        "typeLabel": "Aframax",
+        "dwt": 105357,
+        "gt": 58123,
+        "nt": 27750,
+        "ldt": 20250,
+        "loa": "244.0",
+        "beam": "42.0",
+        "draft": "14.7",
+        "built": 2002,
+        "builder": "Daewoo",
+        "flag": "Marshall Islands",
+        "class": "DNV",
+        "classAbbr": "DNV",
+        "charterer": "Utility Ops",
+        "delivered": "-",
+        "redelivery": "-",
+        "status": "At Shoaiba",
+        "location": "Shoaiba, Saudi Arabia",
+        "lat": 20.6894,
+        "lng": 39.5087,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "SHOAIBA",
+        "eta": "In Port",
+        "navStatus": "Moored",
+        "scrapValue": 10.94,
+        "marketValue": 24,
+        "replacementValue": 80,
+        "pscInspections": [
+            {
+                "port": "Yanbu",
+                "date": "2024-10-28",
+                "deficiencies": 1,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Shoaiba",
+                "country": "Saudi Arabia",
+                "arrived": "13 Jan",
+                "departed": "-"
+            }
+        ],
+        "weather": {
+            "temp": 25,
+            "condition": "Clear",
+            "wind": 10,
+            "humidity": 42,
+            "icon": "☀️"
+        },
+        "cargo": {
+            "type": "Upper Zakum",
+            "quantity": "88,000 MT",
+            "grade": "API 33.4"
+        }
+    },
+    {
+        "id": 22,
+        "name": "Desert Rose",
+        "imo": "9239939",
+        "mmsi": "403097001",
+        "callSign": "V7Q9",
+        "type": "crude",
+        "typeLabel": "Aframax",
+        "dwt": 105328,
+        "gt": 58098,
+        "nt": 27740,
+        "ldt": 20240,
+        "loa": "244.0",
+        "beam": "42.0",
+        "draft": "14.7",
+        "built": 2002,
+        "builder": "Daewoo",
+        "flag": "Marshall Islands",
+        "class": "DNV",
+        "classAbbr": "DNV",
+        "charterer": "Utility Ops",
+        "delivered": "-",
+        "redelivery": "-",
+        "status": "Off Yanbu",
+        "location": "Yanbu, Saudi Arabia",
+        "lat": 24.0894,
+        "lng": 38.0634,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "YANBU",
+        "eta": "Awaiting",
+        "navStatus": "At anchor",
+        "scrapValue": 10.93,
+        "marketValue": 23,
+        "replacementValue": 80,
+        "pscInspections": [
+            {
+                "port": "Rabigh",
+                "date": "2024-11-15",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Rabigh",
+                "country": "Saudi Arabia",
+                "arrived": "08 Jan",
+                "departed": "11 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 22,
+            "condition": "Clear",
+            "wind": 8,
+            "humidity": 48,
+            "icon": "☀️"
+        },
+        "cargo": null
+    },
+    {
+        "id": 23,
+        "name": "Encelia",
+        "imo": "9240172",
+        "mmsi": "325905000",
+        "callSign": "V7R1",
+        "type": "crude",
+        "typeLabel": "Aframax",
+        "dwt": 109250,
+        "gt": 60234,
+        "nt": 28500,
+        "ldt": 21000,
+        "loa": "246.0",
+        "beam": "43.0",
+        "draft": "15.0",
+        "built": 2003,
+        "builder": "Samsung Heavy",
+        "flag": "Marshall Islands",
+        "class": "Lloyd's Register",
+        "classAbbr": "LR",
+        "charterer": "Utility Ops",
+        "delivered": "-",
+        "redelivery": "-",
+        "status": "Awaiting orders",
+        "location": "Saudi Arabia",
+        "lat": 26.2345,
+        "lng": 50.1234,
+        "active": true,
+        "speed": 0,
+        "course": 0,
+        "destination": "ORDERS",
+        "eta": "Awaiting",
+        "navStatus": "At anchor",
+        "scrapValue": 11.34,
+        "marketValue": 25,
+        "replacementValue": 80,
+        "pscInspections": [
+            {
+                "port": "Ras Tanura",
+                "date": "2024-12-02",
+                "deficiencies": 0,
+                "detained": false
+            }
+        ],
+        "portCalls": [
+            {
+                "port": "Ras Tanura",
+                "country": "Saudi Arabia",
+                "arrived": "10 Jan",
+                "departed": "12 Jan"
+            }
+        ],
+        "weather": {
+            "temp": 19,
+            "condition": "Clear",
+            "wind": 12,
+            "humidity": 50,
+            "icon": "☀️"
+        },
+        "cargo": null
+    }
+]

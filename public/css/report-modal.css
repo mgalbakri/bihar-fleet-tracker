@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════════════════
+   REPORT INCIDENT — Modal styling
+   ═══════════════════════════════════════════════════ */
+
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
+.modal-overlay.open { display: flex; animation: fade-in 0.2s; }
+
+.report-modal { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
+.report-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); border-radius: 8px 8px 0 0; }
+.report-header h2 { font-size: 14px; font-weight: 600; color: var(--text-primary); font-family: var(--font-display); }
+.report-close { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+.report-close:hover { color: var(--text-primary); }
+
+.report-body { padding: 20px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); margin-bottom: 4px; }
+.form-group input,
+.form-group select,
+.form-group textarea { width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 8px 10px; font-size: 12px; border-radius: 4px; font-family: var(--font-body); }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { outline: none; border-color: var(--accent); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-group select { cursor: pointer; }
+
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+/* ── Report Incident Button (header) ── */
+.report-btn { display: flex; align-items: center; gap: 5px; background: var(--red); color: #fff; border: none; padding: 6px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; font-family: var(--font-body); transition: all 0.15s; }
+.report-btn:hover { background: #c0392b; }
+.report-btn svg { flex-shrink: 0; }
+
+/* ── Threatmap Layout ── */
+.threatmap-layout { display: flex; flex: 1; min-height: 0; }
+.threatmap-main { flex: 1; position: relative; }
+.threatmap-main #threat-map { width: 100%; height: 100%; }
+.threatmap-controls { position: absolute; bottom: 8px; left: 8px; display: flex; gap: 8px; z-index: 400; background: rgba(10,10,15,0.85); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
+.threatmap-controls select { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); padding: 4px 6px; font-size: 10px; border-radius: 4px; font-family: var(--font-mono); }
+
+.threatmap-sidebar { width: 320px; border-left: 1px solid var(--border); display: flex; flex-direction: column; background: var(--bg-primary); }
+.threatmap-tabs { display: flex; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+.tm-tab { flex: 1; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-muted); padding: 10px; font-size: 11px; font-weight: 600; cursor: pointer; text-align: center; }
+.tm-tab:hover { color: var(--text-secondary); }
+.tm-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tm-panel-body { flex: 1; overflow-y: auto; }
+.tm-feed, .tm-corridors { padding: 0; }

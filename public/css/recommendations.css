@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════════════════
+   RECOMMENDATIONS — Styling for recommendation cards
+   ═══════════════════════════════════════════════════ */
+
+/* Full recommendation detail (used in fleet detail panel) */
+.rec-detail { padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px; }
+.rec-detail-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.rec-detail-type { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 3px; font-family: var(--font-mono); letter-spacing: 0.5px; }
+.rec-detail-type.DIVERT { background: var(--red); color: #fff; }
+.rec-detail-type.AVOID_ZONE { background: #c0392b; color: #fff; }
+.rec-detail-type.INCREASE_SPEED { background: var(--amber); color: #000; }
+.rec-detail-type.INCREASE_WATCH { background: var(--blue); color: #fff; }
+.rec-detail-type.HOLD_POSITION { background: var(--purple); color: #fff; }
+.rec-detail-type.REDUCE_SPEED { background: var(--teal); color: #fff; }
+.rec-detail-type.PROCEED_CAUTION { background: var(--green-dim); color: #fff; }
+.rec-detail-type.MONITOR { background: var(--bg-elevated); color: var(--text-secondary); }
+
+.rec-detail-text { font-size: 12px; color: var(--text-primary); line-height: 1.5; margin-bottom: 8px; }
+.rec-detail-rationale { font-size: 11px; color: var(--text-secondary); line-height: 1.4; padding: 8px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 8px; border-left: 3px solid var(--accent); }
+
+/* Action steps */
+.rec-steps { list-style: none; padding: 0; margin: 8px 0; }
+.rec-steps li { padding: 6px 8px; font-size: 11px; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px; }
+.rec-steps li::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+.rec-steps li:nth-child(odd) { background: var(--bg-tertiary); border-radius: 3px; }
+
+/* Alternative ports */
+.alt-ports { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.alt-port { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; padding: 6px 10px; font-size: 11px; }
+.alt-port-name { font-weight: 600; color: var(--text-primary); }
+.alt-port-eta { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+.alt-port-dist { font-size: 10px; color: var(--text-secondary); }
+
+/* Recommendation action buttons */
+.rec-actions { display: flex; gap: 8px; margin-top: 10px; }
+.rec-btn { padding: 6px 12px; font-size: 11px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-secondary); cursor: pointer; font-family: var(--font-mono); transition: all 0.15s; }
+.rec-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.rec-btn.acknowledge { border-color: var(--accent); color: var(--accent); }
+.rec-btn.acknowledge:hover { background: var(--accent); color: #fff; }
+.rec-btn.execute { border-color: var(--green); color: var(--green); }
+.rec-btn.execute:hover { background: var(--green); color: #fff; }
+.rec-btn.dismiss { border-color: var(--text-muted); color: var(--text-muted); }
+
+/* Confidence indicator */
+.rec-confidence { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.rec-conf-bar { width: 60px; height: 3px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; }
+.rec-conf-fill { height: 100%; border-radius: 2px; }
+.rec-conf-text { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }

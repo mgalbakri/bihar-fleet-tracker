@@ -1,0 +1,164 @@
+/* Panel -- Side/bottom panel, vessel list, search, filters, vessel cards */
+
+.panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 600; }
+.panel-overlay.visible { display: block; }
+
+.panel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg-primary);
+    border-radius: 12px 12px 0 0;
+    z-index: 700;
+    max-height: calc(80% - var(--safe-top));
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(100% - 70px));
+    transition: transform 0.3s ease-out;
+    padding-bottom: var(--safe-bottom);
+    border-top: 1px solid var(--border);
+}
+.panel.open { transform: translateY(0); }
+
+.panel-handle { padding: 12px; display: flex; justify-content: center; cursor: pointer; }
+.panel-handle span { width: 40px; height: 4px; background: var(--border-bright); border-radius: 3px; }
+
+.panel-header {
+    padding: 0 16px 12px;
+    border-bottom: 1px solid var(--border);
+}
+.panel-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.panel-title h2 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.vessel-count {
+    background: var(--accent-bg);
+    border: 1px solid rgba(74,158,255,0.15);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--accent);
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color 0.2s;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus {
+    border-color: var(--accent-dim);
+}
+
+.filters { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
+.filters::-webkit-scrollbar { display: none; }
+
+.filter-btn {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.5px;
+}
+.filter-btn:hover { border-color: var(--border-bright); color: var(--text-secondary); }
+.filter-btn.active {
+    background: var(--accent-bg);
+    border-color: var(--accent-dim);
+    color: var(--accent);
+}
+
+/* Vessel list */
+.vessel-list { flex: 1; overflow-y: auto; padding: 10px; }
+
+.vessel-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px 12px 16px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s, background 0.2s;
+}
+.vessel-card:hover {
+    border-color: var(--border-bright);
+    background: var(--bg-tertiary);
+}
+
+.vessel-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 4px 0 0 4px;
+}
+.vessel-card.tanker::before { background: var(--amber); }
+.vessel-card.lpg::before { background: var(--teal); }
+.vessel-card.chemical::before { background: var(--accent); }
+.vessel-card.crude::before { background: var(--red); }
+
+.vessel-card.selected {
+    border-color: var(--accent-dim);
+    background: var(--accent-bg);
+}
+.vessel-card.maintenance { border-left: 3px dashed var(--amber) !important; }
+.vessel-card.maintenance::before { display: none; }
+
+.vessel-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.vessel-name { font-size: 14px; font-weight: 600; font-family: var(--font-display); }
+.vessel-imo { font-size: 10px; color: var(--text-muted); margin-top: 1px; font-family: var(--font-mono); letter-spacing: 0.5px; }
+
+.vessel-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+}
+.vessel-badge.tanker { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(212,160,55,0.15); }
+.vessel-badge.lpg { background: rgba(58,168,154,0.1); color: var(--teal); border: 1px solid rgba(58,168,154,0.15); }
+.vessel-badge.chemical { background: var(--accent-bg); color: var(--accent); border: 1px solid rgba(74,158,255,0.15); }
+.vessel-badge.crude { background: var(--red-bg); color: var(--red); border: 1px solid rgba(224,85,85,0.15); }
+
+.vessel-location { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.vessel-stats { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+.class-badge { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 3px; background: rgba(144,112,204,0.1); color: var(--purple); border: 1px solid rgba(144,112,204,0.15); font-family: var(--font-mono); letter-spacing: 0.5px; }
+.psc-badge { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 3px; font-family: var(--font-mono); letter-spacing: 0.5px; }
+.psc-badge.good { background: var(--green-bg); color: var(--green); border: 1px solid rgba(60,179,113,0.15); }
+.psc-badge.warn { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(212,160,55,0.15); }
+.maintenance-tag { display: inline-block; background: var(--amber-bg); color: var(--amber); font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-left: 6px; font-family: var(--font-mono); }
+.value-badge { font-size: 10px; font-weight: 700; color: var(--green); }
+
+/* JWC zone badge */
+.jwc-badge { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px; font-family: var(--font-mono); }
+.jwc-badge.critical { background: var(--red-bg); color: var(--red); border: 1px solid rgba(224,85,85,0.2); }
+.jwc-badge.high { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(212,160,55,0.2); }
+.jwc-badge.elevated { background: var(--amber-bg); color: var(--amber-light); border: 1px solid rgba(224,184,77,0.15); }
+.jwc-badge.low { background: var(--green-bg); color: var(--green); border: 1px solid rgba(60,179,113,0.15); }
+
+/* AIS health indicator */
+.ais-health-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.ais-health-dot.green { background: var(--green); }
+.ais-health-dot.amber { background: var(--amber); animation: pulse 2s infinite; }
+.ais-health-dot.red { background: var(--red); animation: pulse 1s infinite; }
