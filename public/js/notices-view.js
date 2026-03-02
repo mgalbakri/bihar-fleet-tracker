@@ -67,9 +67,9 @@ function renderNoticesList(notices) {
           '<span class="notice-type-badge ' + _esc(typeClass) + '">' + _esc((n.type || n.notice_type || '').replace(/_/g, ' ')) + '</span>' +
           '<span class="notice-vessel">' + _esc(n.vessel_name || n.vessel_imo || '') + '</span>' +
         '</div>' +
-        '<span class="notice-time">' + _formatTime(n.created_at || n.timestamp) + '</span>' +
+        '<span class="notice-time">' + _formatTime(n.generated_at || n.created_at || n.timestamp) + '</span>' +
       '</div>' +
-      '<div class="notice-preview">' + _esc(n.subject || n.summary || '') + '</div>' +
+      '<div class="notice-preview">' + _esc(n.trigger_event || n.subject || n.summary || '') + '</div>' +
       renderDeliveryTags(n) +
       renderNoticeActions(n) +
     '</div>';
@@ -90,7 +90,7 @@ function renderDeliveryTags(notice) {
 }
 
 function renderNoticeActions(notice) {
-  var status = notice.status || 'pending';
+  var status = (notice.status || 'pending').toLowerCase();
   if (status === 'sent' || status === 'dismissed') return '';
 
   var html = '<div class="notice-actions">';
