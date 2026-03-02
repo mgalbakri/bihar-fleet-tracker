@@ -3,12 +3,18 @@ const { v4: uuidv4 } = require('uuid');
 
 let db;
 
+// NATO-style source tiers:
+//   Tier 1 (85-95): Official government/military bodies (UKMTO, MARAD, CENTCOM)
+//   Tier 2 (65-75): Verified data providers & manual reports (ACLED, MANUAL)
+//   Tier 3 (40-55): News aggregators (Google News, security news RSS)
 const DEFAULT_SOURCES = [
-  { name: 'UKMTO', type: 'SCRAPE', url: 'https://www.ukmto.org', reliability_score: 90 },
-  { name: 'MARAD', type: 'RSS', url: 'https://www.maritime.dot.gov', reliability_score: 85 },
-  { name: 'CENTCOM', type: 'RSS', url: 'https://www.centcom.mil', reliability_score: 80 },
-  { name: 'ACLED', type: 'API', url: 'https://acleddata.com', reliability_score: 65 },
-  { name: 'MANUAL', type: 'MANUAL', url: null, reliability_score: 70 }
+  { name: 'UKMTO', type: 'SCRAPE', url: 'https://www.ukmto.org', reliability_score: 95 },
+  { name: 'MARAD', type: 'RSS', url: 'https://www.maritime.dot.gov', reliability_score: 90 },
+  { name: 'CENTCOM', type: 'RSS', url: 'https://www.centcom.mil', reliability_score: 85 },
+  { name: 'ACLED', type: 'API', url: 'https://acleddata.com', reliability_score: 70 },
+  { name: 'MANUAL', type: 'MANUAL', url: null, reliability_score: 75 },
+  { name: 'GOOGLE_NEWS', type: 'RSS', url: 'https://news.google.com', reliability_score: 45 },
+  { name: 'NEWS_INTEL', type: 'RSS', url: null, reliability_score: 40 }
 ];
 
 function init(database) {

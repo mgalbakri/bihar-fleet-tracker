@@ -39,7 +39,27 @@ router.get('/', (req, res) => {
       params.push(source);
     }
 
-    query += ' ORDER BY timestamp DESC LIMIT ?';
+    // Sort: official sources first (by reliability tier), then most recent
+    // Tier 1: UKMTO, MARAD, CENTCOM (gov/military)
+    // Tier 2: ACLED, MANUAL (verified providers)
+    // Tier 3: GOOGLE_NEWS, NEWS_INTEL (news aggregators)
+    var sortBy = req.query.sort || 'priority';
+    if (sortBy === 'priority') {
+      query += ` ORDER BY
+        CASE source
+          WHEN 'UKMTO' THEN 1
+          WHEN 'MARAD' THEN 1
+          WHEN 'CENTCOM' THEN 1
+          WHEN 'ACLED' THEN 2
+          WHEN 'MANUAL' THEN 2
+          ELSE 3
+        END ASC,
+        severity DESC,
+        timestamp DESC
+        LIMIT ?`;
+    } else {
+      query += ' ORDER BY timestamp DESC LIMIT ?';
+    }
     params.push(parseInt(limit) || 100);
 
     res.json(db.prepare(query).all(...params));

@@ -2,7 +2,7 @@
 // BIHAR SENTINEL
 
 var incidentsData = [];
-var incidentSort = { field: 'timestamp', dir: 'desc' };
+var incidentSort = { field: 'source', dir: 'asc' };
 var incidentsInitialized = false;
 
 function initIncidents() {
@@ -84,11 +84,21 @@ function getFilteredIncidents() {
     return true;
   });
 
-  // Sort
+  // Sort -- source column sorts by tier (official first), others by value
   filtered.sort(function(a, b) {
-    var va = a[incidentSort.field], vb = b[incidentSort.field];
-    if (incidentSort.field === 'severity') { va = Number(va) || 0; vb = Number(vb) || 0; }
-    if (incidentSort.field === 'timestamp') { va = new Date(va || 0).getTime(); vb = new Date(vb || 0).getTime(); }
+    var field = incidentSort.field;
+    var va, vb;
+    if (field === 'source') {
+      va = _sourceTier(a.source).tier;
+      vb = _sourceTier(b.source).tier;
+      if (va !== vb) return incidentSort.dir === 'asc' ? va - vb : vb - va;
+      // Within same tier, sort by severity desc then time desc
+      if ((b.severity || 0) !== (a.severity || 0)) return (b.severity || 0) - (a.severity || 0);
+      return new Date(b.timestamp || 0) - new Date(a.timestamp || 0);
+    }
+    va = a[field]; vb = b[field];
+    if (field === 'severity') { va = Number(va) || 0; vb = Number(vb) || 0; }
+    if (field === 'timestamp') { va = new Date(va || 0).getTime(); vb = new Date(vb || 0).getTime(); }
     if (va < vb) return incidentSort.dir === 'asc' ? -1 : 1;
     if (va > vb) return incidentSort.dir === 'asc' ? 1 : -1;
     return 0;
@@ -110,6 +120,7 @@ function renderIncidentsTable() {
     var confClass = confScore >= 75 ? 'conf-high' : confScore >= 50 ? 'conf-med' : 'conf-low';
     return '<tr data-id="' + _esc(inc.id) + '" onclick="openIncidentDetail(\'' + _esc(inc.id) + '\')">' +
       '<td><span class="sev-badge sev-' + (inc.severity || 3) + '">' + (inc.severity || '?') + '</span></td>' +
+      '<td>' + _sourceBadgeHtml(inc.source) + '</td>' +
       '<td><span class="type-tag ' + _esc(inc.type) + '">' + _esc((inc.type || '').replace(/_/g, ' ')) + '</span></td>' +
       '<td>' + _esc(inc.title || 'Untitled') + '</td>' +
       '<td>' + _esc((inc.corridor || '').replace(/_/g, ' ')) + '</td>' +
@@ -155,7 +166,7 @@ function renderIncidentDetailPanel(inc) {
   html += _field('Severity', '<span class="sev-badge sev-' + (inc.severity || 3) + '">' + (inc.severity || '?') + '</span>');
   html += _field('Status', '<span class="status-tag ' + _esc(inc.status) + '">' + _esc(inc.status) + '</span>');
   html += _field('Corridor', _esc((inc.corridor || '').replace(/_/g, ' ')));
-  html += _field('Source', _esc(inc.source || ''));
+  html += _field('Source', _sourceBadgeHtml(inc.source) + ' ' + _esc(inc.source || ''));
   if (inc.source_reliability) html += _field('Source Reliability', _esc(inc.source_reliability));
   if (inc.confidence_score) html += _field('Confidence', inc.confidence_score + '%');
   if (inc.escalation_potential) html += _field('Escalation', _esc(inc.escalation_potential));

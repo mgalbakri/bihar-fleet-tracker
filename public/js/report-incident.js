@@ -189,17 +189,54 @@ function renderThreatMapMarkers(vessels, incidents) {
 function renderThreatFeedSidebar(incidents) {
   var el = document.getElementById('tmFeed');
   if (!el) return;
-  el.innerHTML = incidents.slice(0, 30).map(function(inc) {
-    return '<div class="threat-item" onclick="viewIncident(\'' + _esc(inc.id) + '\')">' +
-      '<div class="threat-item-header">' +
-        '<span class="threat-sev sev-' + (inc.severity || 3) + '"></span>' +
-        '<span class="threat-type">' + _esc((inc.type || '').replace(/_/g, ' ')) + '</span>' +
-        '<span class="threat-time">' + _timeAgo(inc.timestamp) + '</span>' +
-      '</div>' +
-      '<div class="threat-title">' + _esc(inc.title || 'Untitled') + '</div>' +
-      '<div class="threat-location">' + _esc(inc.corridor || '') + '</div>' +
-    '</div>';
-  }).join('');
+  // Sort: official sources first, then severity, then time
+  var sorted = incidents.slice().sort(function(a, b) {
+    var ta = _sourceTier(a.source).tier, tb = _sourceTier(b.source).tier;
+    if (ta !== tb) return ta - tb;
+    if ((b.severity || 0) !== (a.severity || 0)) return (b.severity || 0) - (a.severity || 0);
+    return new Date(b.timestamp) - new Date(a.timestamp);
+  });
+  el.textContent = '';
+  sorted.slice(0, 30).forEach(function(inc) {
+    var item = document.createElement('div');
+    item.className = 'threat-item';
+    item.onclick = function() { viewIncident(inc.id); };
+
+    var header = document.createElement('div');
+    header.className = 'threat-item-header';
+    var sev = document.createElement('span');
+    sev.className = 'threat-sev sev-' + (inc.severity || 3);
+    header.appendChild(sev);
+
+    var badge = document.createElement('span');
+    var tier = _sourceTier(inc.source);
+    badge.className = 'source-tier-badge tier-' + tier.tier;
+    badge.style.cssText = 'font-size:8px;font-family:var(--font-mono);letter-spacing:0.5px;padding:1px 4px;border-radius:2px;border:1px solid ' + tier.color + ';color:' + tier.color + ';white-space:nowrap;';
+    badge.textContent = tier.label;
+    header.appendChild(badge);
+
+    var typeEl = document.createElement('span');
+    typeEl.className = 'threat-type';
+    typeEl.textContent = (inc.type || '').replace(/_/g, ' ');
+    header.appendChild(typeEl);
+    var timeEl = document.createElement('span');
+    timeEl.className = 'threat-time';
+    timeEl.textContent = _timeAgo(inc.timestamp);
+    header.appendChild(timeEl);
+    item.appendChild(header);
+
+    var title = document.createElement('div');
+    title.className = 'threat-title';
+    title.textContent = inc.title || 'Untitled';
+    item.appendChild(title);
+
+    var loc = document.createElement('div');
+    loc.className = 'threat-location';
+    loc.textContent = inc.corridor || '';
+    item.appendChild(loc);
+
+    el.appendChild(item);
+  });
 }
 
 function renderThreatCorridorsSidebar(corridors) {

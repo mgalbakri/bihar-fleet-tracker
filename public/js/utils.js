@@ -74,6 +74,29 @@ function _formatTime(ts) {
 // Try to parse JSON, return original on failure
 function _tryParse(s) { try { return JSON.parse(s); } catch(e) { return s; } }
 
+// ========== SOURCE TIER HELPERS ==========
+
+// NATO-style source classification
+var SOURCE_TIERS = {
+  UKMTO:       { tier: 1, label: 'OFFICIAL', color: '#4fc3f7' },
+  MARAD:       { tier: 1, label: 'OFFICIAL', color: '#4fc3f7' },
+  CENTCOM:     { tier: 1, label: 'OFFICIAL', color: '#4fc3f7' },
+  ACLED:       { tier: 2, label: 'VERIFIED', color: '#81c784' },
+  MANUAL:      { tier: 2, label: 'VERIFIED', color: '#81c784' },
+  GOOGLE_NEWS: { tier: 3, label: 'NEWS', color: '#aaa' },
+  NEWS_INTEL:  { tier: 3, label: 'NEWS', color: '#aaa' }
+};
+
+function _sourceTier(source) {
+  return SOURCE_TIERS[source] || { tier: 3, label: 'NEWS', color: '#aaa' };
+}
+
+// Render source badge HTML (for use in innerHTML contexts)
+function _sourceBadgeHtml(source) {
+  var t = _sourceTier(source);
+  return '<span class="source-tier-badge tier-' + t.tier + '" style="font-size:8px;font-family:var(--font-mono);letter-spacing:0.5px;padding:1px 4px;border-radius:2px;border:1px solid ' + t.color + ';color:' + t.color + ';white-space:nowrap;">' + t.label + '</span>';
+}
+
 // ========== MAP MARKER HELPERS ==========
 
 // Risk level → color mapping (shared across all maps)
