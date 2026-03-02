@@ -122,11 +122,12 @@ function renderOverviewMap(vessels, incidents) {
     overviewIncidentMarkers.push(m);
   });
 
-  // Auto-fit map to show all vessel markers
+  // Auto-fit map to show all vessel markers (min zoom 3 to keep operational focus)
   var allMarkers = Object.values(overviewMarkers).concat(overviewIncidentMarkers);
   if (allMarkers.length > 0) {
     var group = L.featureGroup(allMarkers);
     overviewMap.fitBounds(group.getBounds().pad(0.1));
+    if (overviewMap.getZoom() < 3) overviewMap.setZoom(3);
   }
 }
 

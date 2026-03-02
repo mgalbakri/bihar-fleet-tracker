@@ -167,11 +167,12 @@ function renderThreatMapMarkers(vessels, incidents) {
     threatIncidentMarkers.push(m);
   });
 
-  // Auto-fit map to show all vessel and incident markers
+  // Auto-fit map to show all vessel and incident markers (min zoom 3 for operational focus)
   var allMarkers = Object.values(threatMarkers).concat(threatIncidentMarkers);
   if (allMarkers.length > 0) {
     var group = L.featureGroup(allMarkers);
     threatMap.fitBounds(group.getBounds().pad(0.1));
+    if (threatMap.getZoom() < 3) threatMap.setZoom(3);
   }
 }
 
