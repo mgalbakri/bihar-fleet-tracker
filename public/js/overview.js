@@ -121,6 +121,13 @@ function renderOverviewMap(vessels, incidents) {
     m.bindTooltip(_esc(inc.title || inc.type) + ' [Sev ' + inc.severity + ']', { className: 'sentinel-tooltip' });
     overviewIncidentMarkers.push(m);
   });
+
+  // Auto-fit map to show all vessel markers
+  var allMarkers = Object.values(overviewMarkers).concat(overviewIncidentMarkers);
+  if (allMarkers.length > 0) {
+    var group = L.featureGroup(allMarkers);
+    overviewMap.fitBounds(group.getBounds().pad(0.1));
+  }
 }
 
 function renderOverviewRecs(recs) {

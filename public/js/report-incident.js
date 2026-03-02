@@ -166,6 +166,13 @@ function renderThreatMapMarkers(vessels, incidents) {
     m.on('click', function() { viewIncident(inc.id); });
     threatIncidentMarkers.push(m);
   });
+
+  // Auto-fit map to show all vessel and incident markers
+  var allMarkers = Object.values(threatMarkers).concat(threatIncidentMarkers);
+  if (allMarkers.length > 0) {
+    var group = L.featureGroup(allMarkers);
+    threatMap.fitBounds(group.getBounds().pad(0.1));
+  }
 }
 
 function renderThreatFeedSidebar(incidents) {
