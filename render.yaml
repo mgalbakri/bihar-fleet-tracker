@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: bihar-sentinel
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@bihar.com
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DATALASTIC_API_KEY
+        sync: false
+      - key: OPENWEATHERMAP_API_KEY
+        sync: false
+      - key: AISSTREAM_API_KEY
+        sync: false
