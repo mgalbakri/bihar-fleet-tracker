@@ -2,7 +2,13 @@
 // Fetches maritime advisories from MARAD's public RSS feed
 
 const RssParser = require('rss-parser');
-const parser = new RssParser();
+const parser = new RssParser({
+  timeout: 15000,
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+  }
+});
 
 const SOURCE = 'MARAD';
 const FEED_URL = 'https://www.maritime.dot.gov/rss.xml';

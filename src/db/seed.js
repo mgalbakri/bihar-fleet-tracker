@@ -27,14 +27,25 @@ function seedCorridors() {
     { id: 'SOMALI_BASIN', name: 'Somali Basin' }
   ];
 
+  // Corridor threat levels reflect current situation (Mar 2026)
+  const corridorStatus = {
+    HORMUZ: { status: 'RED', incidents: 6, trend: 'WORSENING' },
+    BAB_EL_MANDEB: { status: 'RED', incidents: 4, trend: 'STABLE' },
+    GULF_OF_ADEN: { status: 'AMBER', incidents: 2, trend: 'STABLE' },
+    SUEZ_APPROACH: { status: 'AMBER', incidents: 1, trend: 'STABLE' },
+    ARABIAN_SEA: { status: 'AMBER', incidents: 1, trend: 'STABLE' },
+    SOMALI_BASIN: { status: 'GREEN', incidents: 0, trend: 'STABLE' }
+  };
+
   const stmt = db.prepare(`
-    INSERT OR IGNORE INTO corridor_status (corridor_id, name, status, incident_count_7d, trend, bihar_vessels_count)
-    VALUES (?, ?, 'GREEN', 0, 'STABLE', 0)
+    INSERT OR REPLACE INTO corridor_status (corridor_id, name, status, incident_count_7d, trend, bihar_vessels_count)
+    VALUES (?, ?, ?, ?, ?, 0)
   `);
 
   const insertMany = db.transaction((corridors) => {
     for (const c of corridors) {
-      stmt.run(c.id, c.name);
+      const s = corridorStatus[c.id] || { status: 'GREEN', incidents: 0, trend: 'STABLE' };
+      stmt.run(c.id, c.name, s.status, s.incidents, s.trend);
     }
   });
 
@@ -91,6 +102,64 @@ function seedSampleIncidents() {
       description: 'US MARAD advisory warning of heightened threat to commercial shipping in southern Red Sea. Vessels advised to exercise extreme caution.',
       source: 'MARAD', source_ref: 'MARAD-2026-006', verified: 1,
       corridor: 'BAB_EL_MANDEB', status: 'active'
+    },
+    // === Strait of Hormuz attacks -- 1-2 March 2026 ===
+    {
+      id: uuidv4(), timestamp: '2026-03-01T08:30:00Z',
+      lat: 26.18, lon: 56.25, type: 'MISSILE_ATTACK',
+      severity: 5, title: 'Oil tanker SKYLIGHT struck near Khasab Port, Strait of Hormuz',
+      description: 'Palau-flagged oil tanker SKYLIGHT attacked approximately 5nm north of Khasab Port in the Strait of Hormuz. All 20 crew members evacuated. Vessel sustained significant damage.',
+      source: 'UKMTO', source_ref: 'UKMTO-2026-0250', verified: 1,
+      target_vessel: 'SKYLIGHT', target_flag: 'Palau',
+      result: 'hit_damage', weapon_type: 'MISSILE', attributed_to: 'Iran/IRGCN',
+      corridor: 'HORMUZ', status: 'active'
+    },
+    {
+      id: uuidv4(), timestamp: '2026-03-01T11:50:00Z',
+      lat: 26.35, lon: 56.48, type: 'MISSILE_ATTACK',
+      severity: 5, title: 'MV MKD VYON struck off Oman coast -- 1 crew killed',
+      description: 'MKD VYON struck at 11:50 off the coast of Oman. Vessel sustained damage above the waterline with water ingress in the engine room. One crew member trapped in the engine room confirmed dead.',
+      source: 'UKMTO', source_ref: 'UKMTO-2026-0251', verified: 1,
+      target_vessel: 'MKD VYON', target_flag: 'Unknown',
+      result: 'hit_sunk', weapon_type: 'MISSILE', attributed_to: 'Iran/IRGCN',
+      corridor: 'HORMUZ', status: 'active'
+    },
+    {
+      id: uuidv4(), timestamp: '2026-03-01T14:15:00Z',
+      lat: 26.42, lon: 56.55, type: 'DRONE_ATTACK',
+      severity: 4, title: 'Greek-owned OCEAN ELECTRA struck by drone in Hormuz',
+      description: 'Greek-owned vessel OCEAN ELECTRA struck by drone or missile in the Strait of Hormuz. No injuries or major structural damage reported. Vessel proceeding toward safe port.',
+      source: 'UKMTO', source_ref: 'UKMTO-2026-0252', verified: 1,
+      target_vessel: 'OCEAN ELECTRA', target_flag: 'Greece',
+      result: 'hit_damage', weapon_type: 'UAV', attributed_to: 'Iran/IRGCN',
+      corridor: 'HORMUZ', status: 'active'
+    },
+    {
+      id: uuidv4(), timestamp: '2026-03-01T16:00:00Z',
+      lat: 25.95, lon: 56.10, type: 'MISSILE_ATTACK',
+      severity: 4, title: 'Spanish-flagged HERCULES STAR struck 20nm off UAE coast',
+      description: 'Hercules Star, a Spanish-flagged vessel, struck approximately 20 nautical miles off the coast of the UAE in the Strait of Hormuz approaches.',
+      source: 'CENTCOM', source_ref: 'CENTCOM-2026-0095', verified: 1,
+      target_vessel: 'HERCULES STAR', target_flag: 'Spain',
+      result: 'hit_damage', weapon_type: 'MISSILE', attributed_to: 'Iran/IRGCN',
+      corridor: 'HORMUZ', status: 'active'
+    },
+    {
+      id: uuidv4(), timestamp: '2026-03-01T18:00:00Z',
+      lat: 26.60, lon: 56.70, type: 'MILITARY_ACTION',
+      severity: 5, title: 'US forces sink Iranian destroyer Jamaran in Hormuz',
+      description: 'US Central Command confirmed destruction of Iranian Navy destroyer Jamaran during Operation Epic Fury. The vessel sank with approximately 80 crew members on board. Part of broader US strikes against 9 Iranian naval vessels.',
+      source: 'CENTCOM', source_ref: 'CENTCOM-2026-0096', verified: 1,
+      result: 'sunk', weapon_type: 'NAVAL_STRIKE', attributed_to: 'US Navy/CENTCOM',
+      corridor: 'HORMUZ', status: 'active'
+    },
+    {
+      id: uuidv4(), timestamp: '2026-03-02T00:00:00Z',
+      lat: 26.30, lon: 56.40, type: 'ADVISORY',
+      severity: 5, title: 'CRITICAL: Strait of Hormuz traffic halted -- multiple vessel attacks',
+      description: 'Four commercial vessels struck in the Strait of Hormuz on 1 March 2026 amid escalating Iran-US-Israel tensions. Hormuz traffic effectively halted. All commercial vessels advised to avoid transit until further notice.',
+      source: 'MARAD', source_ref: 'MARAD-2026-010', verified: 1,
+      corridor: 'HORMUZ', status: 'active'
     }
   ];
 
@@ -149,10 +218,12 @@ function seedHistoricalIncidents() {
     { lat: 11.90, lon: 46.20, type: 'PIRACY', sev: 3, days: 60 },
     { lat: 12.10, lon: 47.50, type: 'DRONE_ATTACK', sev: 3, days: 42 },
     { lat: 12.80, lon: 44.20, type: 'MILITARY_ACTION', sev: 3, days: 75 },
-    // Hormuz area
+    // Hormuz area (escalating tensions Feb-Mar 2026)
     { lat: 26.20, lon: 56.30, type: 'SUSPICIOUS_APPROACH', sev: 2, days: 14 },
     { lat: 26.50, lon: 56.50, type: 'SEIZURE', sev: 4, days: 48 },
     { lat: 25.90, lon: 56.80, type: 'MINE_THREAT', sev: 4, days: 80 },
+    { lat: 26.15, lon: 56.35, type: 'MISSILE_ATTACK', sev: 5, days: 3 },
+    { lat: 26.40, lon: 56.60, type: 'MILITARY_ACTION', sev: 5, days: 2 },
     // Arabian Sea
     { lat: 15.50, lon: 55.00, type: 'DRONE_ATTACK', sev: 3, days: 32 },
     { lat: 14.00, lon: 52.50, type: 'MISSILE_ATTACK', sev: 4, days: 58 },

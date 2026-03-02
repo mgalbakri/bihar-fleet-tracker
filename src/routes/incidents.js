@@ -12,10 +12,11 @@ router.get('/', (req, res) => {
     let query = 'SELECT * FROM incidents WHERE 1=1';
     const params = [];
 
-    // Exclude news articles by default -- only show verified threat incidents
-    // Pass include_intel=true to include NEWS_INTEL (used by threat feeds)
+    // Exclude low-severity news articles by default
+    // High-severity news (>=4) about real attacks always shows through
+    // Pass include_intel=true to include ALL news sources
     if (!req.query.include_intel && !source) {
-      query += " AND source != 'NEWS_INTEL'";
+      query += " AND (source NOT IN ('NEWS_INTEL', 'GOOGLE_NEWS') OR severity >= 4)";
     }
 
     if (status) {

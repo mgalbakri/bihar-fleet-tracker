@@ -6,6 +6,7 @@ const maradRss = require('./marad-rss');
 const centcomRss = require('./centcom-rss');
 const acledApi = require('./acled-api');
 const securityNews = require('./security-news-rss');
+const googleNews = require('./google-news-rss');
 const normalizer = require('./incident-normalizer');
 
 let db;
@@ -41,13 +42,15 @@ async function pollNow() {
 
   try {
     // Run all scrapers in parallel
-    // MARAD/CENTCOM gov feeds may return 403 -- security news RSS is the primary live source
+    // Google News RSS is the primary live source (always available)
+    // MARAD/CENTCOM gov feeds may return 403 -- kept as fallback
     var results = await Promise.allSettled([
+      fetchAndNormalize(googleNews),
+      fetchAndNormalize(securityNews),
       fetchAndNormalize(ukmtoScraper),
       fetchAndNormalize(maradRss),
       fetchAndNormalize(centcomRss),
-      fetchAndNormalize(acledApi),
-      fetchAndNormalize(securityNews)
+      fetchAndNormalize(acledApi)
     ]);
 
     for (var r of results) {
@@ -98,7 +101,7 @@ function getStatus() {
   return {
     lastPollTime: lastPollTime,
     isPolling: isPolling,
-    sources: ['UKMTO', 'MARAD', 'CENTCOM', 'ACLED', 'NEWS_INTEL']
+    sources: ['GOOGLE_NEWS', 'NEWS_INTEL', 'UKMTO', 'MARAD', 'CENTCOM', 'ACLED']
   };
 }
 
