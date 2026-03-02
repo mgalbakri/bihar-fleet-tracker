@@ -345,8 +345,6 @@ function renderIncidentDetailPanel(incident) {
   if (incident.weapon_type) fields.push({ label: 'Weapon Type', value: incident.weapon_type });
   if (incident.attributed_to) fields.push({ label: 'Attributed To', value: incident.attributed_to });
   if (incident.result) fields.push({ label: 'Result', value: incident.result });
-  if (incident.source_ref) fields.push({ label: 'Source Ref', value: incident.source_ref });
-
   var grid = document.createElement('div');
   grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;';
   fields.forEach(function(f) {
@@ -364,6 +362,11 @@ function renderIncidentDetailPanel(incident) {
     grid.appendChild(item);
   });
   panel.appendChild(grid);
+
+  // Source link (clickable)
+  if (incident.source_ref && incident.source_ref.startsWith('http')) {
+    panel.appendChild(createSourceLink(incident.source_ref));
+  }
 
   // Update history
   if (incident.updates && incident.updates.length > 0) {
@@ -667,6 +670,11 @@ function loadFeedItemDetail(incidentId, container) {
       });
       container.appendChild(grid);
 
+      // Source article link
+      if (data.source_ref && data.source_ref.startsWith('http')) {
+        container.appendChild(createSourceLink(data.source_ref));
+      }
+
       // Full detail button
       var fullBtn = document.createElement('button');
       fullBtn.className = 'feed-detail-full-btn';
@@ -791,6 +799,48 @@ function getIncidentIcon(type) {
   if (t.includes('SEIZURE')) return '\u26D4';
   if (t.includes('SUSPICIOUS')) return '\u2753';
   return '\u26A0';
+}
+
+function createSourceLink(url) {
+  var link = document.createElement('a');
+  link.href = url;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.className = 'source-article-link';
+  link.style.cssText = 'display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:5px;color:var(--accent);font-size:11px;font-family:var(--font-mono);text-decoration:none;margin:8px 0;transition:all 0.2s;cursor:pointer;';
+  link.onmouseover = function() { this.style.borderColor = 'var(--accent)'; this.style.background = 'rgba(100,149,237,0.1)'; };
+  link.onmouseout = function() { this.style.borderColor = 'var(--border)'; this.style.background = 'var(--bg-secondary)'; };
+
+  var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  icon.setAttribute('width', '12');
+  icon.setAttribute('height', '12');
+  icon.setAttribute('viewBox', '0 0 24 24');
+  icon.setAttribute('fill', 'none');
+  icon.setAttribute('stroke', 'currentColor');
+  icon.setAttribute('stroke-width', '2');
+  var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path1.setAttribute('d', 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6');
+  icon.appendChild(path1);
+  var path2 = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+  path2.setAttribute('points', '15 3 21 3 21 9');
+  icon.appendChild(path2);
+  var path3 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  path3.setAttribute('x1', '10'); path3.setAttribute('y1', '14');
+  path3.setAttribute('x2', '21'); path3.setAttribute('y2', '3');
+  icon.appendChild(path3);
+  link.appendChild(icon);
+
+  var linkText = document.createElement('span');
+  linkText.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;';
+  linkText.textContent = 'View Source Article';
+  link.appendChild(linkText);
+
+  var linkDomain = document.createElement('span');
+  linkDomain.style.cssText = 'color:var(--text-muted);font-size:9px;flex-shrink:0;';
+  try { linkDomain.textContent = new URL(url).hostname.replace('www.', ''); } catch(e) {}
+  link.appendChild(linkDomain);
+
+  return link;
 }
 
 function formatIncidentType(type) {

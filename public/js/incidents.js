@@ -169,6 +169,17 @@ function renderIncidentDetailPanel(inc) {
     html += '<p style="font-size:12px;color:var(--text-secondary);line-height:1.5">' + _esc(inc.description) + '</p></div>';
   }
 
+  // Source article link
+  if (inc.source_ref && inc.source_ref.startsWith('http')) {
+    var domain = '';
+    try { domain = new URL(inc.source_ref).hostname.replace('www.', ''); } catch(e) {}
+    html += '<div class="idp-section">';
+    html += '<a href="' + _esc(inc.source_ref) + '" target="_blank" rel="noopener noreferrer" class="source-article-link" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:5px;color:var(--accent);font-size:11px;font-family:var(--font-mono);text-decoration:none;">';
+    html += '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">View Source Article</span>';
+    if (domain) html += '<span style="color:var(--text-muted);font-size:9px;">' + _esc(domain) + '</span>';
+    html += '</a></div>';
+  }
+
   // Enrichment details
   if (inc.impact_area || inc.recommended_clearance_nm) {
     html += '<div class="idp-section"><div class="idp-section-title">Enrichment</div>';
