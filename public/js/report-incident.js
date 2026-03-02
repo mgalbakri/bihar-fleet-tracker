@@ -171,7 +171,7 @@ function renderThreatMapMarkers(vessels, incidents) {
   var allMarkers = Object.values(threatMarkers).concat(threatIncidentMarkers);
   if (allMarkers.length > 0) {
     var group = L.featureGroup(allMarkers);
-    threatMap.fitBounds(group.getBounds().pad(0.1));
+    threatMap.fitBounds(group.getBounds().pad(0.1), { animate: false, maxZoom: 8 });
     if (threatMap.getZoom() < 3) threatMap.setZoom(3);
   }
 }

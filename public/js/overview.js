@@ -126,7 +126,7 @@ function renderOverviewMap(vessels, incidents) {
   var allMarkers = Object.values(overviewMarkers).concat(overviewIncidentMarkers);
   if (allMarkers.length > 0) {
     var group = L.featureGroup(allMarkers);
-    overviewMap.fitBounds(group.getBounds().pad(0.1));
+    overviewMap.fitBounds(group.getBounds().pad(0.1), { animate: false, maxZoom: 8 });
     if (overviewMap.getZoom() < 3) overviewMap.setZoom(3);
   }
 }
